@@ -46786,6 +46786,7 @@ var env = {
   // Messenger
   messengerPageAccessToken: optional2("MESSENGER_PAGE_ACCESS_TOKEN"),
   messengerPageId: optional2("MESSENGER_PAGE_ID"),
+  messengerVerifyToken: optional2("MESSENGER_VERIFY_TOKEN"),
   messengerAppSecret: optional2("MESSENGER_APP_SECRET"),
   // ElevenLabs
   elevenlabsApiKey: optional2("ELEVENLABS_API_KEY"),
@@ -48181,7 +48182,7 @@ app3.get("/webhook", async (c) => {
   const mode = c.req.query("hub.mode");
   const verifyToken = c.req.query("hub.verify_token");
   const challenge = c.req.query("hub.challenge");
-  if (mode === "subscribe" && verifyToken === env.whatsappVerifyToken) {
+  if (mode === "subscribe" && verifyToken === env.messengerVerifyToken) {
     return c.text(challenge ?? "OK");
   }
   return c.json({ error: "Verification failed" }, 403);
