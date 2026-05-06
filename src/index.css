@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 43% 97%;
+    --foreground: 30 20% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 30 20% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 20% 18%;
+    --primary: 30 34% 36%;
+    --primary-foreground: 42 60% 97%;
+    --secondary: 35 31% 92%;
+    --secondary-foreground: 30 23% 26%;
+    --muted: 35 31% 92%;
+    --muted-foreground: 30 13% 47%;
+    --accent: 37 38% 89%;
+    --accent-foreground: 29 25% 27%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 33 26% 85%;
+    --input: 33 26% 85%;
+    --ring: 30 34% 36%;
+    --radius: 0.625rem;
+    --sidebar-background: 35 45% 96%;
+    --sidebar-foreground: 30 18% 26%;
+    --sidebar-primary: 30 34% 36%;
+    --sidebar-primary-foreground: 42 60% 97%;
+    --sidebar-accent: 35 35% 92%;
+    --sidebar-accent-foreground: 30 23% 26%;
+    --sidebar-border: 35 28% 86%;
+    --sidebar-ring: 30 34% 36%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at 10% 10%, hsl(38 60% 92% / 0.55), transparent 45%),
+      radial-gradient(circle at 85% 20%, hsl(190 40% 90% / 0.35), transparent 42%),
+      linear-gradient(180deg, hsl(39 52% 98%) 0%, hsl(36 46% 96%) 100%);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    letter-spacing: -0.02em;
+  }
+}
