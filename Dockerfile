@@ -3,8 +3,7 @@ WORKDIR /app
 
 FROM base AS deps
 COPY package.json package-lock.json ./
-RUN npm config set registry https://npm.mirrors.msh.team
-RUN npm ci --include=dev --prefer-offline --no-audit
+RUN npm ci --include=dev --no-audit
 FROM deps AS build
 COPY . .
 RUN npm run build
