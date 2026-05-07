@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { publicQuery, createRouter } from "./middleware";
 import { detectLanguage, type Language } from "@contracts/templates";
-
-const GEMINI_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const RESORT_INFO = {
   name: "La Vida Resort & Beach Club",
@@ -67,6 +65,27 @@ Respond in Arabic unless user asks in English.`;
 Respond in English unless user asks in Arabic.`;
 }
 
+function toGeminiHistory(
+  history: { role: "user" | "assistant"; content: string }[],
+): { role: "user" | "model"; parts: { text: string }[] }[] {
+  const normalized = history
+    .map((item) => ({
+      role: item.role === "assistant" ? "model" as const : "user" as const,
+      text: item.content.trim(),
+    }))
+    .filter((item) => item.text.length > 0);
+
+  // Gemini chat history must start with a user message.
+  while (normalized.length > 0 && normalized[0]?.role !== "user") {
+    normalized.shift();
+  }
+
+  return normalized.map((item) => ({
+    role: item.role,
+    parts: [{ text: item.text }],
+  }));
+}
+
 export const chatRouter = createRouter({
   ask: publicQuery
     .input(
@@ -123,60 +142,28 @@ Contact: ${RESORT_INFO.phones.join(" or ")}`;
         };
       }
 
-      const messages = [
-        ...(input.history ?? []),
-        { role: "user", content: message },
-      ];
+      const history = input.history ?? [];
 
       try {
-        const url = `${GEMINI_URL}?key=${encodeURIComponent(geminiApiKey)}`;
-        const res = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: buildSystemPrompt(lang) }],
-            },
-            generationConfig: {
-              temperature: 0.4,
-              maxOutputTokens: 400,
-            },
-            contents: messages.map((item) => ({
-              role: item.role === "assistant" ? "model" : "user",
-              parts: [{ text: item.content }],
-            })),
-          }),
+        const client = new GoogleGenerativeAI(geminiApiKey);
+        const model = client.getGenerativeModel({
+          model: "gemini-1.5-flash",
+          systemInstruction: buildSystemPrompt(lang),
         });
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("[chat.ask] Gemini request failed", {
-            status: res.status,
-            body: errorText,
-          });
-          return {
-            reply: fallback,
-            language: lang,
-            source: "fallback" as const,
-          };
-        }
+        const chat = model.startChat({
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 400,
+          },
+          history: toGeminiHistory(history),
+        });
 
-        const data = (await res.json()) as {
-          candidates?: {
-            content?: {
-              parts?: { text?: string }[];
-            };
-          }[];
-        };
-        const reply = data.candidates?.[0]?.content?.parts
-          ?.map((part) => part.text ?? "")
-          .join("\n")
-          .trim();
+        const result = await chat.sendMessage(message);
+        const reply = result.response.text()?.trim();
 
         if (!reply) {
-          console.error("[chat.ask] Gemini returned empty content", data);
+          console.error("[chat.ask] Gemini returned empty content");
           return {
             reply: fallback,
             language: lang,
