@@ -2,7 +2,8 @@ import { z } from "zod";
 import { publicQuery, createRouter } from "./middleware";
 import { detectLanguage, type Language } from "@contracts/templates";
 
-const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const GEMINI_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 const RESORT_INFO = {
   name: "La Vida Resort & Beach Club",
@@ -111,10 +112,10 @@ Location: ${RESORT_INFO.location}
 Website: ${RESORT_INFO.website}
 Contact: ${RESORT_INFO.phones.join(" or ")}`;
 
-      const openAiApiKey = process.env.OPENAI_API_KEY;
+      const geminiApiKey = process.env.GEMINI_API_KEY;
 
-      if (!openAiApiKey) {
-        console.error("[chat.ask] Missing OPENAI_API_KEY, using fallback response");
+      if (!geminiApiKey) {
+        console.error("[chat.ask] Missing GEMINI_API_KEY, using fallback response");
         return {
           reply: fallback,
           language: lang,
@@ -123,29 +124,35 @@ Contact: ${RESORT_INFO.phones.join(" or ")}`;
       }
 
       const messages = [
-        { role: "system", content: buildSystemPrompt(lang) },
         ...(input.history ?? []),
         { role: "user", content: message },
       ];
 
       try {
-        const res = await fetch(OPENAI_URL, {
+        const url = `${GEMINI_URL}?key=${encodeURIComponent(geminiApiKey)}`;
+        const res = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${openAiApiKey}`,
           },
           body: JSON.stringify({
-            model: "gpt-4o-mini",
-            temperature: 0.4,
-            max_tokens: 400,
-            messages,
+            systemInstruction: {
+              parts: [{ text: buildSystemPrompt(lang) }],
+            },
+            generationConfig: {
+              temperature: 0.4,
+              maxOutputTokens: 400,
+            },
+            contents: messages.map((item) => ({
+              role: item.role === "assistant" ? "model" : "user",
+              parts: [{ text: item.content }],
+            })),
           }),
         });
 
         if (!res.ok) {
           const errorText = await res.text();
-          console.error("[chat.ask] OpenAI request failed", {
+          console.error("[chat.ask] Gemini request failed", {
             status: res.status,
             body: errorText,
           });
@@ -157,12 +164,19 @@ Contact: ${RESORT_INFO.phones.join(" or ")}`;
         }
 
         const data = (await res.json()) as {
-          choices?: { message?: { content?: string } }[];
+          candidates?: {
+            content?: {
+              parts?: { text?: string }[];
+            };
+          }[];
         };
-        const reply = data.choices?.[0]?.message?.content?.trim();
+        const reply = data.candidates?.[0]?.content?.parts
+          ?.map((part) => part.text ?? "")
+          .join("\n")
+          .trim();
 
         if (!reply) {
-          console.error("[chat.ask] OpenAI returned empty content");
+          console.error("[chat.ask] Gemini returned empty content", data);
           return {
             reply: fallback,
             language: lang,
