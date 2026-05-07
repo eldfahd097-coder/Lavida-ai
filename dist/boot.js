@@ -1233,7 +1233,7 @@ var chatRouter = createRouter({
     try {
       const client = new GoogleGenerativeAI(geminiApiKey);
       const model = client.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash",
         systemInstruction: buildSystemPrompt(lang)
       });
       const chat = model.startChat({
