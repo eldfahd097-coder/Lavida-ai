@@ -35,7 +35,7 @@ export default function ChatPage() {
         ...prev,
         {
           role: "assistant",
-          content:
+          content: error.message ||
             "Sorry, I could not complete your request right now. Please try again. / عذراً، تعذر إكمال الطلب الآن. يرجى المحاولة مرة أخرى.",
         },
       ]);

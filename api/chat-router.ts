@@ -2,6 +2,7 @@ import { z } from "zod";
 import { publicQuery, createRouter } from "./middleware";
 import { detectLanguage, type Language } from "@contracts/templates";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { TRPCError } from "@trpc/server";
 
 const RESORT_INFO = {
   name: "La Vida Resort & Beach Club",
@@ -120,26 +121,14 @@ export const chatRouter = createRouter({
         };
       }
 
-      const fallback =
-        lang === "ar"
-          ? `مرحباً بكم في ${RESORT_INFO.name}.
-الموقع: ${RESORT_INFO.location}
-الموقع الإلكتروني: ${RESORT_INFO.website}
-للتواصل: ${RESORT_INFO.phones.join(" أو ")}`
-          : `Welcome to ${RESORT_INFO.name}.
-Location: ${RESORT_INFO.location}
-Website: ${RESORT_INFO.website}
-Contact: ${RESORT_INFO.phones.join(" or ")}`;
-
       const geminiApiKey = process.env.GEMINI_API_KEY;
 
       if (!geminiApiKey) {
-        console.error("[chat.ask] Missing GEMINI_API_KEY, using fallback response");
-        return {
-          reply: fallback,
-          language: lang,
-          source: "fallback" as const,
-        };
+        console.error("[chat.ask] Missing GEMINI_API_KEY");
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "GEMINI_API_KEY is missing on the server",
+        });
       }
 
       const history = input.history ?? [];
@@ -164,11 +153,10 @@ Contact: ${RESORT_INFO.phones.join(" or ")}`;
 
         if (!reply) {
           console.error("[chat.ask] Gemini returned empty content");
-          return {
-            reply: fallback,
-            language: lang,
-            source: "fallback" as const,
-          };
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Gemini returned an empty response",
+          });
         }
 
         console.log("[chat.ask] Assistant reply generated", {
@@ -181,11 +169,10 @@ Contact: ${RESORT_INFO.phones.join(" or ")}`;
         };
       } catch (error) {
         console.error("[chat.ask] Unexpected error", error);
-        return {
-          reply: fallback,
-          language: lang,
-          source: "fallback" as const,
-        };
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate Gemini response",
+        });
       }
     }),
 });
