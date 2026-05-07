@@ -6,17 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build-server": "esbuild api/boot.ts --platform=node --bundle --format=esm --outfile=dist/boot.js",
+    "start": "NODE_ENV=production node dist/boot.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "NODE_ENV=production node dist/boot.js",
     "check": "tsc -b",
     "format": "prettier --write .",
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "builds": "vite build && esbuild api/boot.ts -- platform=node --bundle -- format=esm --packages=external --outfield=dist/boot.js",
-    "startNODE_ENV": "production node dist/boot.js"
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.965.0",
