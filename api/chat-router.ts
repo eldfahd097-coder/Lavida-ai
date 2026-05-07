@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { publicQuery, createRouter } from "./middleware";
-import { env } from "./lib/env";
 import { detectLanguage, type Language } from "@contracts/templates";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
@@ -86,8 +85,14 @@ export const chatRouter = createRouter({
     .mutation(async ({ input }) => {
       const message = input.message.trim();
       const lang = detectLanguage(message);
+      console.log("[chat.ask] Incoming message", {
+        lang,
+        messageLength: message.length,
+        historyCount: input.history?.length ?? 0,
+      });
 
       if (includesBookingQuestion(message)) {
+        console.log("[chat.ask] Matched booking/pricing rule");
         return {
           reply: bookingAnnouncement(lang),
           language: lang,
@@ -106,7 +111,10 @@ Location: ${RESORT_INFO.location}
 Website: ${RESORT_INFO.website}
 Contact: ${RESORT_INFO.phones.join(" or ")}`;
 
-      if (!env.openaiApiKey) {
+      const openAiApiKey = process.env.OPENAI_API_KEY;
+
+      if (!openAiApiKey) {
+        console.error("[chat.ask] Missing OPENAI_API_KEY, using fallback response");
         return {
           reply: fallback,
           language: lang,
@@ -120,36 +128,63 @@ Contact: ${RESORT_INFO.phones.join(" or ")}`;
         { role: "user", content: message },
       ];
 
-      const res = await fetch(OPENAI_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${env.openaiApiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          temperature: 0.4,
-          max_tokens: 400,
-          messages,
-        }),
-      });
+      try {
+        const res = await fetch(OPENAI_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${openAiApiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            temperature: 0.4,
+            max_tokens: 400,
+            messages,
+          }),
+        });
 
-      if (!res.ok) {
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("[chat.ask] OpenAI request failed", {
+            status: res.status,
+            body: errorText,
+          });
+          return {
+            reply: fallback,
+            language: lang,
+            source: "fallback" as const,
+          };
+        }
+
+        const data = (await res.json()) as {
+          choices?: { message?: { content?: string } }[];
+        };
+        const reply = data.choices?.[0]?.message?.content?.trim();
+
+        if (!reply) {
+          console.error("[chat.ask] OpenAI returned empty content");
+          return {
+            reply: fallback,
+            language: lang,
+            source: "fallback" as const,
+          };
+        }
+
+        console.log("[chat.ask] Assistant reply generated", {
+          replyLength: reply.length,
+        });
+        return {
+          reply,
+          language: lang,
+          source: "ai" as const,
+        };
+      } catch (error) {
+        console.error("[chat.ask] Unexpected error", error);
         return {
           reply: fallback,
           language: lang,
           source: "fallback" as const,
         };
       }
-
-      const data = (await res.json()) as {
-        choices?: { message?: { content?: string } }[];
-      };
-
-      return {
-        reply: data.choices?.[0]?.message?.content?.trim() || fallback,
-        language: lang,
-        source: "ai" as const,
-      };
     }),
 });

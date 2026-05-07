@@ -23,7 +23,22 @@ export default function ChatPage() {
 
   const askMutation = trpc.chat.ask.useMutation({
     onSuccess: (data) => {
+      console.log("[chat.ui] Assistant response received", {
+        source: data.source,
+        language: data.language,
+      });
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+    },
+    onError: (error) => {
+      console.error("[chat.ui] Chat request failed", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            "Sorry, I could not complete your request right now. Please try again. / عذراً، تعذر إكمال الطلب الآن. يرجى المحاولة مرة أخرى.",
+        },
+      ]);
     },
   });
 
@@ -38,6 +53,10 @@ export default function ChatPage() {
   const sendMessage = () => {
     const value = text.trim();
     if (!value || askMutation.isPending) return;
+    console.log("[chat.ui] Sending message", {
+      length: value.length,
+      historyCount: history.length,
+    });
     setMessages((prev) => [...prev, { role: "user", content: value }]);
     setText("");
     askMutation.mutate({ message: value, history });
