@@ -4,6 +4,7 @@ import { messagesRouter } from "./messages-router";
 import { callsRouter } from "./calls-router";
 import { settingsRouter } from "./settings-router";
 import { logsRouter } from "./logs-router";
+import { chatRouter } from "./chat-router";
 import { createRouter, publicQuery } from "./middleware";
 
 export const appRouter = createRouter({
@@ -14,6 +15,7 @@ export const appRouter = createRouter({
   calls: callsRouter,
   setting: settingsRouter,
   log: logsRouter,
+  chat: chatRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -54,7 +54,7 @@ export type Language = "ar" | "en";
 export type Platform = "whatsapp" | "messenger" | "phone";
 
 // ─── Greeting Templates ─────────────────────────────────────────
-export function getGreeting(platform: Platform, lang: Language): string {
+export function getGreeting(_platform: Platform, lang: Language): string {
   if (lang === "ar") {
     return `مرحباً بكم في La Vida Resort & Beach Club 🏖️
 نشكركم على تواصلكم معنا
