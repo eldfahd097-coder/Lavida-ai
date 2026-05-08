@@ -19,13 +19,23 @@ function buildSystemPrompt(lang: Language): string {
 - موعد الافتتاح سيُعلن قريباً
 - الاتصال: +218 91 211 0392, info@lavida.ly
 
+المعرفة الأساسية:
+- منتجع شاطئي في زوارة
+- فيلات فاخرة، شاليهات عائلية، وشقق فندقية
+- مسبح كبير
+- كافيه شاطئي ومنطقة أكل
+- أنشطة بحرية وتأجير جتسكي
+- ملعب كرة قدم وملعب كرة طائرة
+- أجواء شاطئية هادئة ومريحة
+
 قواعد:
 1. تحدث العربية الليبية بطبيعية (ليس رسمياً جداً ولا روبوتياً)
 2. كن مؤدباً، أنيقاً، ومتعاوناً
 3. لا تعدد معلومات خاطئة
 4. إذا سُئلت عن الحجز أو الأسعار، قل "غير متاح حالياً، سيتم الإعلان عنه قريباً"
 5. حافظ على نبرة منتجع فاخر وهادئ
-6. ردودك قصيرة وواضحة`;
+6. ردودك قصيرة وواضحة
+7. إذا سأل المستخدم عن المرافق أو الأنشطة، جاوبه مباشرة بشكل طبيعي ومختصر`;
   }
   return `You are an intelligent assistant for La Vida Resort & Beach Club in Zuwarah, Libya.
 You are elegant, helpful, warm, and calm — like a luxury resort concierge.
@@ -39,13 +49,23 @@ Available information:
 - Opening date will be announced soon
 - Contact: +218 91 211 0392, info@lavida.ly
 
+Core knowledge:
+- Beachfront location in Zuwarah
+- Luxury villas, family chalets, and hotel apartments
+- Large swimming pool
+- Beach cafe and food area
+- Water sports activities and jetski rentals
+- Football and volleyball courts
+- Relaxing beach atmosphere
+
 Rules:
 1. Speak like a professional luxury resort concierge
 2. Be polite, elegant, and helpful
 3. Do not make up information
 4. If asked about booking or pricing, say "not available yet, will be announced soon"
 5. Keep a calm, luxurious tone
-6. Keep responses concise and clear`;
+6. Keep responses concise and clear
+7. For activities or facilities questions, answer directly and naturally instead of asking for clarification`;
 }
 
 // ─── AI Response Generator ──────────────────────────────────────
@@ -117,6 +137,16 @@ async function callOpenAI(
 // ─── Template Fallback Logic ────────────────────────────────────
 function getTemplateResponse(userMessage: string, lang: Language): string {
   const text = userMessage.trim().toLowerCase();
+
+  const wantsFacilities =
+    /(jetski|jet ski|water sport|water sports|cafe|café|food|restaurant|activities|activity|football|volleyball|beach|pool|chalet|chalets|villa|villas|apartment|apartments|جتسكي|أنشطة|نشاط|كافيه|اكل|أكل|مطعم|ملعب|كرة|طائرة|شاطئ|مسبح|شاليه|شاليهات|فيلا|فلل|شقة|شقق)/i.test(
+      text,
+    );
+  if (wantsFacilities) {
+    return lang === "ar"
+      ? "أكيد ✨ لافيدا فيها كافيه ومنطقة أكل وأنشطة بحرية وتأجير جتسكي بالإضافة لملعب كرة وملعب طائرة، مع شاطئ ومسبح وأجواء مريحة."
+      : "Yes ✨ La Vida includes a beach cafe, food area, water activities, and jetski rentals, along with football and volleyball courts, plus beach and pool access.";
+  }
 
   const wantsResortInfo =
     /(resort|la vida|details|about|facilities|features|location|zuwarah|beach|pool|chalet|villa|activities|منتجع|لافيدا|تفاصيل|مرافق|الموقع|زوارة|شاطئ|مسبح|شاليه|أنشطة)/i.test(
