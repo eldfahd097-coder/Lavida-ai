@@ -1739,7 +1739,6 @@ var twilio_webhook_default = app2;
 
 // api/messenger-webhook.ts
 import { Hono as Hono3 } from "hono";
-import { eq as eq8, and as and6, desc as desc6 } from "drizzle-orm";
 
 // api/lib/messenger.ts
 var MESSENGER_API_BASE = "https://graph.facebook.com/v18.0";
@@ -1765,22 +1764,6 @@ async function sendMessengerMessage(recipientId, text2) {
     return { success: true, messageId: data.message_id };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Unknown error" };
-  }
-}
-async function getMessengerUserProfile(psid) {
-  if (!env.messengerPageAccessToken) {
-    return { error: "Messenger not configured" };
-  }
-  const url = `${MESSENGER_API_BASE}/${psid}?fields=first_name,last_name,profile_pic&access_token=${env.messengerPageAccessToken}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return { error: `HTTP ${res.status}` };
-    const data = await res.json();
-    if (data.error) return { error: data.error.message };
-    const name = [data.first_name, data.last_name].filter(Boolean).join(" ");
-    return { name };
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : "Unknown error" };
   }
 }
 
@@ -1822,71 +1805,18 @@ app3.post("/", async (c) => {
 async function handleMessengerMessage(messaging) {
   const senderId = messaging.sender.id;
   const text2 = messaging.message.text;
-  const messageId = messaging.message.mid;
   if (!senderId || !text2) return;
-  const db = getDb();
-  const lang = detectLanguage(text2);
-  const profile = await getMessengerUserProfile(senderId);
-  const senderName = profile.name ?? "Messenger User";
-  let lead = await db.query.leads.findFirst({
-    where: eq8(leads.phone, senderId)
+  console.log("[messenger.webhook] sender message", {
+    senderId,
+    text: text2
   });
-  let leadId;
-  if (!lead) {
-    const result = await db.insert(leads).values({
-      source: "messenger",
-      name: senderName,
-      phone: senderId,
-      language: lang,
-      status: "new",
-      interest: "general"
-    });
-    leadId = Number(result[0].insertId);
-  } else {
-    leadId = lead.id;
-  }
-  await db.insert(messages).values({
-    leadId,
-    platform: "messenger",
-    direction: "inbound",
-    messageId,
-    fromNumber: senderId,
-    toNumber: env.messengerPageId ?? "",
-    body: text2,
-    status: "read"
-  });
-  let replyText = "";
-  const trimmedText = text2.trim().toLowerCase();
-  if (/^[1-5]$/.test(trimmedText)) {
-    replyText = getResponseByChoice(trimmedText, lang);
-  } else if (/^(مرحب|سلام|هاي|hello|hi|hey)/i.test(trimmedText)) {
-    replyText = `${getGreeting("messenger", lang)}
-
-${getMenu("messenger", lang)}`;
-  } else {
-    const recentMessages = await db.query.messages.findMany({
-      where: and6(eq8(messages.leadId, leadId), eq8(messages.platform, "messenger")),
-      orderBy: [desc6(messages.createdAt)],
-      limit: 5
-    });
-    const history = recentMessages.reverse().map((m) => ({
-      role: m.direction === "inbound" ? "user" : "assistant",
-      content: m.body
-    }));
-    const aiResult = await generateAIResponse(text2, history, lang);
-    replyText = aiResult.text;
-  }
+  const aiResult = await generateAIResponse(text2, []);
+  const replyText = aiResult.text;
   const sendResult = await sendMessengerMessage(senderId, replyText);
-  if (sendResult.success) {
-    await db.insert(messages).values({
-      leadId,
-      platform: "messenger",
-      direction: "outbound",
-      messageId: sendResult.messageId,
-      fromNumber: env.messengerPageId ?? "",
-      toNumber: senderId,
-      body: replyText,
-      status: "sent"
+  if (!sendResult.success) {
+    console.error("[messenger.webhook] Failed to send reply", {
+      senderId,
+      error: sendResult.error
     });
   }
 }
