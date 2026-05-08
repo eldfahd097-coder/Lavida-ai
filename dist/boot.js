@@ -219,7 +219,12 @@ var env = {
   elevenlabsVoiceId: optional("ELEVENLABS_VOICE_ID"),
   // App
   webhookBaseUrl: optional("APP_WEBHOOK_BASE_URL"),
-  ownerPhoneNumber: optional("OWNER_PHONE_NUMBER") || "+218912110392"
+  ownerPhoneNumber: optional("OWNER_PHONE_NUMBER") || "+218912110392",
+  // SMTP
+  smtpHost: optional("SMTP_HOST"),
+  smtpPort: optional("SMTP_PORT"),
+  smtpUser: optional("SMTP_USER"),
+  smtpPass: optional("SMTP_PASS")
 };
 
 // db/schema.ts
@@ -2147,6 +2152,7 @@ async function sendMessengerMessage(recipientId, text2) {
 }
 
 // api/messenger-webhook.ts
+import nodemailer from "nodemailer";
 var app3 = new Hono3();
 var lastTopicBySender = /* @__PURE__ */ new Map();
 var recentMessageIds = /* @__PURE__ */ new Map();
@@ -2243,6 +2249,59 @@ Guests: ${guests}
 Date: ${date}
 The La Vida team will contact you once booking opens`;
 }
+async function sendBookingInterestEmail(interest, senderId) {
+  if (!env.smtpHost || !env.smtpPort || !env.smtpUser || !env.smtpPass) {
+    console.error("[messenger.webhook] SMTP config missing; skipping booking interest email");
+    return false;
+  }
+  try {
+    const transporter = nodemailer.createTransport({
+      host: env.smtpHost,
+      port: Number(env.smtpPort),
+      secure: Number(env.smtpPort) === 465,
+      auth: {
+        user: env.smtpUser,
+        pass: env.smtpPass
+      }
+    });
+    const timestamp2 = (/* @__PURE__ */ new Date()).toISOString();
+    await transporter.sendMail({
+      from: `"La Vida AI" <${env.smtpUser}>`,
+      to: "info@lavidaresort.ly",
+      subject: "New Booking Interest - La Vida AI",
+      text: [
+        "New booking interest received from Messenger.",
+        "",
+        `Name: ${interest.name ?? "-"}`,
+        `Phone number: ${interest.phone ?? "-"}`,
+        `Accommodation type: ${interest.accommodation ?? "-"}`,
+        `Guest count: ${interest.guests ?? "-"}`,
+        `Preferred dates: ${interest.date ?? "-"}`,
+        `Messenger sender ID: ${senderId}`,
+        `Timestamp: ${timestamp2}`
+      ].join("\n"),
+      html: `
+        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
+          <h2>New Booking Interest - La Vida AI</h2>
+          <p>A new booking interest was received from Messenger.</p>
+          <table cellpadding="6" cellspacing="0" border="0">
+            <tr><td><strong>Name</strong></td><td>${interest.name ?? "-"}</td></tr>
+            <tr><td><strong>Phone number</strong></td><td>${interest.phone ?? "-"}</td></tr>
+            <tr><td><strong>Accommodation type</strong></td><td>${interest.accommodation ?? "-"}</td></tr>
+            <tr><td><strong>Guest count</strong></td><td>${interest.guests ?? "-"}</td></tr>
+            <tr><td><strong>Preferred dates</strong></td><td>${interest.date ?? "-"}</td></tr>
+            <tr><td><strong>Messenger sender ID</strong></td><td>${senderId}</td></tr>
+            <tr><td><strong>Timestamp</strong></td><td>${timestamp2}</td></tr>
+          </table>
+        </div>
+      `
+    });
+    return true;
+  } catch (error) {
+    console.error("[messenger.webhook] Failed to send booking interest email", error);
+    return false;
+  }
+}
 function bookingMissingPrompt(missing, lang) {
   if (lang === "ar") {
     return `\u0645\u0645\u062A\u0627\u0632 \u2728 \u0628\u0627\u0642\u064A \u0641\u0642\u0637: ${missing.join("\u060C ")}.`;
@@ -2325,6 +2384,18 @@ async function handleMessengerMessage(messaging) {
     if (missing.length === 0) {
       draft.completed = true;
       bookingInterestBySender.set(senderId, draft);
+      const emailed = await sendBookingInterestEmail(draft, senderId);
+      if (emailed) {
+        const successReply = lang === "ar" ? "\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0637\u0644\u0628\u0643\u0645 \u0627\u0644\u0645\u0628\u062F\u0626\u064A \u2728\n\u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0639\u0646\u062F \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632" : "Your booking interest has been received \u2728\nThe La Vida team will contact you once booking opens";
+        const sendResult3 = await sendMessengerMessage(senderId, successReply);
+        if (!sendResult3.success) {
+          console.error("[messenger.webhook] Failed to send booking-interest confirmation", {
+            senderId,
+            error: sendResult3.error
+          });
+        }
+        return;
+      }
     }
     const sendResult2 = await sendMessengerMessage(senderId, replyText2);
     if (!sendResult2.success) {
@@ -2350,6 +2421,18 @@ async function handleMessengerMessage(messaging) {
     if (missing.length === 0) {
       existingInterest.completed = true;
       bookingInterestBySender.set(senderId, existingInterest);
+      const emailed = await sendBookingInterestEmail(existingInterest, senderId);
+      if (emailed) {
+        const successReply = lang === "ar" ? "\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0637\u0644\u0628\u0643\u0645 \u0627\u0644\u0645\u0628\u062F\u0626\u064A \u2728\n\u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0639\u0646\u062F \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632" : "Your booking interest has been received \u2728\nThe La Vida team will contact you once booking opens";
+        const sendResult3 = await sendMessengerMessage(senderId, successReply);
+        if (!sendResult3.success) {
+          console.error("[messenger.webhook] Failed to send booking-interest confirmation", {
+            senderId,
+            error: sendResult3.error
+          });
+        }
+        return;
+      }
     }
     const sendResult2 = await sendMessengerMessage(senderId, replyText2);
     if (!sendResult2.success) {

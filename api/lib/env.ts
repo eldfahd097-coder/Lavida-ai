@@ -38,4 +38,9 @@ export const env = {
   // App
   webhookBaseUrl: optional("APP_WEBHOOK_BASE_URL"),
   ownerPhoneNumber: optional("OWNER_PHONE_NUMBER") || "+218912110392",
+  // SMTP
+  smtpHost: optional("SMTP_HOST"),
+  smtpPort: optional("SMTP_PORT"),
+  smtpUser: optional("SMTP_USER"),
+  smtpPass: optional("SMTP_PASS"),
 };
