@@ -21,7 +21,10 @@ function buildSystemPrompt(lang: Language): string {
 
 المعرفة الأساسية:
 - منتجع شاطئي في زوارة
-- فيلات فاخرة، شاليهات عائلية، وشقق فندقية
+- فلل VIP بمسابح خاصة (حتى 8 أشخاص)
+- فلل رئاسية فاخرة بمسبح خاص (حتى 10 أشخاص)
+- شاليهات عائلية مريحة (حتى 5 أشخاص)
+- شقق فندقية أنيقة (حتى 3 أشخاص)
 - مسبح كبير
 - كافيه شاطئي ومنطقة أكل
 - أنشطة بحرية وتأجير جتسكي
@@ -51,7 +54,10 @@ Available information:
 
 Core knowledge:
 - Beachfront location in Zuwarah
-- Luxury villas, family chalets, and hotel apartments
+- VIP villas with private pools (up to 8 guests)
+- Presidential villas with private pools (up to 10 guests)
+- Family chalets (up to 5 guests)
+- Hotel apartments (up to 3 guests)
 - Large swimming pool
 - Beach cafe and food area
 - Water sports activities and jetski rentals
@@ -146,6 +152,16 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
     return lang === "ar"
       ? "أكيد ✨ لافيدا فيها كافيه ومنطقة أكل وأنشطة بحرية وتأجير جتسكي بالإضافة لملعب كرة وملعب طائرة، مع شاطئ ومسبح وأجواء مريحة."
       : "Yes ✨ La Vida includes a beach cafe, food area, water activities, and jetski rentals, along with football and volleyball courts, plus beach and pool access.";
+  }
+
+  const wantsAccommodation =
+    /(room|rooms|accommodation|stay|unit|units|villa|villas|vip villa|presidential|chalet|chalets|apartment|apartments|capacity|guests|how many people|private pool|private pools|مبيت|إقامة|الغرف|غرف|شن أنواع الغرف|كم شخص|شن نوع|فلل|فيلا|vip|رئاسية|شاليه|شاليهات|شقق|سعة|ضيوف|مسبح خاص|في مسبح خاص)/i.test(
+      text,
+    );
+  if (wantsAccommodation) {
+    return lang === "ar"
+      ? "لافيدا توفر فلل VIP بمسابح خاصة حتى 8 أشخاص، وفلل رئاسية حتى 10 أشخاص، وشاليهات عائلية حتى 5 أشخاص، وشقق فندقية أنيقة حتى 3 أشخاص ✨"
+      : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and elegant hotel apartments for up to 3 guests ✨";
   }
 
   const wantsResortInfo =

@@ -1363,7 +1363,10 @@ function buildSystemPrompt2(lang) {
 
 \u0627\u0644\u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0623\u0633\u0627\u0633\u064A\u0629:
 - \u0645\u0646\u062A\u062C\u0639 \u0634\u0627\u0637\u0626\u064A \u0641\u064A \u0632\u0648\u0627\u0631\u0629
-- \u0641\u064A\u0644\u0627\u062A \u0641\u0627\u062E\u0631\u0629\u060C \u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629\u060C \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629
+- \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 (\u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635)
+- \u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u0641\u0627\u062E\u0631\u0629 \u0628\u0645\u0633\u0628\u062D \u062E\u0627\u0635 (\u062D\u062A\u0649 10 \u0623\u0634\u062E\u0627\u0635)
+- \u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u0645\u0631\u064A\u062D\u0629 (\u062D\u062A\u0649 5 \u0623\u0634\u062E\u0627\u0635)
+- \u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u0623\u0646\u064A\u0642\u0629 (\u062D\u062A\u0649 3 \u0623\u0634\u062E\u0627\u0635)
 - \u0645\u0633\u0628\u062D \u0643\u0628\u064A\u0631
 - \u0643\u0627\u0641\u064A\u0647 \u0634\u0627\u0637\u0626\u064A \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644
 - \u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629 \u0648\u062A\u0623\u062C\u064A\u0631 \u062C\u062A\u0633\u0643\u064A
@@ -1393,7 +1396,10 @@ Available information:
 
 Core knowledge:
 - Beachfront location in Zuwarah
-- Luxury villas, family chalets, and hotel apartments
+- VIP villas with private pools (up to 8 guests)
+- Presidential villas with private pools (up to 10 guests)
+- Family chalets (up to 5 guests)
+- Hotel apartments (up to 3 guests)
 - Large swimming pool
 - Beach cafe and food area
 - Water sports activities and jetski rentals
@@ -1459,6 +1465,12 @@ function getTemplateResponse(userMessage, lang) {
   );
   if (wantsFacilities) {
     return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0644\u0627\u0641\u064A\u062F\u0627 \u0641\u064A\u0647\u0627 \u0643\u0627\u0641\u064A\u0647 \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644 \u0648\u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629 \u0648\u062A\u0623\u062C\u064A\u0631 \u062C\u062A\u0633\u0643\u064A \u0628\u0627\u0644\u0625\u0636\u0627\u0641\u0629 \u0644\u0645\u0644\u0639\u0628 \u0643\u0631\u0629 \u0648\u0645\u0644\u0639\u0628 \u0637\u0627\u0626\u0631\u0629\u060C \u0645\u0639 \u0634\u0627\u0637\u0626 \u0648\u0645\u0633\u0628\u062D \u0648\u0623\u062C\u0648\u0627\u0621 \u0645\u0631\u064A\u062D\u0629." : "Yes \u2728 La Vida includes a beach cafe, food area, water activities, and jetski rentals, along with football and volleyball courts, plus beach and pool access.";
+  }
+  const wantsAccommodation = /(room|rooms|accommodation|stay|unit|units|villa|villas|vip villa|presidential|chalet|chalets|apartment|apartments|capacity|guests|how many people|private pool|private pools|مبيت|إقامة|الغرف|غرف|شن أنواع الغرف|كم شخص|شن نوع|فلل|فيلا|vip|رئاسية|شاليه|شاليهات|شقق|سعة|ضيوف|مسبح خاص|في مسبح خاص)/i.test(
+    text2
+  );
+  if (wantsAccommodation) {
+    return lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u062A\u0648\u0641\u0631 \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u062D\u062A\u0649 10 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u062D\u062A\u0649 5 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u0623\u0646\u064A\u0642\u0629 \u062D\u062A\u0649 3 \u0623\u0634\u062E\u0627\u0635 \u2728" : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and elegant hotel apartments for up to 3 guests \u2728";
   }
   const wantsResortInfo = /(resort|la vida|details|about|facilities|features|location|zuwarah|beach|pool|chalet|villa|activities|منتجع|لافيدا|تفاصيل|مرافق|الموقع|زوارة|شاطئ|مسبح|شاليه|أنشطة)/i.test(
     text2
