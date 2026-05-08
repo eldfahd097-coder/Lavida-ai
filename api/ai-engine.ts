@@ -372,13 +372,30 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     );
   }
 
-  const asksPhotos = hasAny(text, ["photo", "photos", "picture", "pictures", "image", "images", "صور", "صور الشاليهات"]);
+  const asksPhotos = hasAny(text, [
+    "photo",
+    "photos",
+    "picture",
+    "pictures",
+    "image",
+    "images",
+    "renders",
+    "gallery",
+    "show me rooms",
+    "show me villas",
+    "صور",
+    "صور الشاليهات",
+    "صور المنتجع",
+    "ابعت صور",
+    "نبي صور",
+    "في صور",
+    "صور الغرف",
+    "صور الفلل",
+  ]);
   if (asksPhotos) {
-    replies.push(
-      lang === "ar"
-      ? "صور الشاليهات والمنتجع حتنزل قريباً عبر تحديثاتنا الرسمية ✨"
-      : "Chalet and resort images will be shared through our official updates soon ✨",
-    );
+    replies.push(lang === "ar"
+      ? "حالياً الصور الرسمية الخاصة بالشاليهات والمنتجع مش متوفرة عندنا توا ✨\nوحنشاركوا كل الصور والتحديثات البصرية قريباً مع موعد الافتتاح والإعلان الرسمي للحجز."
+      : "Currently the official chalet and resort images are not available yet ✨\nAll photos and visual updates will be shared closer to the opening date and official booking announcement.");
   }
 
   const asksHuman = hasAny(text, [
