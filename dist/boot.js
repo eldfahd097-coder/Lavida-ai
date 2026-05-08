@@ -1769,6 +1769,28 @@ async function sendMessengerMessage(recipientId, text2) {
 
 // api/messenger-webhook.ts
 var app3 = new Hono3();
+function isBookingQuestion(text2) {
+  const value = text2.toLowerCase();
+  const keywords = ["how can i book", "book", "booking", "reservation", "\u0627\u0644\u062D\u062C\u0632", "\u0646\u0628\u064A \u0646\u062D\u062C\u0632"];
+  return keywords.some((keyword) => value.includes(keyword));
+}
+function isPriceQuestion(text2) {
+  const value = text2.toLowerCase();
+  const keywords = ["prices", "price", "\u0627\u0644\u0623\u0633\u0639\u0627\u0631", "\u0628\u0643\u0645", "\u0643\u0645 \u0627\u0644\u0633\u0639\u0631"];
+  return keywords.some((keyword) => value.includes(keyword));
+}
+function bookingAnnouncement2(lang) {
+  if (lang === "ar") {
+    return "\u0627\u0644\u062D\u062C\u0632 \u0628\u064A\u0641\u062A\u062D \u0642\u0631\u064A\u0628\u0627\u064B\u060C \u0648\u062D\u0646\u0639\u0644\u0646\u0648\u0627 \u0643\u0644 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728";
+  }
+  return "Bookings will open soon, and all booking details will be announced officially on May 20 \u2728";
+}
+function priceAnnouncement(lang) {
+  if (lang === "ar") {
+    return "\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728";
+  }
+  return "Prices will be announced officially on May 20 \u2728";
+}
 app3.get("/", async (c) => {
   const mode = c.req.query("hub.mode");
   const verifyToken = c.req.query("hub.verify_token");
@@ -1805,13 +1827,21 @@ app3.post("/", async (c) => {
 async function handleMessengerMessage(messaging) {
   const senderId = messaging.sender.id;
   const text2 = messaging.message.text;
+  const lang = detectLanguage(text2);
   if (!senderId || !text2) return;
   console.log("[messenger.webhook] sender message", {
     senderId,
     text: text2
   });
-  const aiResult = await generateAIResponse(text2, []);
-  const replyText = aiResult.text;
+  let replyText = "";
+  if (isBookingQuestion(text2)) {
+    replyText = bookingAnnouncement2(lang);
+  } else if (isPriceQuestion(text2)) {
+    replyText = priceAnnouncement(lang);
+  } else {
+    const aiResult = await generateAIResponse(text2, []);
+    replyText = aiResult.text;
+  }
   const sendResult = await sendMessengerMessage(senderId, replyText);
   if (!sendResult.success) {
     console.error("[messenger.webhook] Failed to send reply", {
