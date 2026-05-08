@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { publicQuery, createRouter } from "./middleware";
 import { detectLanguage, type Language } from "@contracts/templates";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { TRPCError } from "@trpc/server";
+import OpenAI from "openai";
 
 const RESORT_INFO = {
   name: "La Vida Resort & Beach Club",
@@ -66,27 +66,6 @@ Respond in Arabic unless user asks in English.`;
 Respond in English unless user asks in Arabic.`;
 }
 
-function toGeminiHistory(
-  history: { role: "user" | "assistant"; content: string }[],
-): { role: "user" | "model"; parts: { text: string }[] }[] {
-  const normalized = history
-    .map((item) => ({
-      role: item.role === "assistant" ? "model" as const : "user" as const,
-      text: item.content.trim(),
-    }))
-    .filter((item) => item.text.length > 0);
-
-  // Gemini chat history must start with a user message.
-  while (normalized.length > 0 && normalized[0]?.role !== "user") {
-    normalized.shift();
-  }
-
-  return normalized.map((item) => ({
-    role: item.role,
-    parts: [{ text: item.text }],
-  }));
-}
-
 export const chatRouter = createRouter({
   ask: publicQuery
     .input(
@@ -106,14 +85,9 @@ export const chatRouter = createRouter({
     .mutation(async ({ input }) => {
       const message = input.message.trim();
       const lang = detectLanguage(message);
-      console.log("[chat.ask] Incoming message", {
-        lang,
-        messageLength: message.length,
-        historyCount: input.history?.length ?? 0,
-      });
+      const history = input.history ?? [];
 
       if (includesBookingQuestion(message)) {
-        console.log("[chat.ask] Matched booking/pricing rule");
         return {
           reply: bookingAnnouncement(lang),
           language: lang,
@@ -121,47 +95,45 @@ export const chatRouter = createRouter({
         };
       }
 
-      const geminiApiKey = process.env.GEMINI_API_KEY;
+      const groqApiKey = process.env.GROQ_API_KEY;
 
-      if (!geminiApiKey) {
-        console.error("[chat.ask] Missing GEMINI_API_KEY");
+      if (!groqApiKey) {
+        console.error("[chat.ask] Missing GROQ_API_KEY");
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "GEMINI_API_KEY is missing on the server",
+          message: "GROQ_API_KEY is missing on the server",
         });
       }
 
-      const history = input.history ?? [];
-
       try {
-        const client = new GoogleGenerativeAI(geminiApiKey);
-        const model = client.getGenerativeModel({
-          model: "gemini-2.0-flash",
-          systemInstruction: buildSystemPrompt(lang),
+        const client = new OpenAI({
+          apiKey: groqApiKey,
+          baseURL: "https://api.groq.com/openai/v1",
         });
 
-        const chat = model.startChat({
-          generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 400,
-          },
-          history: toGeminiHistory(history),
+        const result = await client.chat.completions.create({
+          model: "llama-3.3-70b-versatile",
+          temperature: 0.4,
+          max_tokens: 400,
+          messages: [
+            { role: "system", content: buildSystemPrompt(lang) },
+            ...history.map((item) => ({
+              role: item.role,
+              content: item.content,
+            })),
+            { role: "user", content: message },
+          ],
         });
 
-        const result = await chat.sendMessage(message);
-        const reply = result.response.text()?.trim();
+        const reply = result.choices?.[0]?.message?.content?.trim();
 
         if (!reply) {
-          console.error("[chat.ask] Gemini returned empty content");
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Gemini returned an empty response",
+            message: "Groq returned an empty response",
           });
         }
 
-        console.log("[chat.ask] Assistant reply generated", {
-          replyLength: reply.length,
-        });
         return {
           reply,
           language: lang,
@@ -171,7 +143,7 @@ export const chatRouter = createRouter({
         console.error("[chat.ask] Unexpected error", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to generate Gemini response",
+          message: "Failed to generate AI response",
         });
       }
     }),
