@@ -28,6 +28,8 @@ function detectTopic(text: string): string | undefined {
   if (/location|address|where|wen|ween|maps|وين|الموقع|موقع|زوارة/.test(value)) return "location";
   if (/phone|contact|number|call|رقم|تواصل|تلفون/.test(value)) return "contact";
   if (/photo|photos|picture|pictures|image|images|صور/.test(value)) return "photos";
+  if (/offer|facilities|activities|things to do|what else|more details|resort info|tell me more|what do you offer|شن عندكم|شنو عندكم|تفاصيل|معلومات/.test(value))
+    return "general";
   return undefined;
 }
 
@@ -179,7 +181,7 @@ function bookingMissingPrompt(missing: string[], lang: Language): string {
 }
 
 function isFollowUpPrompt(text: string): boolean {
-  return /^(ok|okay|tell me more|more|details|when|شنو اكثر|شنو اكتر|زيد|زيدني|وضّح|وضح|more details|and\??|امتى|متى|وبعدين|شن بعد)$/i.test(
+  return /^(ok|okay|tell me more|more|details|when|what else|and\??|i want to know more|شنو اكثر|شنو اكتر|زيد|زيدني|وضّح|وضح|more details|امتى|متى|وبعدين|شن بعد)$/i.test(
     text.trim(),
   );
 }

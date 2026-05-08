@@ -398,6 +398,24 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
       : "Currently the official chalet and resort images are not available yet ✨\nAll photos and visual updates will be shared closer to the opening date and official booking announcement.");
   }
 
+  const asksSupermarket = hasAny(text, [
+    "supermarket",
+    "market",
+    "grocery",
+    "mini market",
+    "سوبرماركت",
+    "بقاله",
+    "بقالة",
+    "سوق",
+  ]);
+  if (asksSupermarket) {
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ بخصوص السوبرماركت والخدمات القريبة، فريق لافيدا حيوجهكم بأقرب الخيارات المناسبة عند الافتتاح."
+        : "Of course ✨ For supermarket and nearby essentials, the La Vida team will guide you to the closest suitable options at opening.",
+    );
+  }
+
   const asksHuman = hasAny(text, [
     "manager",
     "management",
@@ -564,6 +582,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "things to do",
     "what activities",
     "what are your activity",
+    "what else",
     "what can we do",
     "facilities",
     "entertainment",
@@ -579,6 +598,8 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "شن النشاطات",
     "شن عندكم",
     "شنو عندكم",
+    "شن فيه",
+    "شنو فيه",
     "المرافق",
   ]);
   if (asksGeneralActivities) {
@@ -595,6 +616,10 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "what do you have",
     "what do u have",
     "tell me about",
+    "tell me more",
+    "i want to know more",
+    "know more",
+    "what else",
     "more details",
     "about la vida",
     "about the resort",
@@ -605,6 +630,9 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "عرفني",
     "معلومات اكثر",
     "تفاصيل اكثر",
+    "ممكن معلومات اكثر",
+    "شنو اكثر",
+    "شن بعد",
     "شن هو المنتجع",
     "شن تقدموا",
     "شن عندكم",
@@ -616,6 +644,26 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
       lang === "ar"
         ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، فيه فلل وشاليهات وشقق فندقية ومسابح وأنشطة بحرية وكافيه وأجواء عائلية راقية ✨"
         : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach café, and a calm family-friendly atmosphere ✨",
+    );
+  }
+
+  const asksMoreGeneric = hasAny(text, [
+    "tell me more",
+    "i want to know more",
+    "know more",
+    "what else",
+    "more details",
+    "ممكن معلومات اكثر",
+    "معلومات اكثر",
+    "تفاصيل اكثر",
+    "شنو اكثر",
+    "شن بعد",
+  ]);
+  if (asksMoreGeneric && replies.length === 0) {
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ تحبوا تعرفوا أكثر على الغرف، الأنشطة، الحجز، الموقع ولا المرافق؟"
+        : "Of course ✨ What would you like to know more about? Rooms, activities, booking, location, or facilities?",
     );
   }
 
