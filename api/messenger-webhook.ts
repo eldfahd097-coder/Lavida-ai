@@ -2,11 +2,13 @@ import { Hono } from "hono";
 import { env } from "./lib/env";
 import { sendMessengerMessage } from "./lib/messenger";
 import { generateAIResponse } from "./ai-engine";
+import { detectLanguage, type Language } from "@contracts/templates";
 
 const app = new Hono();
 const lastTopicBySender = new Map<string, string>();
 const recentMessageIds = new Map<string, number>();
 const DUPLICATE_WINDOW_MS = 2 * 60 * 1000;
+const bookingInterestBySender = new Map<string, BookingInterest>();
 
 function detectTopic(text: string): string | undefined {
   const value = text.toLowerCase();
@@ -26,6 +28,93 @@ function detectTopic(text: string): string | undefined {
   if (/phone|contact|number|call|رقم|تواصل|تلفون/.test(value)) return "contact";
   if (/photo|photos|picture|pictures|image|images|صور/.test(value)) return "photos";
   return undefined;
+}
+
+function isBookingIntent(text: string): boolean {
+  const value = text.toLowerCase();
+  return /book|booking|reservation|reserve|availability|حجز|الحجز|نحجز|نبي نحجز|طريقة الحجز|في حجز/.test(value);
+}
+
+function detectAccommodationType(text: string): string | undefined {
+  const value = text.toLowerCase();
+  if (/vip villa|فيلا vip|فلل vip|vip/.test(value)) return "VIP Villa (up to 8 guests, private pool)";
+  if (/presidential|رئاسي|رئاسية/.test(value)) return "Presidential Villa (up to 10 guests, private pool)";
+  if (/family chalet|شاليه|شاليهات/.test(value)) return "Family Chalet (up to 5 guests)";
+  if (/hotel apartment|apartment|شقة|شقق/.test(value)) return "Hotel Apartment (up to 3 guests)";
+  return undefined;
+}
+
+function extractPhone(text: string): string | undefined {
+  const match = text.match(/(\+?\d[\d\s-]{6,}\d)/);
+  return match?.[1]?.replace(/\s+/g, " ").trim();
+}
+
+function extractGuestCount(text: string): string | undefined {
+  const digitMatch = text.match(/\b(\d{1,2})\s*(guest|guests|people|persons|شخص|أشخاص)?\b/i);
+  if (digitMatch?.[1]) return digitMatch[1];
+  const arMatch = text.match(/(\d{1,2})\s*(شخص|أشخاص)/);
+  return arMatch?.[1];
+}
+
+function extractDate(text: string): string | undefined {
+  const iso = text.match(/\b\d{4}-\d{1,2}-\d{1,2}\b/)?.[0];
+  if (iso) return iso;
+  const slash = text.match(/\b\d{1,2}[/-]\d{1,2}([/-]\d{2,4})?\b/)?.[0];
+  if (slash) return slash;
+  const monthWord = text.match(
+    /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i,
+  )?.[0];
+  return monthWord;
+}
+
+function extractName(text: string): string | undefined {
+  const lower = text.toLowerCase();
+  const en = lower.match(/(?:my name is|name is)\s+([a-z][a-z\s'-]{1,40})/i)?.[1];
+  if (en) return en.trim();
+  const ar = text.match(/(?:اسمي|الاسم)\s*[:\-]?\s*([^\d\n]{2,40})/)?.[1];
+  if (ar) return ar.trim();
+  if (!extractPhone(text) && text.trim().split(/\s+/).length <= 4 && /[a-zA-Z\u0600-\u06FF]/.test(text)) {
+    return text.trim();
+  }
+  return undefined;
+}
+
+function bookingPrompt(lang: Language): string {
+  if (lang === "ar") {
+    return "الحجز الرسمي بيفتح قريباً وحنعلنوا كل التفاصيل يوم 20 مايو ✨\nنقدر ناخذ بياناتكم مبدئياً باش يتواصل معاكم الفريق أول ما يفتح الحجز\n\nشن الاسم ورقم الهاتف ونوع الإقامة اللي مهتمين بيها؟";
+  }
+  return "Official booking will open soon and all details will be announced on May 20 ✨\nI can take your details now so the team can contact you once booking opens\n\nPlease send your name phone number and preferred accommodation type";
+}
+
+function bookingSummary(interest: BookingInterest, lang: Language): string {
+  const name = interest.name ?? "-";
+  const phone = interest.phone ?? "-";
+  const accommodation = interest.accommodation ?? "-";
+  const guests = interest.guests ?? "-";
+  const date = interest.date ?? "-";
+  if (lang === "ar") {
+    return `تم استلام بياناتكم مبدئياً ✨
+الاسم: ${name}
+رقم الهاتف: ${phone}
+نوع الإقامة: ${accommodation}
+عدد الضيوف: ${guests}
+التاريخ: ${date}
+فريق لافيدا حيتواصل معاكم عند فتح الحجز`;
+  }
+  return `Your booking interest has been received ✨
+Name: ${name}
+Phone: ${phone}
+Accommodation: ${accommodation}
+Guests: ${guests}
+Date: ${date}
+The La Vida team will contact you once booking opens`;
+}
+
+function bookingMissingPrompt(missing: string[], lang: Language): string {
+  if (lang === "ar") {
+    return `ممتاز ✨ باقي فقط: ${missing.join("، ")}.`;
+  }
+  return `Great ✨ I still need: ${missing.join(", ")}.`;
 }
 
 function isFollowUpPrompt(text: string): boolean {
@@ -82,6 +171,7 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
   const senderId = messaging.sender.id;
   const text = messaging.message.text;
   const messageId = messaging.message.mid;
+  const lang = detectLanguage(text);
 
   if (!senderId || !text || !messageId) return;
 
@@ -101,6 +191,75 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
     messageId,
     text,
   });
+
+  const existingInterest = bookingInterestBySender.get(senderId);
+  if (isBookingIntent(text) && !existingInterest?.completed) {
+    const draft: BookingInterest = existingInterest ?? { completed: false };
+    draft.name = draft.name ?? extractName(text);
+    draft.phone = draft.phone ?? extractPhone(text);
+    draft.accommodation = draft.accommodation ?? detectAccommodationType(text);
+    draft.guests = draft.guests ?? extractGuestCount(text);
+    draft.date = draft.date ?? extractDate(text);
+    bookingInterestBySender.set(senderId, draft);
+
+    const missing: string[] = [];
+    if (!draft.name) missing.push(lang === "ar" ? "الاسم" : "name");
+    if (!draft.phone) missing.push(lang === "ar" ? "رقم الهاتف" : "phone number");
+    if (!draft.accommodation) missing.push(lang === "ar" ? "نوع الإقامة" : "accommodation type");
+
+    const replyText =
+      missing.length === 3
+        ? bookingPrompt(lang)
+        : missing.length > 0
+          ? bookingMissingPrompt(missing, lang)
+          : bookingSummary(draft, lang);
+
+    if (missing.length === 0) {
+      draft.completed = true;
+      bookingInterestBySender.set(senderId, draft);
+    }
+
+    const sendResult = await sendMessengerMessage(senderId, replyText);
+    if (!sendResult.success) {
+      console.error("[messenger.webhook] Failed to send booking-interest reply", {
+        senderId,
+        error: sendResult.error,
+      });
+    }
+    return;
+  }
+
+  if (existingInterest && !existingInterest.completed) {
+    existingInterest.name = existingInterest.name ?? extractName(text);
+    existingInterest.phone = existingInterest.phone ?? extractPhone(text);
+    existingInterest.accommodation = existingInterest.accommodation ?? detectAccommodationType(text);
+    existingInterest.guests = existingInterest.guests ?? extractGuestCount(text);
+    existingInterest.date = existingInterest.date ?? extractDate(text);
+    bookingInterestBySender.set(senderId, existingInterest);
+
+    const missing: string[] = [];
+    if (!existingInterest.name) missing.push(lang === "ar" ? "الاسم" : "name");
+    if (!existingInterest.phone) missing.push(lang === "ar" ? "رقم الهاتف" : "phone number");
+    if (!existingInterest.accommodation) missing.push(lang === "ar" ? "نوع الإقامة" : "accommodation type");
+
+    const replyText =
+      missing.length > 0
+        ? bookingMissingPrompt(missing, lang)
+        : bookingSummary(existingInterest, lang);
+    if (missing.length === 0) {
+      existingInterest.completed = true;
+      bookingInterestBySender.set(senderId, existingInterest);
+    }
+
+    const sendResult = await sendMessengerMessage(senderId, replyText);
+    if (!sendResult.success) {
+      console.error("[messenger.webhook] Failed to send booking-interest follow-up", {
+        senderId,
+        error: sendResult.error,
+      });
+    }
+    return;
+  }
 
   const currentTopic = detectTopic(text);
   const priorTopic = lastTopicBySender.get(senderId);
@@ -139,6 +298,15 @@ type MessengerMessagingEvent = {
     mid: string;
     text: string;
   };
+};
+
+type BookingInterest = {
+  name?: string;
+  phone?: string;
+  accommodation?: string;
+  guests?: string;
+  date?: string;
+  completed: boolean;
 };
 
 export default app;
