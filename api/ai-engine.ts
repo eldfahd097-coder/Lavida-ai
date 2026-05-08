@@ -178,6 +178,21 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   const rawText = userMessage.trim().toLowerCase();
   const text = normalizeArabic(rawText);
 
+  const isGreeting = hasAny(text, [
+    "hi",
+    "hello",
+    "hey",
+    "السلام عليكم",
+    "سلام",
+    "مرحبا",
+    "اهلا",
+  ]);
+  if (isGreeting) {
+    return lang === "ar"
+      ? "مرحباً بكم في La Vida Resort & Beach Club 🌊\nنورتونا ✨\nكيف نقدر نساعدكم اليوم؟"
+      : "Welcome to La Vida Resort & Beach Club 🌊\nWe’re happy to assist you ✨\nHow can we help you today?";
+  }
+
   const isPrice = hasAny(text, [
     "price",
     "prices",

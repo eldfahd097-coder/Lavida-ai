@@ -1479,6 +1479,18 @@ function getNaturalFallback(lang) {
 function getIntentResponse(userMessage, lang) {
   const rawText = userMessage.trim().toLowerCase();
   const text2 = normalizeArabic(rawText);
+  const isGreeting = hasAny(text2, [
+    "hi",
+    "hello",
+    "hey",
+    "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064A\u0643\u0645",
+    "\u0633\u0644\u0627\u0645",
+    "\u0645\u0631\u062D\u0628\u0627",
+    "\u0627\u0647\u0644\u0627"
+  ]);
+  if (isGreeting) {
+    return lang === "ar" ? "\u0645\u0631\u062D\u0628\u0627\u064B \u0628\u0643\u0645 \u0641\u064A La Vida Resort & Beach Club \u{1F30A}\n\u0646\u0648\u0631\u062A\u0648\u0646\u0627 \u2728\n\u0643\u064A\u0641 \u0646\u0642\u062F\u0631 \u0646\u0633\u0627\u0639\u062F\u0643\u0645 \u0627\u0644\u064A\u0648\u0645\u061F" : "Welcome to La Vida Resort & Beach Club \u{1F30A}\nWe\u2019re happy to assist you \u2728\nHow can we help you today?";
+  }
   const isPrice = hasAny(text2, [
     "price",
     "prices",
