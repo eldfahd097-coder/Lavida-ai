@@ -3,75 +3,75 @@ import { detectLanguage } from "@contracts/templates";
 import type { Language } from "@contracts/templates";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const RESORT_NAME = "La Vida Resort & Beach Club";
+const WEBSITE = "lavidaresort.ly";
+const PHONE_1 = "093 888 8868";
+const PHONE_2 = "093 888 8878";
 
 // ─── System Prompt for La Vida Resort AI ─────────────────────────
 function buildSystemPrompt(lang: Language): string {
   if (lang === "ar") {
-    return `أنت مساعد ذكي لمنتجع La Vida Resort & Beach Club في زوارة، ليبيا.
-أنت متحدث بلهجة ليبية ودودة، أنيقة، وهادئة.
+    return `أنت La Vida AI، موظف الاستقبال الرسمي لمنتجع ${RESORT_NAME}.
+النبرة: راقية، هادئة، ودودة، طبيعية، والردود قصيرة.
+اللغة: إذا المستخدم كتب بالعربي (حتى لهجة ليبية) رد بالعربي.
 
-المعلومات المتاحة:
-- الموقع: زوارة، ليبيا، مباشرة على البحر
-- 42 وحدة: 10 فيلات فاخرة (6 فيلات VIP بمسبح خاص + 4 فيلات رئاسية)، 20 شاليه عائلي، 12 شقة
-- المرافق: مسبح مركزي، شاطئ خاص، رياضات مائية، ملاعب، ألعاب أطفال، مقهى، واي فاي، استقبال 24/7
-- الحجز غير متاح حالياً
-- الأسعار ستُعلن قريباً
-- موعد الافتتاح سيُعلن قريباً
-- الاتصال: +218 91 211 0392, info@lavida.ly
+حقائق رسمية:
+- الموقع: زوارة، ليبيا
+- الموقع الإلكتروني: ${WEBSITE}
+- أرقام التواصل: ${PHONE_1} / ${PHONE_2}
+- الافتتاح الرسمي: 1 يونيو 2026
+- الأسعار وتفاصيل الحجز: إعلان رسمي يوم 20 مايو 2026
 
-المعرفة الأساسية:
-- منتجع شاطئي في زوارة
-- فلل VIP بمسابح خاصة (حتى 8 أشخاص)
-- فلل رئاسية فاخرة بمسبح خاص (حتى 10 أشخاص)
-- شاليهات عائلية مريحة (حتى 5 أشخاص)
-- شقق فندقية أنيقة (حتى 3 أشخاص)
-- مسبح كبير
+الإقامة:
+- فلل VIP بمسابح خاصة حتى 8 أشخاص
+- فلل رئاسية بمسابح خاصة حتى 10 أشخاص
+- شاليهات عائلية حتى 5 أشخاص
+- شقق فندقية حتى 3 أشخاص
+
+المرافق:
+- شاطئ ومسبح كبير
 - كافيه شاطئي ومنطقة أكل
 - أنشطة بحرية وتأجير جتسكي
-- ملعب كرة قدم وملعب كرة طائرة
-- أجواء شاطئية هادئة ومريحة
+- ملعب كرة وملعب طائرة
+- أنشطة أطفال، أجواء عائلية، ترفيه ليلي، مشاهدة مباريات، وألعاب شبابية
 
-قواعد:
-1. تحدث العربية الليبية بطبيعية (ليس رسمياً جداً ولا روبوتياً)
-2. كن مؤدباً، أنيقاً، ومتعاوناً
-3. لا تعدد معلومات خاطئة
-4. إذا سُئلت عن الحجز أو الأسعار، قل "غير متاح حالياً، سيتم الإعلان عنه قريباً"
-5. حافظ على نبرة منتجع فاخر وهادئ
-6. ردودك قصيرة وواضحة
-7. إذا سأل المستخدم عن المرافق أو الأنشطة، جاوبه مباشرة بشكل طبيعي ومختصر`;
+قواعد إلزامية:
+1) لا تخترع أسعار أو حجوزات أو توفر.
+2) لا تؤكد أي حجز.
+3) إذا السؤال عن الأسعار/الحجز/التوفر، استخدم الصياغات الرسمية القصيرة.
+4) إذا السؤال عن مرفق معين، جاوب على نفس المرفق فقط بدون إطالة.
+5) إذا الطلب غير واضح جداً، اطلب توضيح قصير ولطيف.`;
   }
-  return `You are an intelligent assistant for La Vida Resort & Beach Club in Zuwarah, Libya.
-You are elegant, helpful, warm, and calm — like a luxury resort concierge.
+  return `You are La Vida AI, the official receptionist for ${RESORT_NAME}.
+Tone: luxury, calm, elegant, warm, natural. Keep replies short.
+Language: reply in English unless the guest writes Arabic.
 
-Available information:
-- Location: Zuwarah, Libya, directly on the beach
-- 42 units: 10 luxury villas (6 VIP with private pool + 4 Presidential), 20 family chalets, 12 apartments
-- Facilities: central pool, private beach, water sports, courts, kids area, cafe, Wi-Fi, 24/7 reception
-- Booking is not available yet
-- Pricing will be announced soon
-- Opening date will be announced soon
-- Contact: +218 91 211 0392, info@lavida.ly
+Official facts:
+- Location: Zuwarah, Libya
+- Website: ${WEBSITE}
+- Contact numbers: ${PHONE_1} / ${PHONE_2}
+- Official opening date: June 1, 2026
+- Prices and booking details: officially announced on May 20, 2026
 
-Core knowledge:
-- Beachfront location in Zuwarah
+Accommodation:
 - VIP villas with private pools (up to 8 guests)
 - Presidential villas with private pools (up to 10 guests)
 - Family chalets (up to 5 guests)
 - Hotel apartments (up to 3 guests)
-- Large swimming pool
-- Beach cafe and food area
-- Water sports activities and jetski rentals
-- Football and volleyball courts
-- Relaxing beach atmosphere
 
-Rules:
-1. Speak like a professional luxury resort concierge
-2. Be polite, elegant, and helpful
-3. Do not make up information
-4. If asked about booking or pricing, say "not available yet, will be announced soon"
-5. Keep a calm, luxurious tone
-6. Keep responses concise and clear
-7. For activities or facilities questions, answer directly and naturally instead of asking for clarification`;
+Facilities:
+- Beachfront access and large pool
+- Beach cafe and food area
+- Water sports and jetski rentals
+- Football and volleyball courts
+- Kids activities, family atmosphere, evening entertainment, match screenings, arcade-style youth area
+
+Hard rules:
+1) Never invent prices, booking availability, or policies.
+2) Never confirm bookings.
+3) For price/booking/availability questions, use the official short announcements.
+4) For specific facility questions, answer only that point briefly.
+5) Ask for clarification only when truly necessary.`;
 }
 
 // ─── AI Response Generator ──────────────────────────────────────
@@ -143,39 +143,232 @@ async function callOpenAI(
 // ─── Template Fallback Logic ────────────────────────────────────
 function getTemplateResponse(userMessage: string, lang: Language): string {
   const text = userMessage.trim().toLowerCase();
+  const hasAny = (keywords: string[]) => keywords.some((keyword) => text.includes(keyword));
 
-  const wantsFacilities =
-    /(jetski|jet ski|water sport|water sports|cafe|café|food|restaurant|activities|activity|football|volleyball|beach|pool|chalet|chalets|villa|villas|apartment|apartments|جتسكي|أنشطة|نشاط|كافيه|اكل|أكل|مطعم|ملعب|كرة|طائرة|شاطئ|مسبح|شاليه|شاليهات|فيلا|فلل|شقة|شقق)/i.test(
-      text,
-    );
-  if (wantsFacilities) {
+  const isPrice = hasAny([
+    "price",
+    "prices",
+    "how much",
+    "cost",
+    "rates",
+    "الأسعار",
+    "بكم",
+    "قداش",
+    "كم السعر",
+    "شن السعر",
+    "كم تكلف",
+    "سعر",
+  ]);
+  if (isPrice) {
     return lang === "ar"
-      ? "أكيد ✨ لافيدا فيها كافيه ومنطقة أكل وأنشطة بحرية وتأجير جتسكي بالإضافة لملعب كرة وملعب طائرة، مع شاطئ ومسبح وأجواء مريحة."
-      : "Yes ✨ La Vida includes a beach cafe, food area, water activities, and jetski rentals, along with football and volleyball courts, plus beach and pool access.";
+      ? "الأسعار سيتم الإعلان عنها رسمياً يوم 20 مايو ✨"
+      : "Prices will be announced officially on May 20 ✨";
   }
 
-  const wantsAccommodation =
-    /(room|rooms|accommodation|stay|unit|units|villa|villas|vip villa|presidential|chalet|chalets|apartment|apartments|capacity|guests|how many people|private pool|private pools|مبيت|إقامة|الغرف|غرف|شن أنواع الغرف|كم شخص|شن نوع|فلل|فيلا|vip|رئاسية|شاليه|شاليهات|شقق|سعة|ضيوف|مسبح خاص|في مسبح خاص)/i.test(
-      text,
-    );
-  if (wantsAccommodation) {
+  const isBooking = hasAny([
+    "book",
+    "booking",
+    "reserve",
+    "reservation",
+    "availability",
+    "الحجز",
+    "نبي نحجز",
+    "كيف نحجز",
+    "في حجز",
+    "طريقة الحجز",
+    "نحجز",
+    "حجز",
+  ]);
+  if (isBooking) {
     return lang === "ar"
-      ? "لافيدا توفر فلل VIP بمسابح خاصة حتى 8 أشخاص، وفلل رئاسية حتى 10 أشخاص، وشاليهات عائلية حتى 5 أشخاص، وشقق فندقية أنيقة حتى 3 أشخاص ✨"
-      : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and elegant hotel apartments for up to 3 guests ✨";
+      ? "الحجز بيفتح قريباً، وحنعلنوا كل التفاصيل الرسمية يوم 20 مايو ✨"
+      : "Bookings will open soon, and all booking details will be announced officially on May 20 ✨";
   }
 
-  const wantsResortInfo =
-    /(resort|la vida|details|about|facilities|features|location|zuwarah|beach|pool|chalet|villa|activities|منتجع|لافيدا|تفاصيل|مرافق|الموقع|زوارة|شاطئ|مسبح|شاليه|أنشطة)/i.test(
-      text,
-    );
-  if (wantsResortInfo) {
+  const isOpening = hasAny(["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
+  if (isOpening) {
     return lang === "ar"
-      ? "La Vida Resort & Beach Club في زوارة تجربة ضيافة راقية على البحر، مع شاطئ ومسبح وشاليهات فاخرة وأنشطة عائلية ممتعة في أجواء هادئة وأنيقة ✨"
-      : "La Vida Resort & Beach Club in Zuwarah offers an elegant beachfront escape with beach access, pool, luxury chalets, and family-friendly activities in a calm, premium atmosphere ✨";
+      ? "الافتتاح الرسمي لـ La Vida Resort & Beach Club سيكون يوم 1 يونيو 2026 ✨"
+      : "La Vida Resort & Beach Club officially opens on June 1, 2026 ✨";
   }
 
-  if (lang === "ar") {
-    return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
+  const asksContact = hasAny(["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال"]);
+  if (asksContact) {
+    return lang === "ar"
+      ? `تقدروا تتواصلوا مع لافيدا على:\n${PHONE_1}\n${PHONE_2} ✨`
+      : `You can contact La Vida on:\n${PHONE_1}\n${PHONE_2} ✨`;
   }
+
+  const asksLocation = hasAny(["location", "address", "maps", "where", "وين", "موقع", "العنوان", "زوارة"]);
+  if (asksLocation) {
+    return lang === "ar"
+      ? `لافيدا ريزورت آند بيتش كلوب موجودة في زوارة، ليبيا ✨\nالموقع الإلكتروني: ${WEBSITE}`
+      : `La Vida Resort & Beach Club is located in Zuwarah, Libya ✨\nWebsite: ${WEBSITE}`;
+  }
+
+  const asksMeals = hasAny(["full board", "breakfast", "meals", "food included", "وجبات", "إقامة كاملة", "فول بورد"]);
+  if (asksMeals) {
+    return lang === "ar"
+      ? "تفاصيل الإقامة الكاملة والوجبات حيتم الإعلان عنها رسمياً مع تفاصيل الحجز يوم 20 مايو ✨"
+      : "Full board and meal package details will be announced officially with the booking details on May 20 ✨";
+  }
+
+  const asksPhotos = hasAny(["photo", "photos", "picture", "pictures", "image", "images", "صور", "صور الشاليهات"]);
+  if (asksPhotos) {
+    return lang === "ar"
+      ? "صور الشاليهات والمنتجع حتنزل قريباً عبر تحديثاتنا الرسمية ✨"
+      : "Chalet and resort images will be shared through our official updates soon ✨";
+  }
+
+  const asksHuman = hasAny([
+    "manager",
+    "management",
+    "human",
+    "admin",
+    "complaint",
+    "problem",
+    "مشكلة",
+    "الإدارة",
+    "موظف",
+  ]);
+  if (asksHuman) {
+    return lang === "ar"
+      ? "أكيد ✨ أحد أعضاء فريق لافيدا حيتواصل معاكم قريباً."
+      : "Of course ✨ A member of the La Vida team will assist you shortly.";
+  }
+
+  const asksPrivatePools = hasAny([
+    "private pool",
+    "private pools",
+    "do villas have private pools",
+    "في مسبح خاص",
+    "مسبح خاص",
+  ]);
+  if (asksPrivatePools) {
+    return lang === "ar"
+      ? "أكيد ✨ فلل VIP والفلل الرئاسية فيها مسابح خاصة."
+      : "Yes ✨ VIP villas and presidential villas include private pools.";
+  }
+
+  const asksAccommodation = hasAny([
+    "room",
+    "rooms",
+    "villa",
+    "villas",
+    "chalet",
+    "chalets",
+    "apartment",
+    "apartments",
+    "accommodation",
+    "where to stay",
+    "capacity",
+    "guest",
+    "guests",
+    "how many people can stay",
+    "شن أنواع الغرف",
+    "كم شخص يقدر يقعد",
+    "الغرف",
+    "شاليه",
+    "شاليهات",
+    "فلل",
+    "شقق",
+    "إقامة",
+  ]);
+  if (asksAccommodation) {
+    return lang === "ar"
+      ? "لافيدا توفر فلل VIP بمسابح خاصة حتى 8 أشخاص، وفلل رئاسية بمسابح خاصة حتى 10 أشخاص، وشاليهات عائلية حتى 5 أشخاص، وشقق فندقية حتى 3 أشخاص ✨"
+      : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests ✨";
+  }
+
+  const asksJetski = hasAny(["jetski", "jet ski", "water sports", "water sport", "جتسكي", "الأنشطة البحرية", "أنشطة بحرية"]);
+  const asksCafe = hasAny(["cafe", "café", "food", "restaurant", "eat", "eating", "كافيه", "مطعم", "أكل", "اكل"]);
+  if (asksJetski && asksCafe) {
+    return lang === "ar"
+      ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل، ومعاها تأجير جتسكي وأنشطة بحرية، والتفاصيل الكاملة حنعلنوها قريباً."
+      : "Yes ✨ La Vida will include a beach cafe and food area, plus jetski rentals and water activities. Full details will be announced closer to opening.";
+  }
+  if (asksJetski) {
+    return lang === "ar"
+      ? "أكيد ✨ تأجير الجتسكي والأنشطة البحرية حيكونوا متوفرين في لافيدا، وحنعلنوا التفاصيل كاملة قريباً."
+      : "Yes ✨ Jet ski rentals and water activities will be available at La Vida. Full details will be announced closer to opening.";
+  }
+  if (asksCafe) {
+    return lang === "ar"
+      ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل للضيوف خلال الإقامة."
+      : "Yes ✨ La Vida will include a beach café and food area for guests to enjoy during their stay.";
+  }
+
+  const asksCourts = hasAny(["football", "soccer", "volleyball", "court", "courts", "كرة", "طائرة", "ملعب"]);
+  if (asksCourts) {
+    return lang === "ar"
+      ? "أكيد ✨ لافيدا فيها ملعب كرة وملعب طائرة للضيوف."
+      : "Yes ✨ La Vida includes football and volleyball courts for guests.";
+  }
+
+  const asksPool = hasAny(["pool", "swimming pool", "مسبح", "سباحة"]);
+  if (asksPool) {
+    return lang === "ar"
+      ? "أكيد ✨ لافيدا فيها مسبح، وفلل الـ VIP فيها مسابح خاصة."
+      : "Yes ✨ La Vida includes pool access, and VIP villas include private pools.";
+  }
+
+  const asksFamily = hasAny(["kids", "children", "family", "families", "أطفال", "العائلة", "عائلات", "عائلية"]);
+  if (asksFamily) {
+    return lang === "ar"
+      ? "أكيد ✨ لافيدا مناسبة للعائلات وحيكون فيها أنشطة للأطفال ومساحات مريحة للعائلة."
+      : "Yes ✨ La Vida is family-friendly and will include kids activities and relaxing spaces for families.";
+  }
+
+  const asksNight = hasAny([
+    "night",
+    "entertainment",
+    "evening",
+    "match",
+    "world cup",
+    "arcade",
+    "ليل",
+    "ترفيه",
+    "مباريات",
+    "ألعاب",
+  ]);
+  if (asksNight) {
+    return lang === "ar"
+      ? "لافيدا حتوفر أجواء ليلية حلوة، مشاهدة مباريات، ألعاب ترفيهية، وتجارب مناسبة للعائلات ✨"
+      : "La Vida will include evening entertainment, football match screenings, arcade-style activities, and family-friendly night experiences ✨";
+  }
+
+  const asksGeneralActivities = hasAny([
+    "activities",
+    "facilities",
+    "features",
+    "things to do",
+    "شن فيه",
+    "شنو فيه",
+    "المرافق",
+    "الأنشطة",
+  ]);
+  if (asksGeneralActivities) {
+    return lang === "ar"
+      ? "لافيدا حتوفر شاطئ، مسبح، أنشطة بحرية، تأجير جتسكي، ملعب كرة، ملعب طائرة، أنشطة للأطفال، كافيه، وأجواء عائلية راقية ✨"
+      : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach café, and relaxing family-friendly spaces ✨";
+  }
+
+  const asksGeneralResort = hasAny([
+    "tell me about",
+    "more details",
+    "about la vida",
+    "resort info",
+    "منتجع",
+    "عرفني",
+    "تفاصيل لافيدا",
+    "معلومات",
+  ]);
+  if (asksGeneralResort) {
+    return lang === "ar"
+      ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، مصمم لأجواء هادئة وعائلية مع فلل وشاليهات وشقق فندقية وأنشطة بحرية وكافيه وتجربة راقية ✨"
+      : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah, designed for calm seaside stays, family comfort, water activities, villas, chalets, apartments, a beach café, and premium relaxation ✨";
+  }
+
+  if (lang === "ar") return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
   return "Could you tell us a bit more about what you'd like to know? ✨";
 }

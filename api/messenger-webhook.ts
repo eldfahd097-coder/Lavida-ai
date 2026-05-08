@@ -2,35 +2,8 @@ import { Hono } from "hono";
 import { env } from "./lib/env";
 import { sendMessengerMessage } from "./lib/messenger";
 import { generateAIResponse } from "./ai-engine";
-import { detectLanguage, type Language } from "@contracts/templates";
 
 const app = new Hono();
-
-function isBookingQuestion(text: string): boolean {
-  const value = text.toLowerCase();
-  const keywords = ["how can i book", "book", "booking", "reservation", "الحجز", "نبي نحجز"];
-  return keywords.some((keyword) => value.includes(keyword));
-}
-
-function isPriceQuestion(text: string): boolean {
-  const value = text.toLowerCase();
-  const keywords = ["prices", "price", "الأسعار", "بكم", "كم السعر"];
-  return keywords.some((keyword) => value.includes(keyword));
-}
-
-function bookingAnnouncement(lang: Language): string {
-  if (lang === "ar") {
-    return "الحجز بيفتح قريباً، وحنعلنوا كل التفاصيل الرسمية يوم 20 مايو ✨";
-  }
-  return "Bookings will open soon, and all booking details will be announced officially on May 20 ✨";
-}
-
-function priceAnnouncement(lang: Language): string {
-  if (lang === "ar") {
-    return "الأسعار سيتم الإعلان عنها رسمياً يوم 20 مايو ✨";
-  }
-  return "Prices will be announced officially on May 20 ✨";
-}
 
 // ─── Messenger Verification ─────────────────────────────────────
 app.get("/", async (c) => {
@@ -79,7 +52,6 @@ app.post("/", async (c) => {
 async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
   const senderId = messaging.sender.id;
   const text = messaging.message.text;
-  const lang = detectLanguage(text);
 
   if (!senderId || !text) return;
 
@@ -88,15 +60,8 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
     text,
   });
 
-  let replyText = "";
-  if (isBookingQuestion(text)) {
-    replyText = bookingAnnouncement(lang);
-  } else if (isPriceQuestion(text)) {
-    replyText = priceAnnouncement(lang);
-  } else {
-    const aiResult = await generateAIResponse(text, []);
-    replyText = aiResult.text;
-  }
+  const aiResult = await generateAIResponse(text, []);
+  const replyText = aiResult.text;
 
   // Send reply
   const sendResult = await sendMessengerMessage(senderId, replyText);
