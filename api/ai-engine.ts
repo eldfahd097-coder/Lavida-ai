@@ -390,14 +390,27 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   }
 
   const asksGeneralActivities = hasAny(text, [
+    "activity",
     "activities",
-    "facilities",
-    "features",
     "things to do",
-    "شن فيه",
-    "شنو فيه",
+    "what activities",
+    "what are your activity",
+    "what can we do",
+    "facilities",
+    "entertainment",
+    "water sports",
+    "jetski",
+    "football",
+    "volleyball",
+    "kids",
+    "نشاط",
+    "نشاطات",
+    "أنشطة",
+    "الانشطة",
+    "شن النشاطات",
+    "شن عندكم",
+    "شنو عندكم",
     "المرافق",
-    "الأنشطة",
   ]);
   if (asksGeneralActivities) {
     return lang === "ar"
@@ -406,19 +419,31 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   }
 
   const asksGeneralResort = hasAny(text, [
+    "what do you offer",
+    "what do u offer",
+    "what do you have",
+    "what do u have",
     "tell me about",
     "more details",
     "about la vida",
+    "about the resort",
     "resort info",
+    "information",
+    "details",
     "منتجع",
     "عرفني",
+    "معلومات اكثر",
+    "تفاصيل اكثر",
+    "شن هو المنتجع",
+    "شن تقدموا",
+    "شن عندكم",
     "تفاصيل لافيدا",
     "معلومات",
   ]);
   if (asksGeneralResort) {
     return lang === "ar"
-      ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، مصمم لأجواء هادئة وعائلية مع فلل وشاليهات وشقق فندقية وأنشطة بحرية وكافيه وتجربة راقية ✨"
-      : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah, designed for calm seaside stays, family comfort, water activities, villas, chalets, apartments, a beach café, and premium relaxation ✨";
+      ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، فيه فلل وشاليهات وشقق فندقية ومسابح وأنشطة بحرية وكافيه وأجواء عائلية راقية ✨"
+      : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach café, and a calm family-friendly atmosphere ✨";
   }
 
   return undefined;
