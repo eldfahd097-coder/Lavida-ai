@@ -174,14 +174,15 @@ function pickRandom(items: string[]): string {
 }
 
 function getNaturalFallback(lang: Language): string {
-  if (lang === "ar") return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
-  return "Could you tell us a bit more about what you'd like to know? ✨";
+  if (lang === "ar") return "ممكن توضحلنا أكثر شنو تحب تعرف عن لافيدا؟ ✨";
+  return "Could you tell us a bit more about what you'd like to know about La Vida? ✨";
 }
 
 function getIntentResponse(userMessage: string, lang: Language): string | undefined {
   const rawText = userMessage.trim().toLowerCase();
   const text = normalizeArabic(rawText);
   const compact = text.replace(/\s+/g, " ").trim();
+  const replies: string[] = [];
 
   const acknowledgementPhrases = [
     "موافق",
@@ -259,15 +260,22 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "اهلا",
   ]);
   if (isGreeting) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "مرحباً بكم في La Vida Resort & Beach Club 🌊\nنورتونا ✨\nكيف نقدر نساعدكم اليوم؟"
-      : "Welcome to La Vida Resort & Beach Club 🌊\nWe’re happy to assist you ✨\nHow can we help you today?";
+      : "Welcome to La Vida Resort & Beach Club 🌊\nWe’re happy to assist you ✨\nHow can we help you today?",
+    );
   }
 
   const isPrice = hasAny(text, [
     "price",
     "prices",
     "how much",
+    "kam",
+    "bekam",
+    "bikam",
+    "as3ar",
+    "asaar",
     "cost",
     "rates",
     "الأسعار",
@@ -280,14 +288,18 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "اسعار",
   ]);
   if (isPrice) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "الأسعار سيتم الإعلان عنها رسمياً يوم 20 مايو ✨"
-      : "Prices will be announced officially on May 20 ✨";
+      : "Prices will be announced officially on May 20 ✨",
+    );
   }
 
   const isBooking = hasAny(text, [
     "book",
     "booking",
+    "7ajz",
+    "hajz",
     "reserve",
     "reservation",
     "availability",
@@ -302,44 +314,71 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "فيه حجز",
   ]);
   if (isBooking) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "الحجز بيفتح قريباً وحنعلنوا كل التفاصيل الرسمية يوم 20 مايو ✨"
-      : "Bookings will open soon and all booking details will be announced officially on May 20 ✨";
+      : "Bookings will open soon and all booking details will be announced officially on May 20 ✨",
+    );
   }
 
   const isOpening = hasAny(text, ["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
   if (isOpening) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "الافتتاح الرسمي يوم 1 يونيو 2026 ✨"
-      : "La Vida officially opens on June 1 2026 ✨";
+      : "La Vida officially opens on June 1 2026 ✨",
+    );
   }
 
   const asksContact = hasAny(text, ["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال", "تلفون"]);
   if (asksContact) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? `تقدروا تتواصلوا مع لافيدا على:\n${PHONE_1}\n${PHONE_2} ✨`
-      : `You can contact La Vida on:\n${PHONE_1}\n${PHONE_2} ✨`;
+      : `You can contact La Vida on:\n${PHONE_1}\n${PHONE_2} ✨`,
+    );
   }
 
-  const asksLocation = hasAny(text, ["location", "address", "maps", "where", "وين", "موقع", "العنوان", "زواره"]);
+  const asksLocation = hasAny(text, [
+    "location",
+    "address",
+    "maps",
+    "where",
+    "wen",
+    "ween",
+    "وين",
+    "موقع",
+    "العنوان",
+    "زواره",
+    "shn",
+    "sheno",
+    "shno",
+    "shnowa",
+  ]);
   if (asksLocation) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? `لافيدا موجودة في زوارة ليبيا ✨ ${WEBSITE}`
-      : `La Vida is located in Zuwarah Libya ✨ ${WEBSITE}`;
+      : `La Vida is located in Zuwarah Libya ✨ ${WEBSITE}`,
+    );
   }
 
   const asksMeals = hasAny(text, ["full board", "breakfast", "meals", "food included", "وجبات", "اقامه كامله", "فول بورد"]);
   if (asksMeals) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "تفاصيل الإقامة الكاملة والوجبات حيتم الإعلان عنها رسمياً مع تفاصيل الحجز يوم 20 مايو ✨"
-      : "Full board and meal package details will be announced officially with the booking details on May 20 ✨";
+      : "Full board and meal package details will be announced officially with the booking details on May 20 ✨",
+    );
   }
 
   const asksPhotos = hasAny(text, ["photo", "photos", "picture", "pictures", "image", "images", "صور", "صور الشاليهات"]);
   if (asksPhotos) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "صور الشاليهات والمنتجع حتنزل قريباً عبر تحديثاتنا الرسمية ✨"
-      : "Chalet and resort images will be shared through our official updates soon ✨";
+      : "Chalet and resort images will be shared through our official updates soon ✨",
+    );
   }
 
   const asksHuman = hasAny(text, [
@@ -354,9 +393,11 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "موظف",
   ]);
   if (asksHuman) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "أكيد ✨ أحد أعضاء فريق لافيدا حيتواصل معاكم قريباً."
-      : "Of course ✨ A member of the La Vida team will assist you shortly.";
+      : "Of course ✨ A member of the La Vida team will assist you shortly.",
+    );
   }
 
   const asksPrivatePools = hasAny(text, [
@@ -367,9 +408,11 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "مسبح خاص",
   ]);
   if (asksPrivatePools) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "أكيد ✨ فلل VIP والفلل الرئاسية فيها مسابح خاصة."
-      : "Yes ✨ VIP villas and presidential villas include private pools.";
+      : "Yes ✨ VIP villas and presidential villas include private pools.",
+    );
   }
 
   const asksAccommodation = hasAny(text, [
@@ -398,48 +441,84 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "إقامة",
   ]);
   if (asksAccommodation) {
-    return lang === "ar"
+    replies.push(
+      lang === "ar"
       ? "لافيدا توفر فلل VIP بمسابح خاصة حتى 8 أشخاص، وفلل رئاسية بمسابح خاصة حتى 10 أشخاص، وشاليهات عائلية حتى 5 أشخاص، وشقق فندقية حتى 3 أشخاص ✨"
-      : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests ✨";
+      : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests ✨",
+    );
   }
 
-  const asksJetski = hasAny(text, ["jetski", "jet ski", "water sports", "water sport", "جتسكي", "الانشطه البحريه", "انشطه بحريه"]);
-  const asksCafe = hasAny(text, ["cafe", "café", "food", "restaurant", "eat", "eating", "كافيه", "مطعم", "أكل", "اكل"]);
+  const asksJetski = hasAny(text, [
+    "jetski",
+    "jet ski",
+    "jet-ski",
+    "jitski",
+    "jtski",
+    "water sports",
+    "water sport",
+    "جتسكي",
+    "الانشطه البحريه",
+    "انشطه بحريه",
+  ]);
+  const asksCafe = hasAny(text, [
+    "cafe",
+    "kafe",
+    "café",
+    "coffee",
+    "food",
+    "restaurant",
+    "eat",
+    "eating",
+    "كافيه",
+    "مطعم",
+    "أكل",
+    "اكل",
+  ]);
   if (asksJetski && asksCafe) {
-    return lang === "ar"
-      ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل، ومعاها تأجير جتسكي وأنشطة بحرية، والتفاصيل الكاملة حنعلنوها قريباً."
-      : "Yes ✨ La Vida will include a beach cafe and food area, plus jetski rentals and water activities. Full details will be announced closer to opening.";
-  }
-  if (asksJetski) {
-    return lang === "ar"
-      ? "أكيد ✨ تأجير الجتسكي والأنشطة البحرية حيكونوا متوفرين في لافيدا، وحنعلنوا التفاصيل كاملة قريباً."
-      : "Yes ✨ Jet ski rentals and water activities will be available at La Vida. Full details will be announced closer to opening.";
-  }
-  if (asksCafe) {
-    return lang === "ar"
-      ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل للضيوف خلال الإقامة."
-      : "Yes ✨ La Vida will include a beach café and food area for guests to enjoy during their stay.";
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل، ومعاها تأجير جتسكي وأنشطة بحرية، والتفاصيل الكاملة حنعلنوها قريباً."
+        : "Yes ✨ La Vida will include a beach cafe and food area, plus jetski rentals and water activities. Full details will be announced closer to opening.",
+    );
+  } else if (asksJetski) {
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ تأجير الجتسكي والأنشطة البحرية حيكونوا متوفرين في لافيدا، وحنعلنوا التفاصيل كاملة قريباً."
+        : "Yes ✨ Jet ski rentals and water activities will be available at La Vida. Full details will be announced closer to opening.",
+    );
+  } else if (asksCafe) {
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل للضيوف خلال الإقامة."
+        : "Yes ✨ La Vida will include a beach café and food area for guests to enjoy during their stay.",
+    );
   }
 
   const asksCourts = hasAny(text, ["football", "soccer", "volleyball", "court", "courts", "كرة", "طائره", "ملعب"]);
   if (asksCourts) {
-    return lang === "ar"
-      ? "أكيد ✨ لافيدا فيها ملعب كرة وملعب طائرة للضيوف."
-      : "Yes ✨ La Vida includes football and volleyball courts for guests.";
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ لافيدا فيها ملعب كرة وملعب طائرة للضيوف."
+        : "Yes ✨ La Vida includes football and volleyball courts for guests.",
+    );
   }
 
   const asksPool = hasAny(text, ["pool", "swimming pool", "مسبح", "سباحه"]);
   if (asksPool) {
-    return lang === "ar"
-      ? "أكيد ✨ لافيدا فيها مسبح، وفلل الـ VIP فيها مسابح خاصة."
-      : "Yes ✨ La Vida includes pool access, and VIP villas include private pools.";
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ لافيدا فيها مسبح، وفلل الـ VIP فيها مسابح خاصة."
+        : "Yes ✨ La Vida includes pool access, and VIP villas include private pools.",
+    );
   }
 
   const asksFamily = hasAny(text, ["kids", "children", "family", "families", "اطفال", "العائله", "عائلات", "عائليه"]);
   if (asksFamily) {
-    return lang === "ar"
-      ? "أكيد ✨ لافيدا مناسبة للعائلات وحيكون فيها أنشطة للأطفال ومساحات مريحة للعائلة."
-      : "Yes ✨ La Vida is family-friendly and will include kids activities and relaxing spaces for families.";
+    replies.push(
+      lang === "ar"
+        ? "أكيد ✨ لافيدا مناسبة للعائلات وحيكون فيها أنشطة للأطفال ومساحات مريحة للعائلة."
+        : "Yes ✨ La Vida is family-friendly and will include kids activities and relaxing spaces for families.",
+    );
   }
 
   const asksNight = hasAny(text, [
@@ -455,9 +534,11 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "ألعاب",
   ]);
   if (asksNight) {
-    return lang === "ar"
-      ? "لافيدا حتوفر أجواء ليلية حلوة، مشاهدة مباريات، ألعاب ترفيهية، وتجارب مناسبة للعائلات ✨"
-      : "La Vida will include evening entertainment, football match screenings, arcade-style activities, and family-friendly night experiences ✨";
+    replies.push(
+      lang === "ar"
+        ? "لافيدا حتوفر أجواء ليلية حلوة، مشاهدة مباريات، ألعاب ترفيهية، وتجارب مناسبة للعائلات ✨"
+        : "La Vida will include evening entertainment, football match screenings, arcade-style activities, and family-friendly night experiences ✨",
+    );
   }
 
   const asksGeneralActivities = hasAny(text, [
@@ -484,9 +565,11 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "المرافق",
   ]);
   if (asksGeneralActivities) {
-    return lang === "ar"
-      ? "لافيدا حتوفر شاطئ، مسبح، أنشطة بحرية، تأجير جتسكي، ملعب كرة، ملعب طائرة، أنشطة للأطفال، كافيه، وأجواء عائلية راقية ✨"
-      : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach café, and relaxing family-friendly spaces ✨";
+    replies.push(
+      lang === "ar"
+        ? "لافيدا حتوفر شاطئ، مسبح، أنشطة بحرية، تأجير جتسكي، ملعب كرة، ملعب طائرة، أنشطة للأطفال، كافيه، وأجواء عائلية راقية ✨"
+        : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach café, and relaxing family-friendly spaces ✨",
+    );
   }
 
   const asksGeneralResort = hasAny(text, [
@@ -512,10 +595,14 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "معلومات",
   ]);
   if (asksGeneralResort) {
-    return lang === "ar"
-      ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، فيه فلل وشاليهات وشقق فندقية ومسابح وأنشطة بحرية وكافيه وأجواء عائلية راقية ✨"
-      : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach café, and a calm family-friendly atmosphere ✨";
+    replies.push(
+      lang === "ar"
+        ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، فيه فلل وشاليهات وشقق فندقية ومسابح وأنشطة بحرية وكافيه وأجواء عائلية راقية ✨"
+        : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach café, and a calm family-friendly atmosphere ✨",
+    );
   }
 
-  return undefined;
+  const uniqueReplies = Array.from(new Set(replies));
+  if (uniqueReplies.length === 0) return undefined;
+  return uniqueReplies.slice(0, 3).join("\n");
 }

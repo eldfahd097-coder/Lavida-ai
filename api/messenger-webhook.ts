@@ -5,27 +5,31 @@ import { generateAIResponse } from "./ai-engine";
 
 const app = new Hono();
 const lastTopicBySender = new Map<string, string>();
+const recentMessageIds = new Map<string, number>();
+const DUPLICATE_WINDOW_MS = 2 * 60 * 1000;
 
 function detectTopic(text: string): string | undefined {
   const value = text.toLowerCase();
-  if (/price|prices|how much|cost|rates|الاسعار|الأسعار|بكم|قداش|كم السعر|سعر/.test(value)) return "prices";
-  if (/book|booking|reservation|reserve|availability|الحجز|نحجز|نبي نحجز|حجز|متاح/.test(value)) return "booking";
+  if (/price|prices|how much|cost|rates|as3ar|asaar|kam|bekam|bikam|الاسعار|الأسعار|بكم|قداش|كم السعر|سعر/.test(value))
+    return "prices";
+  if (/book|booking|reservation|reserve|availability|7ajz|hajz|الحجز|نحجز|نبي نحجز|حجز|متاح/.test(value)) return "booking";
   if (/opening|when open|opening date|الافتتاح|متى تفتحو|موعد الافتتاح/.test(value)) return "opening";
   if (/room|rooms|villa|villas|chalet|chalets|apartment|apartments|accommodation|الغرف|فلل|شاليهات|شقق|مسبح خاص/.test(value))
     return "accommodation";
-  if (/jetski|jet ski|water sport|water sports|جتسكي|انشطة بحرية|أنشطة بحرية/.test(value)) return "jetski";
-  if (/cafe|café|food|restaurant|eat|مطعم|كافيه|اكل|أكل/.test(value)) return "food";
+  if (/jetski|jet ski|jet-ski|jitski|jtski|water sport|water sports|جتسكي|انشطة بحرية|أنشطة بحرية/.test(value))
+    return "jetski";
+  if (/cafe|kafe|café|coffee|food|restaurant|eat|مطعم|كافيه|اكل|أكل/.test(value)) return "food";
   if (/pool|swimming pool|مسبح/.test(value)) return "pool";
   if (/football|soccer|volleyball|court|courts|ملعب|كرة|طائرة/.test(value)) return "courts";
   if (/kids|children|family|families|أطفال|عائلات|العائلة/.test(value)) return "family";
-  if (/location|address|where|maps|وين|الموقع|موقع|زوارة/.test(value)) return "location";
+  if (/location|address|where|wen|ween|maps|وين|الموقع|موقع|زوارة/.test(value)) return "location";
   if (/phone|contact|number|call|رقم|تواصل|تلفون/.test(value)) return "contact";
   if (/photo|photos|picture|pictures|image|images|صور/.test(value)) return "photos";
   return undefined;
 }
 
 function isFollowUpPrompt(text: string): boolean {
-  return /^(ok|okay|tell me more|more|details|شنو اكثر|شنو اكتر|زيد|زيدني|وضّح|وضح|more details|and\??)$/i.test(
+  return /^(ok|okay|tell me more|more|details|when|شنو اكثر|شنو اكتر|زيد|زيدني|وضّح|وضح|more details|and\??|امتى|متى|وبعدين|شن بعد)$/i.test(
     text.trim(),
   );
 }
@@ -77,11 +81,24 @@ app.post("/", async (c) => {
 async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
   const senderId = messaging.sender.id;
   const text = messaging.message.text;
+  const messageId = messaging.message.mid;
 
-  if (!senderId || !text) return;
+  if (!senderId || !text || !messageId) return;
+
+  const now = Date.now();
+  const seenAt = recentMessageIds.get(messageId);
+  if (seenAt && now - seenAt < DUPLICATE_WINDOW_MS) {
+    console.log("[messenger.webhook] Duplicate message ignored", { senderId, messageId });
+    return;
+  }
+  recentMessageIds.set(messageId, now);
+  for (const [id, ts] of recentMessageIds.entries()) {
+    if (now - ts > DUPLICATE_WINDOW_MS) recentMessageIds.delete(id);
+  }
 
   console.log("[messenger.webhook] sender message", {
     senderId,
+    messageId,
     text,
   });
 
