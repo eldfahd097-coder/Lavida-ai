@@ -80,7 +80,13 @@ export async function generateAIResponse(
   history: { role: "user" | "assistant"; content: string }[] = [],
   forceLang?: Language
 ): Promise<{ text: string; lang: Language; source: "ai" | "template" }> {
-  const lang = forceLang ?? detectLanguage(userMessage);
+  const lang = forceLang ?? detectMessageLanguage(userMessage);
+
+  // Strong intent detection before AI generation.
+  const intentText = getIntentResponse(userMessage, lang);
+  if (intentText) {
+    return { text: intentText, lang, source: "template" };
+  }
 
   // Try AI first if API key is available
   if (env.openaiApiKey) {
@@ -94,8 +100,8 @@ export async function generateAIResponse(
     }
   }
 
-  // Fallback to template-based response
-  const templateText = getTemplateResponse(userMessage, lang);
+  // Natural fallback when intent/AI are unavailable
+  const templateText = getNaturalFallback(lang);
   return { text: templateText, lang, source: "template" };
 }
 
@@ -141,11 +147,38 @@ async function callOpenAI(
 }
 
 // ─── Template Fallback Logic ────────────────────────────────────
-function getTemplateResponse(userMessage: string, lang: Language): string {
-  const text = userMessage.trim().toLowerCase();
-  const hasAny = (keywords: string[]) => keywords.some((keyword) => text.includes(keyword));
+function normalizeArabic(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFKC")
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/[ً-ْ]/g, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-  const isPrice = hasAny([
+function detectMessageLanguage(message: string): Language {
+  if (/[\u0600-\u06FF]/.test(message)) return "ar";
+  return detectLanguage(message);
+}
+
+function hasAny(text: string, keywords: string[]): boolean {
+  return keywords.some((keyword) => text.includes(keyword));
+}
+
+function getNaturalFallback(lang: Language): string {
+  if (lang === "ar") return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
+  return "Could you tell us a bit more about what you'd like to know? ✨";
+}
+
+function getIntentResponse(userMessage: string, lang: Language): string | undefined {
+  const rawText = userMessage.trim().toLowerCase();
+  const text = normalizeArabic(rawText);
+
+  const isPrice = hasAny(text, [
     "price",
     "prices",
     "how much",
@@ -158,6 +191,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
     "شن السعر",
     "كم تكلف",
     "سعر",
+    "اسعار",
   ]);
   if (isPrice) {
     return lang === "ar"
@@ -165,7 +199,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "Prices will be announced officially on May 20 ✨";
   }
 
-  const isBooking = hasAny([
+  const isBooking = hasAny(text, [
     "book",
     "booking",
     "reserve",
@@ -178,49 +212,51 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
     "طريقة الحجز",
     "نحجز",
     "حجز",
+    "متاح",
+    "فيه حجز",
   ]);
   if (isBooking) {
     return lang === "ar"
-      ? "الحجز بيفتح قريباً، وحنعلنوا كل التفاصيل الرسمية يوم 20 مايو ✨"
-      : "Bookings will open soon, and all booking details will be announced officially on May 20 ✨";
+      ? "الحجز بيفتح قريباً وحنعلنوا كل التفاصيل الرسمية يوم 20 مايو ✨"
+      : "Bookings will open soon and all booking details will be announced officially on May 20 ✨";
   }
 
-  const isOpening = hasAny(["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
+  const isOpening = hasAny(text, ["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
   if (isOpening) {
     return lang === "ar"
-      ? "الافتتاح الرسمي لـ La Vida Resort & Beach Club سيكون يوم 1 يونيو 2026 ✨"
-      : "La Vida Resort & Beach Club officially opens on June 1, 2026 ✨";
+      ? "الافتتاح الرسمي يوم 1 يونيو 2026 ✨"
+      : "La Vida officially opens on June 1 2026 ✨";
   }
 
-  const asksContact = hasAny(["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال"]);
+  const asksContact = hasAny(text, ["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال", "تلفون"]);
   if (asksContact) {
     return lang === "ar"
       ? `تقدروا تتواصلوا مع لافيدا على:\n${PHONE_1}\n${PHONE_2} ✨`
       : `You can contact La Vida on:\n${PHONE_1}\n${PHONE_2} ✨`;
   }
 
-  const asksLocation = hasAny(["location", "address", "maps", "where", "وين", "موقع", "العنوان", "زوارة"]);
+  const asksLocation = hasAny(text, ["location", "address", "maps", "where", "وين", "موقع", "العنوان", "زواره"]);
   if (asksLocation) {
     return lang === "ar"
-      ? `لافيدا ريزورت آند بيتش كلوب موجودة في زوارة، ليبيا ✨\nالموقع الإلكتروني: ${WEBSITE}`
-      : `La Vida Resort & Beach Club is located in Zuwarah, Libya ✨\nWebsite: ${WEBSITE}`;
+      ? `لافيدا موجودة في زوارة ليبيا ✨ ${WEBSITE}`
+      : `La Vida is located in Zuwarah Libya ✨ ${WEBSITE}`;
   }
 
-  const asksMeals = hasAny(["full board", "breakfast", "meals", "food included", "وجبات", "إقامة كاملة", "فول بورد"]);
+  const asksMeals = hasAny(text, ["full board", "breakfast", "meals", "food included", "وجبات", "اقامه كامله", "فول بورد"]);
   if (asksMeals) {
     return lang === "ar"
       ? "تفاصيل الإقامة الكاملة والوجبات حيتم الإعلان عنها رسمياً مع تفاصيل الحجز يوم 20 مايو ✨"
       : "Full board and meal package details will be announced officially with the booking details on May 20 ✨";
   }
 
-  const asksPhotos = hasAny(["photo", "photos", "picture", "pictures", "image", "images", "صور", "صور الشاليهات"]);
+  const asksPhotos = hasAny(text, ["photo", "photos", "picture", "pictures", "image", "images", "صور", "صور الشاليهات"]);
   if (asksPhotos) {
     return lang === "ar"
       ? "صور الشاليهات والمنتجع حتنزل قريباً عبر تحديثاتنا الرسمية ✨"
       : "Chalet and resort images will be shared through our official updates soon ✨";
   }
 
-  const asksHuman = hasAny([
+  const asksHuman = hasAny(text, [
     "manager",
     "management",
     "human",
@@ -237,7 +273,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "Of course ✨ A member of the La Vida team will assist you shortly.";
   }
 
-  const asksPrivatePools = hasAny([
+  const asksPrivatePools = hasAny(text, [
     "private pool",
     "private pools",
     "do villas have private pools",
@@ -250,7 +286,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "Yes ✨ VIP villas and presidential villas include private pools.";
   }
 
-  const asksAccommodation = hasAny([
+  const asksAccommodation = hasAny(text, [
     "room",
     "rooms",
     "villa",
@@ -267,6 +303,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
     "how many people can stay",
     "شن أنواع الغرف",
     "كم شخص يقدر يقعد",
+    "كم شخص",
     "الغرف",
     "شاليه",
     "شاليهات",
@@ -280,8 +317,8 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests ✨";
   }
 
-  const asksJetski = hasAny(["jetski", "jet ski", "water sports", "water sport", "جتسكي", "الأنشطة البحرية", "أنشطة بحرية"]);
-  const asksCafe = hasAny(["cafe", "café", "food", "restaurant", "eat", "eating", "كافيه", "مطعم", "أكل", "اكل"]);
+  const asksJetski = hasAny(text, ["jetski", "jet ski", "water sports", "water sport", "جتسكي", "الانشطه البحريه", "انشطه بحريه"]);
+  const asksCafe = hasAny(text, ["cafe", "café", "food", "restaurant", "eat", "eating", "كافيه", "مطعم", "أكل", "اكل"]);
   if (asksJetski && asksCafe) {
     return lang === "ar"
       ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل، ومعاها تأجير جتسكي وأنشطة بحرية، والتفاصيل الكاملة حنعلنوها قريباً."
@@ -298,28 +335,28 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "Yes ✨ La Vida will include a beach café and food area for guests to enjoy during their stay.";
   }
 
-  const asksCourts = hasAny(["football", "soccer", "volleyball", "court", "courts", "كرة", "طائرة", "ملعب"]);
+  const asksCourts = hasAny(text, ["football", "soccer", "volleyball", "court", "courts", "كرة", "طائره", "ملعب"]);
   if (asksCourts) {
     return lang === "ar"
       ? "أكيد ✨ لافيدا فيها ملعب كرة وملعب طائرة للضيوف."
       : "Yes ✨ La Vida includes football and volleyball courts for guests.";
   }
 
-  const asksPool = hasAny(["pool", "swimming pool", "مسبح", "سباحة"]);
+  const asksPool = hasAny(text, ["pool", "swimming pool", "مسبح", "سباحه"]);
   if (asksPool) {
     return lang === "ar"
       ? "أكيد ✨ لافيدا فيها مسبح، وفلل الـ VIP فيها مسابح خاصة."
       : "Yes ✨ La Vida includes pool access, and VIP villas include private pools.";
   }
 
-  const asksFamily = hasAny(["kids", "children", "family", "families", "أطفال", "العائلة", "عائلات", "عائلية"]);
+  const asksFamily = hasAny(text, ["kids", "children", "family", "families", "اطفال", "العائله", "عائلات", "عائليه"]);
   if (asksFamily) {
     return lang === "ar"
       ? "أكيد ✨ لافيدا مناسبة للعائلات وحيكون فيها أنشطة للأطفال ومساحات مريحة للعائلة."
       : "Yes ✨ La Vida is family-friendly and will include kids activities and relaxing spaces for families.";
   }
 
-  const asksNight = hasAny([
+  const asksNight = hasAny(text, [
     "night",
     "entertainment",
     "evening",
@@ -337,7 +374,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "La Vida will include evening entertainment, football match screenings, arcade-style activities, and family-friendly night experiences ✨";
   }
 
-  const asksGeneralActivities = hasAny([
+  const asksGeneralActivities = hasAny(text, [
     "activities",
     "facilities",
     "features",
@@ -353,7 +390,7 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach café, and relaxing family-friendly spaces ✨";
   }
 
-  const asksGeneralResort = hasAny([
+  const asksGeneralResort = hasAny(text, [
     "tell me about",
     "more details",
     "about la vida",
@@ -369,6 +406,5 @@ function getTemplateResponse(userMessage: string, lang: Language): string {
       : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah, designed for calm seaside stays, family comfort, water activities, villas, chalets, apartments, a beach café, and premium relaxation ✨";
   }
 
-  if (lang === "ar") return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
-  return "Could you tell us a bit more about what you'd like to know? ✨";
+  return undefined;
 }
