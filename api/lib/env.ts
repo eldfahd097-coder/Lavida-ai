@@ -28,9 +28,9 @@ export const env = {
   whatsappVerifyToken: optional("WHATSAPP_VERIFY_TOKEN"),
   whatsappBusinessAccountId: optional("WHATSAPP_BUSINESS_ACCOUNT_ID"),
   // Messenger
-  messengerPageAccessToken: optional("MESSENGER_PAGE_ACCESS_TOKEN"),
+  messengerPageAccessToken: optional("PAGE_ACCESS_TOKEN") || optional("MESSENGER_PAGE_ACCESS_TOKEN"),
   messengerPageId: optional("MESSENGER_PAGE_ID"),
-  messengerVerifyToken: optional("MESSENGER_VERIFY_TOKEN"),
+  messengerVerifyToken: optional("VERIFY_TOKEN") || optional("MESSENGER_VERIFY_TOKEN"),
   messengerAppSecret: optional("MESSENGER_APP_SECRET"),
   // ElevenLabs
   elevenlabsApiKey: optional("ELEVENLABS_API_KEY"),

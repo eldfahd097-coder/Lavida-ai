@@ -15,7 +15,7 @@ import {
 const app = new Hono();
 
 // ─── Messenger Verification ─────────────────────────────────────
-app.get("/webhook", async (c) => {
+app.get("/", async (c) => {
   const mode = c.req.query("hub.mode");
   const verifyToken = c.req.query("hub.verify_token");
   const challenge = c.req.query("hub.challenge");
@@ -28,13 +28,23 @@ app.get("/webhook", async (c) => {
 });
 
 // ─── Messenger Incoming Messages ──────────────────────────────────
-app.post("/webhook", async (c) => {
+app.post("/", async (c) => {
   try {
     const body = (await c.req.json()) as MessengerWebhookBody;
+
+    if (body.object && body.object !== "page") {
+      // Meta may send events for other objects; acknowledge to avoid retries.
+      return c.json({ success: true, ignored: true });
+    }
 
     for (const entry of body.entry ?? []) {
       for (const messaging of entry.messaging ?? []) {
         if (messaging.message?.text) {
+          console.log("[messenger.webhook] Incoming message", {
+            senderId: messaging.sender?.id,
+            messageId: messaging.message?.mid,
+            textLength: messaging.message.text.length,
+          });
           await handleMessengerMessage(messaging);
         }
       }
@@ -137,6 +147,7 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
 
 // ─── Types ──────────────────────────────────────────────────────
 type MessengerWebhookBody = {
+  object?: string;
   entry?: {
     messaging?: MessengerMessagingEvent[];
   }[];

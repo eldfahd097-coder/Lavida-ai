@@ -210,9 +210,9 @@ var env = {
   whatsappVerifyToken: optional("WHATSAPP_VERIFY_TOKEN"),
   whatsappBusinessAccountId: optional("WHATSAPP_BUSINESS_ACCOUNT_ID"),
   // Messenger
-  messengerPageAccessToken: optional("MESSENGER_PAGE_ACCESS_TOKEN"),
+  messengerPageAccessToken: optional("PAGE_ACCESS_TOKEN") || optional("MESSENGER_PAGE_ACCESS_TOKEN"),
   messengerPageId: optional("MESSENGER_PAGE_ID"),
-  messengerVerifyToken: optional("MESSENGER_VERIFY_TOKEN"),
+  messengerVerifyToken: optional("VERIFY_TOKEN") || optional("MESSENGER_VERIFY_TOKEN"),
   messengerAppSecret: optional("MESSENGER_APP_SECRET"),
   // ElevenLabs
   elevenlabsApiKey: optional("ELEVENLABS_API_KEY"),
@@ -1786,7 +1786,7 @@ async function getMessengerUserProfile(psid) {
 
 // api/messenger-webhook.ts
 var app3 = new Hono3();
-app3.get("/webhook", async (c) => {
+app3.get("/", async (c) => {
   const mode = c.req.query("hub.mode");
   const verifyToken = c.req.query("hub.verify_token");
   const challenge = c.req.query("hub.challenge");
@@ -1795,12 +1795,20 @@ app3.get("/webhook", async (c) => {
   }
   return c.json({ error: "Verification failed" }, 403);
 });
-app3.post("/webhook", async (c) => {
+app3.post("/", async (c) => {
   try {
     const body = await c.req.json();
+    if (body.object && body.object !== "page") {
+      return c.json({ success: true, ignored: true });
+    }
     for (const entry of body.entry ?? []) {
       for (const messaging of entry.messaging ?? []) {
         if (messaging.message?.text) {
+          console.log("[messenger.webhook] Incoming message", {
+            senderId: messaging.sender?.id,
+            messageId: messaging.message?.mid,
+            textLength: messaging.message.text.length
+          });
           await handleMessengerMessage(messaging);
         }
       }
@@ -1890,6 +1898,7 @@ app4.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 app4.route("/api/whatsapp", whatsapp_webhook_default);
 app4.route("/api/twilio", twilio_webhook_default);
 app4.route("/api/messenger", messenger_webhook_default);
+app4.route("/webhook", messenger_webhook_default);
 app4.use("/api/trpc/*", async (c) => {
   return fetchRequestHandler({
     endpoint: "/api/trpc",

@@ -17,6 +17,7 @@ app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 app.route("/api/whatsapp", whatsappWebhook);
 app.route("/api/twilio", twilioWebhook);
 app.route("/api/messenger", messengerWebhook);
+app.route("/webhook", messengerWebhook);
 
 // tRPC API
 app.use("/api/trpc/*", async (c) => {
