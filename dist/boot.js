@@ -1434,57 +1434,16 @@ async function callOpenAI(userMessage, history, lang) {
 }
 function getTemplateResponse(userMessage, lang) {
   const text2 = userMessage.trim().toLowerCase();
-  if (/^[1-5]$/.test(text2)) {
-    return getResponseByChoice(text2, lang);
+  const wantsResortInfo = /(resort|la vida|details|about|facilities|features|location|zuwarah|beach|pool|chalet|villa|activities|منتجع|لافيدا|تفاصيل|مرافق|الموقع|زوارة|شاطئ|مسبح|شاليه|أنشطة)/i.test(
+    text2
+  );
+  if (wantsResortInfo) {
+    return lang === "ar" ? "La Vida Resort & Beach Club \u0641\u064A \u0632\u0648\u0627\u0631\u0629 \u062A\u062C\u0631\u0628\u0629 \u0636\u064A\u0627\u0641\u0629 \u0631\u0627\u0642\u064A\u0629 \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u0631\u060C \u0645\u0639 \u0634\u0627\u0637\u0626 \u0648\u0645\u0633\u0628\u062D \u0648\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0641\u0627\u062E\u0631\u0629 \u0648\u0623\u0646\u0634\u0637\u0629 \u0639\u0627\u0626\u0644\u064A\u0629 \u0645\u0645\u062A\u0639\u0629 \u0641\u064A \u0623\u062C\u0648\u0627\u0621 \u0647\u0627\u062F\u0626\u0629 \u0648\u0623\u0646\u064A\u0642\u0629 \u2728" : "La Vida Resort & Beach Club in Zuwarah offers an elegant beachfront escape with beach access, pool, luxury chalets, and family-friendly activities in a calm, premium atmosphere \u2728";
   }
-  const keywords = {
-    // Arabic keywords
-    "\u062D\u062C\u0632": "resort_info",
-    "\u0627\u0633\u0639\u0627\u0631": "updates",
-    "\u0633\u0639\u0631": "updates",
-    "\u0634\u0627\u0644\u064A\u0647": "chalet_info",
-    "\u0641\u064A\u0644\u0627": "chalet_info",
-    "\u0634\u0642\u0629": "chalet_info",
-    "\u0646\u0634\u0627\u0637": "activities",
-    "\u0645\u0644\u0639\u0628": "activities",
-    "\u0645\u0633\u0628\u062D": "activities",
-    "\u0645\u0648\u0642\u0639": "updates",
-    "\u0627\u0641\u062A\u062A\u0627\u062D": "updates",
-    "\u0627\u062F\u0627\u0631\u0629": "management",
-    "\u0645\u062F\u064A\u0631": "management",
-    "\u0635\u0648\u0631": "chalet_info",
-    // English keywords
-    "book": "resort_info",
-    "price": "updates",
-    "cost": "updates",
-    "chalet": "chalet_info",
-    "villa": "chalet_info",
-    "apartment": "chalet_info",
-    "unit": "chalet_info",
-    "activity": "activities",
-    "pool": "activities",
-    "beach": "activities",
-    "sport": "activities",
-    "location": "updates",
-    "address": "updates",
-    "opening": "updates",
-    "management": "management",
-    "manager": "management",
-    "image": "chalet_info",
-    "photo": "chalet_info"
-  };
-  for (const [keyword, responseKey] of Object.entries(keywords)) {
-    if (text2.includes(keyword)) {
-      return Responses[responseKey][lang];
-    }
+  if (lang === "ar") {
+    return "\u0645\u0645\u0643\u0646 \u062A\u0648\u0636\u062D\u0644\u0646\u0627 \u0623\u0643\u062B\u0631 \u0634\u0646\u0648 \u062A\u062D\u0628 \u062A\u0639\u0631\u0641\u061F \u2728";
   }
-  if (/^(مرحب|سلام|هاي|hello|hi|hey|good morning|good afternoon|good evening)/i.test(text2)) {
-    return Responses.resort_info[lang];
-  }
-  if (/^(شكر|bye|thanks|thank you|goodbye|مع السلامة)/i.test(text2)) {
-    return Responses.goodbye[lang];
-  }
-  return Responses.fallback[lang];
+  return "Could you tell us a bit more about what you'd like to know? \u2728";
 }
 
 // api/whatsapp-webhook.ts

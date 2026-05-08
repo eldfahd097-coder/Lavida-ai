@@ -1,5 +1,5 @@
 import { env } from "./lib/env";
-import { detectLanguage, getResponseByChoice, Responses } from "@contracts/templates";
+import { detectLanguage } from "@contracts/templates";
 import type { Language } from "@contracts/templates";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
@@ -118,64 +118,18 @@ async function callOpenAI(
 function getTemplateResponse(userMessage: string, lang: Language): string {
   const text = userMessage.trim().toLowerCase();
 
-  // Numbered menu choice
-  if (/^[1-5]$/.test(text)) {
-    return getResponseByChoice(text, lang);
+  const wantsResortInfo =
+    /(resort|la vida|details|about|facilities|features|location|zuwarah|beach|pool|chalet|villa|activities|منتجع|لافيدا|تفاصيل|مرافق|الموقع|زوارة|شاطئ|مسبح|شاليه|أنشطة)/i.test(
+      text,
+    );
+  if (wantsResortInfo) {
+    return lang === "ar"
+      ? "La Vida Resort & Beach Club في زوارة تجربة ضيافة راقية على البحر، مع شاطئ ومسبح وشاليهات فاخرة وأنشطة عائلية ممتعة في أجواء هادئة وأنيقة ✨"
+      : "La Vida Resort & Beach Club in Zuwarah offers an elegant beachfront escape with beach access, pool, luxury chalets, and family-friendly activities in a calm, premium atmosphere ✨";
   }
 
-  // Keywords
-  const keywords: Record<string, keyof typeof Responses> = {
-    // Arabic keywords
-    "حجز": "resort_info",
-    "اسعار": "updates",
-    "سعر": "updates",
-    "شاليه": "chalet_info",
-    "فيلا": "chalet_info",
-    "شقة": "chalet_info",
-    "نشاط": "activities",
-    "ملعب": "activities",
-    "مسبح": "activities",
-    "موقع": "updates",
-    "افتتاح": "updates",
-    "ادارة": "management",
-    "مدير": "management",
-    "صور": "chalet_info",
-    // English keywords
-    "book": "resort_info",
-    "price": "updates",
-    "cost": "updates",
-    "chalet": "chalet_info",
-    "villa": "chalet_info",
-    "apartment": "chalet_info",
-    "unit": "chalet_info",
-    "activity": "activities",
-    "pool": "activities",
-    "beach": "activities",
-    "sport": "activities",
-    "location": "updates",
-    "address": "updates",
-    "opening": "updates",
-    "management": "management",
-    "manager": "management",
-    "image": "chalet_info",
-    "photo": "chalet_info",
-  };
-
-  for (const [keyword, responseKey] of Object.entries(keywords)) {
-    if (text.includes(keyword)) {
-      return Responses[responseKey][lang];
-    }
+  if (lang === "ar") {
+    return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
   }
-
-  // Greetings
-  if (/^(مرحب|سلام|هاي|hello|hi|hey|good morning|good afternoon|good evening)/i.test(text)) {
-    return Responses.resort_info[lang];
-  }
-
-  // Goodbye
-  if (/^(شكر|bye|thanks|thank you|goodbye|مع السلامة)/i.test(text)) {
-    return Responses.goodbye[lang];
-  }
-
-  return Responses.fallback[lang];
+  return "Could you tell us a bit more about what you'd like to know? ✨";
 }
