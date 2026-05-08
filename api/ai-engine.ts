@@ -169,6 +169,10 @@ function hasAny(text: string, keywords: string[]): boolean {
   return keywords.some((keyword) => text.includes(keyword));
 }
 
+function pickRandom(items: string[]): string {
+  return items[Math.floor(Math.random() * items.length)] ?? items[0] ?? "";
+}
+
 function getNaturalFallback(lang: Language): string {
   if (lang === "ar") return "ممكن توضحلنا أكثر شنو تحب تعرف؟ ✨";
   return "Could you tell us a bit more about what you'd like to know? ✨";
@@ -177,6 +181,73 @@ function getNaturalFallback(lang: Language): string {
 function getIntentResponse(userMessage: string, lang: Language): string | undefined {
   const rawText = userMessage.trim().toLowerCase();
   const text = normalizeArabic(rawText);
+  const compact = text.replace(/\s+/g, " ").trim();
+
+  const acknowledgementPhrases = [
+    "موافق",
+    "موافين",
+    "موافينك",
+    "تمام",
+    "تمام خلاص",
+    "اوكي",
+    "خلاص",
+    "كويس",
+    "منيح",
+    "حلو",
+    "حلو تمام",
+    "يعطيك الصحه",
+    "يعطيكم الصحه",
+    "يسلمو",
+    "تسلم",
+    "تسلموا",
+    "يعطيك العافيه",
+    "بارك الله فيك",
+    "شكرا",
+    "ثانكس",
+    "thanks",
+    "thank you",
+    "nice",
+    "perfect",
+    "great",
+    "sounds good",
+    "awesome",
+  ];
+  const isAcknowledgementOnly =
+    acknowledgementPhrases.includes(compact) ||
+    (compact.length <= 28 &&
+      hasAny(compact, [
+        "موافق",
+        "تمام",
+        "اوكي",
+        "خلاص",
+        "شكرا",
+        "يعطيك",
+        "يسلمو",
+        "تسلم",
+        "thanks",
+        "thank you",
+        "perfect",
+        "great",
+        "awesome",
+        "sounds good",
+      ]));
+  if (isAcknowledgementOnly) {
+    if (lang === "ar") {
+      return pickRandom([
+        "تمام ✨ نورتونا",
+        "يسعدنا هذا ✨",
+        "العفو ✨",
+        "تحت أمركم في أي وقت ✨",
+        "منورين ✨",
+      ]);
+    }
+    return pickRandom([
+      "Glad we could help ✨",
+      "You're very welcome ✨",
+      "Happy to help anytime ✨",
+      "Sounds great ✨",
+    ]);
+  }
 
   const isGreeting = hasAny(text, [
     "hi",
