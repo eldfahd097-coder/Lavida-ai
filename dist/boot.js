@@ -2357,106 +2357,147 @@ async function sendMessengerMessage(recipientId, text2) {
 // api/messenger-webhook.ts
 import nodemailer from "nodemailer";
 var app3 = new Hono3();
-var lastTopicBySender = /* @__PURE__ */ new Map();
+var senderSessions = /* @__PURE__ */ new Map();
 var recentMessageIds = /* @__PURE__ */ new Map();
 var DUPLICATE_WINDOW_MS = 2 * 60 * 1e3;
-var bookingInterestBySender = /* @__PURE__ */ new Map();
-function detectTopic(text2) {
-  const value = text2.toLowerCase();
-  if (/price|prices|how much|cost|rates|as3ar|asaar|kam|bekam|bikam|الاسعار|الأسعار|بكم|قداش|كم السعر|سعر/.test(value))
-    return "prices";
-  if (/book|booking|reservation|reserve|availability|7ajz|hajz|الحجز|نحجز|نبي نحجز|حجز|متاح/.test(value)) return "booking";
-  if (/opening|when open|opening date|الافتتاح|متى تفتحو|موعد الافتتاح/.test(value)) return "opening";
-  if (/room|rooms|villa|villas|chalet|chalets|apartment|apartments|accommodation|الغرف|فلل|شاليهات|شقق|مسبح خاص/.test(value))
-    return "accommodation";
-  if (/jetski|jet ski|jet-ski|jitski|jtski|water sport|water sports|جتسكي|انشطة بحرية|أنشطة بحرية/.test(value))
-    return "jetski";
-  if (/cafe|kafe|café|coffee|food|restaurant|eat|مطعم|كافيه|اكل|أكل/.test(value)) return "food";
-  if (/pool|swimming pool|مسبح/.test(value)) return "pool";
-  if (/football|soccer|volleyball|court|courts|ملعب|كرة|طائرة/.test(value)) return "courts";
-  if (/kids|children|family|families|أطفال|عائلات|العائلة/.test(value)) return "family";
-  if (/location|address|where|wen|ween|maps|وين|الموقع|موقع|زوارة/.test(value)) return "location";
-  if (/phone|contact|number|call|رقم|تواصل|تلفون/.test(value)) return "contact";
-  if (/photo|photos|picture|pictures|image|images|صور/.test(value)) return "photos";
-  if (/offer|facilities|activities|things to do|what else|more details|resort info|tell me more|what do you offer|شن عندكم|شنو عندكم|تفاصيل|معلومات/.test(value))
-    return "general";
-  return void 0;
+var MAX_HISTORY_ITEMS = 20;
+function detectMessageLanguage3(message) {
+  if (/[\u0600-\u06FF]/.test(message)) return "ar";
+  return detectLanguage(message);
 }
-function isBookingIntent(text2) {
-  const value = text2.toLowerCase();
-  return /book|booking|reservation|reserve|availability|حجز|الحجز|نحجز|نبي نحجز|طريقة الحجز|في حجز/.test(value);
+function normalizeInput(input) {
+  return input.toLowerCase().normalize("NFKC").replace(/[أإآ]/g, "\u0627").replace(/ى/g, "\u064A").replace(/ة/g, "\u0647").replace(/[ً-ْ]/g, "").replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\bresturent\b/g, "restaurant").replace(/\bresturant\b/g, "restaurant").replace(/\bjet\s*ski\b/g, "jetski").replace(/\bjitski\b/g, "jetski").replace(/\bjtski\b/g, "jetski").replace(/\bas3ar\b/g, "prices").replace(/\b7ajz\b/g, "booking").replace(/\bsheno\b|\bshno\b|\bshn\b/g, "\u0634\u0646\u0648").replace(/\bwen\b|\bween\b/g, "\u0648\u064A\u0646").replace(/\s+/g, " ").trim();
+}
+function hasAny3(text2, keywords) {
+  return keywords.some((keyword) => text2.includes(keyword));
 }
 function detectAccommodationType(text2) {
-  const value = text2.toLowerCase();
-  if (/vip villa|فيلا vip|فلل vip|vip/.test(value)) return "VIP Villa (up to 8 guests, private pool)";
-  if (/presidential|رئاسي|رئاسية/.test(value)) return "Presidential Villa (up to 10 guests, private pool)";
-  if (/family chalet|شاليه|شاليهات/.test(value)) return "Family Chalet (up to 5 guests)";
-  if (/hotel apartment|apartment|شقة|شقق/.test(value)) return "Hotel Apartment (up to 3 guests)";
+  if (hasAny3(text2, ["vip villa", "\u0641\u064A\u0644\u0627 vip", "\u0641\u0644\u0644 vip", "\u0641\u064A\u0644\u0627 \u0641\u064A \u0627\u064A \u0628\u064A"])) {
+    return "VIP Villa private pool up to 8 guests";
+  }
+  if (hasAny3(text2, ["presidential", "\u0631\u0626\u0627\u0633\u064A", "\u0631\u0626\u0627\u0633\u064A\u0629"])) {
+    return "Presidential Villa private pool up to 10 guests";
+  }
+  if (hasAny3(text2, ["family chalet", "\u0634\u0627\u0644\u064A\u0647", "\u0634\u0627\u0644\u064A\u0647\u0627\u062A", "chalet"])) {
+    return "Family Chalet up to 5 guests";
+  }
+  if (hasAny3(text2, ["hotel apartment", "apartment", "\u0634\u0642\u0647", "\u0634\u0642\u0642"])) {
+    return "Hotel Apartment up to 3 guests";
+  }
+  if (hasAny3(text2, ["villa", "\u0641\u064A\u0644\u0627", "\u0641\u0644\u0644"])) {
+    return "VIP Villa private pool up to 8 guests";
+  }
   return void 0;
 }
 function extractPhone(text2) {
-  const match = text2.match(/(\+?\d[\d\s-]{6,}\d)/);
+  const match = text2.match(/(\+?\d[\d\s-]{7,}\d)/);
   return match?.[1]?.replace(/\s+/g, " ").trim();
 }
 function extractGuestCount2(text2) {
-  const digitMatch = text2.match(/\b(\d{1,2})\s*(guest|guests|people|persons|شخص|أشخاص)?\b/i);
+  const rangeMatch = text2.match(/\b(\d{1,2})\s*[/-]\s*(\d{1,2})\b/);
+  if (rangeMatch?.[2]) return rangeMatch[2];
+  const digitMatch = text2.match(/\b(\d{1,2})\s*(guest|guests|people|persons|شخص|اشخاص|أشخاص)?\b/i);
   if (digitMatch?.[1]) return digitMatch[1];
-  const arMatch = text2.match(/(\d{1,2})\s*(شخص|أشخاص)/);
-  return arMatch?.[1];
+  return void 0;
 }
 function extractDate(text2) {
-  const iso = text2.match(/\b\d{4}-\d{1,2}-\d{1,2}\b/)?.[0];
-  if (iso) return iso;
-  const slash = text2.match(/\b\d{1,2}[/-]\d{1,2}([/-]\d{2,4})?\b/)?.[0];
-  if (slash) return slash;
-  const monthWord = text2.match(
-    /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i
+  const fromTo = text2.match(
+    /(من\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\s+الى\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?)|(from\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\s+to\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?)/i
   )?.[0];
-  return monthWord;
+  if (fromTo) return fromTo;
+  const first = text2.match(/\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/g);
+  if (first?.length) return first.join(" to ");
+  return void 0;
 }
 function extractName(text2) {
-  const lower = text2.toLowerCase();
-  const en = lower.match(/(?:my name is|name is)\s+([a-z][a-z\s'-]{1,40})/i)?.[1];
+  const en = text2.match(/(?:my name is|name is)\s+([a-z][a-z\s'-]{1,40})/i)?.[1];
   if (en) return en.trim();
-  const ar = text2.match(/(?:اسمي|الاسم)\s*[:\-]?\s*([^\d\n]{2,40})/)?.[1];
+  const ar = text2.match(/(?:اسمي|الاسم)\s*[:-]?\s*([^\d\n]{2,40})/)?.[1];
   if (ar) return ar.trim();
   if (!extractPhone(text2) && text2.trim().split(/\s+/).length <= 4 && /[a-zA-Z\u0600-\u06FF]/.test(text2)) {
     return text2.trim();
   }
   return void 0;
 }
-function bookingPrompt(lang) {
-  if (lang === "ar") {
-    return "\u0627\u0644\u062D\u062C\u0632 \u0627\u0644\u0631\u0633\u0645\u064A \u0628\u064A\u0641\u062A\u062D \u0642\u0631\u064A\u0628\u0627\u064B \u0648\u062D\u0646\u0639\u0644\u0646\u0648\u0627 \u0643\u0644 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728\n\u0646\u0642\u062F\u0631 \u0646\u0627\u062E\u0630 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0645\u0628\u062F\u0626\u064A\u0627\u064B \u0628\u0627\u0634 \u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0627\u0644\u0641\u0631\u064A\u0642 \u0623\u0648\u0644 \u0645\u0627 \u064A\u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632\n\n\u0634\u0646 \u0627\u0644\u0627\u0633\u0645 \u0648\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641 \u0648\u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0627\u0644\u0644\u064A \u0645\u0647\u062A\u0645\u064A\u0646 \u0628\u064A\u0647\u0627\u061F";
+function detectIntents(text2) {
+  const intents = [];
+  const push = (intent, matched) => {
+    if (matched && !intents.includes(intent)) intents.push(intent);
+  };
+  push("prices", hasAny3(text2, ["price", "prices", "how much", "cost", "rates", "\u0628\u0643\u0645", "\u0642\u062F\u0627\u0634", "\u0633\u0639\u0631", "\u0627\u0633\u0639\u0627\u0631", "\u0627\u0644\u0627\u0633\u0639\u0627\u0631"]));
+  push("booking", hasAny3(text2, ["book", "booking", "reservation", "availability", "\u062D\u062C\u0632", "\u0627\u0644\u062D\u062C\u0632", "\u0646\u062D\u062C\u0632", "\u0645\u062A\u0627\u062D"]));
+  push("opening", hasAny3(text2, ["opening", "when open", "opening date", "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D", "\u0645\u062A\u0649 \u062A\u0641\u062A\u062D\u0648", "\u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D"]));
+  push("rooms", hasAny3(text2, ["room", "rooms", "villa", "villas", "chalet", "chalets", "apartment", "accommodation", "\u0627\u0644\u063A\u0631\u0641", "\u0641\u0644\u0644", "\u0634\u0627\u0644\u064A\u0647\u0627\u062A", "\u0634\u0642\u0642"]));
+  push("private_pool", hasAny3(text2, ["private pool", "\u0645\u0633\u0628\u062D \u062E\u0627\u0635"]));
+  push("jetski", hasAny3(text2, ["jetski", "water sports", "\u062C\u062A\u0633\u0643\u064A", "\u0627\u0646\u0634\u0637\u0647 \u0628\u062D\u0631\u064A\u0647", "\u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629"]));
+  push("cafe_food", hasAny3(text2, ["cafe", "caf\xE9", "food", "restaurant", "\u0645\u0637\u0639\u0645", "\u0645\u0637\u0627\u0639\u0645", "\u0643\u0627\u0641\u064A\u0647", "\u0627\u0643\u0644", "\u0623\u0643\u0644"]));
+  push("supermarket", hasAny3(text2, ["supermarket", "market", "grocery", "\u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A", "\u0628\u0642\u0627\u0644\u0647", "\u0628\u0642\u0627\u0644\u0629"]));
+  push("pool", hasAny3(text2, ["pool", "swimming pool", "\u0645\u0633\u0628\u062D"]));
+  push("football_volleyball", hasAny3(text2, ["football", "soccer", "volleyball", "court", "\u0645\u0644\u0639\u0628", "\u0643\u0631\u0629", "\u0637\u0627\u0626\u0631\u0647", "\u0637\u0627\u0626\u0631\u0629"]));
+  push("kids", hasAny3(text2, ["kids", "children", "family", "families", "\u0627\u0637\u0641\u0627\u0644", "\u0627\u0644\u0639\u0627\u0626\u0644\u0647", "\u0639\u0627\u0626\u0644\u0627\u062A", "\u0639\u0627\u0626\u0644\u064A\u0629"]));
+  push("night_activities", hasAny3(text2, ["night", "entertainment", "world cup", "arcade", "\u0644\u064A\u0644", "\u062A\u0631\u0641\u064A\u0647", "\u0645\u0628\u0627\u0631\u064A\u0627\u062A", "\u0623\u0644\u0639\u0627\u0628"]));
+  push("location", hasAny3(text2, ["location", "address", "maps", "where", "\u0648\u064A\u0646", "\u0645\u0648\u0642\u0639", "\u0627\u0644\u0639\u0646\u0648\u0627\u0646", "\u0632\u0648\u0627\u0631\u0629"]));
+  push("contact", hasAny3(text2, ["phone", "contact", "number", "call", "whatsapp", "\u0648\u0627\u062A\u0633\u0627\u0628", "\u0631\u0642\u0645", "\u062A\u0648\u0627\u0635\u0644"]));
+  push("photos", hasAny3(text2, ["photo", "photos", "image", "gallery", "\u0635\u0648\u0631"]));
+  push("thanks", hasAny3(text2, ["thanks", "thank you", "\u0634\u0643\u0631\u0627", "\u064A\u0633\u0644\u0645\u0648", "\u062A\u0633\u0644\u0645"]));
+  push("greeting", hasAny3(text2, ["hi", "hello", "hey", "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064A\u0643\u0645", "\u0633\u0644\u0627\u0645", "\u0645\u0631\u062D\u0628\u0627", "\u0627\u0647\u0644\u0627"]));
+  push("human_handoff", hasAny3(text2, ["human", "agent", "manager", "admin", "complaint", "problem", "\u0645\u0648\u0638\u0641", "\u0627\u0644\u0625\u062F\u0627\u0631\u0629", "\u0645\u0634\u0643\u0644\u0629"]));
+  push("general", hasAny3(text2, ["what do you offer", "tell me more", "what else", "\u0645\u0645\u0643\u0646 \u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u062A\u0641\u0627\u0635\u064A\u0644", "\u0634\u0646\u0648 \u0639\u0646\u062F\u0643\u0645"]));
+  return intents;
+}
+function replyForIntent(intent, lang) {
+  if (intent === "prices") return lang === "ar" ? "\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Prices will be announced officially on May 20 \u2728";
+  if (intent === "opening") return lang === "ar" ? "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A \u064A\u0648\u0645 1 \u064A\u0648\u0646\u064A\u0648 2026 \u2728" : "La Vida officially opens on June 1 2026 \u2728";
+  if (intent === "photos") {
+    return lang === "ar" ? "\u062D\u0627\u0644\u064A\u0627\u064B \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0627\u0644\u062E\u0627\u0635\u0629 \u0628\u0627\u0644\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0648\u0627\u0644\u0645\u0646\u062A\u062C\u0639 \u0645\u0634 \u0645\u062A\u0648\u0641\u0631\u0629 \u0639\u0646\u062F\u0646\u0627 \u062A\u0648\u0627 \u2728 \u0648\u062D\u0646\u0634\u0627\u0631\u0643\u0648\u0627 \u0643\u0644 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0627\u0644\u0628\u0635\u0631\u064A\u0629 \u0642\u0631\u064A\u0628\u0627\u064B \u0645\u0639 \u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0648\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u0631\u0633\u0645\u064A \u0644\u0644\u062D\u062C\u0632" : "Official chalet and resort images are not available yet \u2728 Photos and visual updates will be shared closer to opening and the official booking announcement";
   }
-  return "Official booking will open soon and all details will be announced on May 20 \u2728\nI can take your details now so the team can contact you once booking opens\n\nPlease send your name phone number and preferred accommodation type";
+  if (intent === "location") return lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u0645\u0648\u062C\u0648\u062F\u0629 \u0641\u064A \u0632\u0648\u0627\u0631\u0629 \u0644\u064A\u0628\u064A\u0627 \u2728 lavidaresort.ly" : "La Vida is located in Zuwarah Libya \u2728 lavidaresort.ly";
+  if (intent === "contact") {
+    return lang === "ar" ? "\u062A\u0642\u062F\u0631\u0648\u0627 \u062A\u062A\u0648\u0627\u0635\u0644\u0648\u0627 \u0645\u0639 \u0644\u0627\u0641\u064A\u062F\u0627 \u0639\u0644\u0649\n093 888 8868\n093 888 8878 \u2728" : "You can contact La Vida on\n093 888 8868\n093 888 8878 \u2728";
+  }
+  if (intent === "jetski") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0627\u0644\u062C\u062A\u0633\u0643\u064A \u0648\u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0628\u062D\u0631\u064A\u0629 \u0645\u062A\u0648\u0641\u0631\u0629 \u0641\u064A \u0644\u0627\u0641\u064A\u062F\u0627." : "Yes \u2728 Jet ski and water sports are available at La Vida.";
+  if (intent === "cafe_food") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0641\u064A \u0644\u0627\u0641\u064A\u062F\u0627 \u0643\u0627\u0641\u064A\u0647 \u0634\u0627\u0637\u0626\u064A \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644." : "Yes \u2728 La Vida has a beach caf\xE9 and food area.";
+  if (intent === "rooms") {
+    return lang === "ar" ? "\u0644\u062F\u064A\u0646\u0627 \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635\u060C \u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u062D\u062A\u0649 10\u060C \u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u062D\u062A\u0649 5\u060C \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u062D\u062A\u0649 3 \u2728" : "We offer VIP villas with private pools up to 8 guests, presidential villas up to 10, family chalets up to 5, and hotel apartments up to 3 \u2728";
+  }
+  if (intent === "private_pool") return lang === "ar" ? "\u0646\u0639\u0645 \u2728 \u0641\u0644\u0644 VIP \u0648\u0627\u0644\u0641\u0644\u0644 \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u0641\u064A\u0647\u0627 \u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629." : "Yes \u2728 VIP and presidential villas include private pools.";
+  if (intent === "supermarket") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0645\u062A\u0648\u0641\u0631 \u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A \u0636\u0645\u0646 \u0627\u0644\u062E\u062F\u0645\u0627\u062A." : "Yes \u2728 A supermarket is available within resort services.";
+  if (intent === "pool") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0641\u064A \u0645\u0633\u0628\u062D \u0643\u0628\u064A\u0631 \u062F\u0627\u062E\u0644 \u0627\u0644\u0645\u0646\u062A\u062C\u0639." : "Yes \u2728 There is a large pool in the resort.";
+  if (intent === "football_volleyball") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0639\u0646\u062F\u0646\u0627 \u0645\u0644\u0639\u0628 \u0643\u0631\u0629 \u0648\u0645\u0644\u0639\u0628 \u0637\u0627\u0626\u0631\u0629." : "Yes \u2728 We have football and volleyball courts.";
+  if (intent === "kids") return lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u0645\u0646\u0627\u0633\u0628\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0641\u064A\u0647\u0627 \u0623\u0646\u0634\u0637\u0629 \u0644\u0644\u0623\u0637\u0641\u0627\u0644 \u2728" : "La Vida is family friendly with kids activities \u2728";
+  if (intent === "night_activities") return lang === "ar" ? "\u0641\u064A\u0647 \u062A\u0631\u0641\u064A\u0647 \u0644\u064A\u0644\u064A\u060C \u0645\u0634\u0627\u0647\u062F\u0629 \u0645\u0628\u0627\u0631\u064A\u0627\u062A\u060C \u0648\u0623\u0644\u0639\u0627\u0628 \u0634\u0628\u0627\u0628\u064A\u0629 \u2728" : "There is night entertainment, match screenings, and youth arcade activities \u2728";
+  if (intent === "human_handoff") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0623\u062D\u062F \u0623\u0639\u0636\u0627\u0621 \u0627\u0644\u0641\u0631\u064A\u0642 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0642\u0631\u064A\u0628\u0627\u064B." : "Of course \u2728 A team member will reach out shortly.";
+  if (intent === "thanks") return lang === "ar" ? "\u062A\u062D\u062A \u0623\u0645\u0631\u0643\u0645 \u0641\u064A \u0623\u064A \u0648\u0642\u062A \u2728" : "Always happy to help \u2728";
+  if (intent === "greeting") return lang === "ar" ? "\u0623\u0647\u0644\u0627\u064B \u0648\u0633\u0647\u0644\u0627\u064B \u0628\u0643\u0645 \u0641\u064A La Vida \u2728 \u0643\u064A\u0641 \u0646\u0642\u062F\u0631 \u0646\u0633\u0627\u0639\u062F\u0643\u0645\u061F" : "Welcome to La Vida \u2728 How can we help you today?";
+  if (intent === "general") {
+    return lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u0645\u0646\u062A\u062C\u0639 \u0641\u0627\u062E\u0631 \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u0631 \u0641\u064A \u0632\u0648\u0627\u0631\u0629 \u0641\u064A\u0647 \u0625\u0642\u0627\u0645\u0629 \u0645\u062A\u0646\u0648\u0639\u0629 \u0648\u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629 \u0648\u0643\u0627\u0641\u064A\u0647 \u0648\u0645\u0631\u0627\u0641\u0642 \u0639\u0627\u0626\u0644\u064A\u0629 \u2728" : "La Vida is a luxury beachfront resort in Zuwarah with varied stays, water activities, caf\xE9 options, and family-friendly facilities \u2728";
+  }
+  return void 0;
+}
+function bookingPrompt(lang) {
+  return lang === "ar" ? "\u0645\u0645\u062A\u0627\u0632 \u2728 \u062E\u0644\u0648\u0646\u0627 \u0646\u0643\u0645\u0644 \u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632 \u0627\u0644\u0645\u0628\u062F\u0626\u064A. \u0627\u0628\u0639\u062A \u0627\u0644\u0627\u0633\u0645\u060C \u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641\u060C \u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629\u060C \u0639\u062F\u062F \u0627\u0644\u0636\u064A\u0648\u0641\u060C \u0648\u0627\u0644\u062A\u0627\u0631\u064A\u062E." : "Great \u2728 Let\u2019s complete your booking interest. Please share name, phone, accommodation type, guest count, and preferred date.";
 }
 function bookingSummary(interest, lang) {
-  const name = interest.name ?? "-";
-  const phone = interest.phone ?? "-";
-  const accommodation = interest.accommodation ?? "-";
-  const guests = interest.guests ?? "-";
-  const date = interest.date ?? "-";
   if (lang === "ar") {
-    return `\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0645\u0628\u062F\u0626\u064A\u0627\u064B \u2728
-\u0627\u0644\u0627\u0633\u0645: ${name}
-\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641: ${phone}
-\u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629: ${accommodation}
-\u0639\u062F\u062F \u0627\u0644\u0636\u064A\u0648\u0641: ${guests}
-\u0627\u0644\u062A\u0627\u0631\u064A\u062E: ${date}
+    return `\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632 \u0627\u0644\u0645\u0628\u062F\u0626\u064A \u2728
+\u0627\u0644\u0627\u0633\u0645: ${interest.name ?? "-"}
+\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641: ${interest.phone ?? "-"}
+\u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629: ${interest.accommodation ?? "-"}
+\u0639\u062F\u062F \u0627\u0644\u0636\u064A\u0648\u0641: ${interest.guests ?? "-"}
+\u0627\u0644\u062A\u0627\u0631\u064A\u062E: ${interest.date ?? "-"}
 \u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0639\u0646\u062F \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632`;
   }
   return `Your booking interest has been received \u2728
-Name: ${name}
-Phone: ${phone}
-Accommodation: ${accommodation}
-Guests: ${guests}
-Date: ${date}
+Name: ${interest.name ?? "-"}
+Phone: ${interest.phone ?? "-"}
+Accommodation: ${interest.accommodation ?? "-"}
+Guests: ${interest.guests ?? "-"}
+Date: ${interest.date ?? "-"}
 The La Vida team will contact you once booking opens`;
 }
-async function sendBookingInterestEmail(interest, senderId) {
+async function sendBookingInterestEmail(interest, senderId, history) {
   if (!env.smtpHost || !env.smtpPort || !env.smtpUser || !env.smtpPass) {
-    console.error("[messenger.webhook] SMTP config missing; skipping booking interest email");
+    console.error("EMAIL FAILED", "SMTP config missing");
     return false;
   }
   try {
@@ -2470,6 +2511,7 @@ async function sendBookingInterestEmail(interest, senderId) {
       }
     });
     const timestamp2 = (/* @__PURE__ */ new Date()).toISOString();
+    const formattedHistory = history.map((item) => `${new Date(item.timestamp).toISOString()} [${item.role}] ${item.content}`).join("\n");
     await transporter.sendMail({
       from: `"La Vida AI" <${env.smtpUser}>`,
       to: "info@lavidaresort.ly",
@@ -2482,8 +2524,12 @@ async function sendBookingInterestEmail(interest, senderId) {
         `Accommodation type: ${interest.accommodation ?? "-"}`,
         `Guest count: ${interest.guests ?? "-"}`,
         `Preferred dates: ${interest.date ?? "-"}`,
+        `Notes: ${interest.notes ?? "-"}`,
         `Messenger sender ID: ${senderId}`,
-        `Timestamp: ${timestamp2}`
+        `Timestamp: ${timestamp2}`,
+        "",
+        "Full conversation history:",
+        formattedHistory || "-"
       ].join("\n"),
       html: `
         <div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
@@ -2495,15 +2541,18 @@ async function sendBookingInterestEmail(interest, senderId) {
             <tr><td><strong>Accommodation type</strong></td><td>${interest.accommodation ?? "-"}</td></tr>
             <tr><td><strong>Guest count</strong></td><td>${interest.guests ?? "-"}</td></tr>
             <tr><td><strong>Preferred dates</strong></td><td>${interest.date ?? "-"}</td></tr>
+            <tr><td><strong>Notes</strong></td><td>${interest.notes ?? "-"}</td></tr>
             <tr><td><strong>Messenger sender ID</strong></td><td>${senderId}</td></tr>
             <tr><td><strong>Timestamp</strong></td><td>${timestamp2}</td></tr>
           </table>
+          <h3>Conversation History</h3>
+          <pre>${formattedHistory || "-"}</pre>
         </div>
       `
     });
     return true;
   } catch (error) {
-    console.error("[messenger.webhook] Failed to send booking interest email", error);
+    console.error("EMAIL FAILED", error);
     return false;
   }
 }
@@ -2513,10 +2562,74 @@ function bookingMissingPrompt(missing, lang) {
   }
   return `Great \u2728 I still need: ${missing.join(", ")}.`;
 }
-function isFollowUpPrompt(text2) {
-  return /^(ok|okay|tell me more|more|details|when|what else|and\??|i want to know more|شنو اكثر|شنو اكتر|زيد|زيدني|وضّح|وضح|more details|امتى|متى|وبعدين|شن بعد)$/i.test(
+function updateBookingData(bookingData, rawText, normalizedText) {
+  const updated = { ...bookingData };
+  updated.name = updated.name ?? extractName(rawText);
+  updated.phone = updated.phone ?? extractPhone(rawText);
+  updated.accommodation = updated.accommodation ?? detectAccommodationType(normalizedText);
+  updated.guests = updated.guests ?? extractGuestCount2(normalizedText);
+  updated.date = updated.date ?? extractDate(rawText);
+  if (!updated.notes && rawText.length > 10 && !updated.name && !updated.phone && !updated.date && !updated.guests) {
+    updated.notes = rawText;
+  }
+  return updated;
+}
+function bookingMissingFields(data, lang) {
+  const missing = [];
+  if (!data.name) missing.push(lang === "ar" ? "\u0627\u0644\u0627\u0633\u0645" : "name");
+  if (!data.phone) missing.push(lang === "ar" ? "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641" : "phone");
+  if (!data.accommodation) missing.push(lang === "ar" ? "\u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629" : "accommodation");
+  if (!data.guests) missing.push(lang === "ar" ? "\u0639\u062F\u062F \u0627\u0644\u0636\u064A\u0648\u0641" : "guests");
+  if (!data.date) missing.push(lang === "ar" ? "\u0627\u0644\u062A\u0627\u0631\u064A\u062E" : "date");
+  return missing;
+}
+function isBookingDataMessage(rawText, normalizedText) {
+  return Boolean(
+    extractPhone(rawText) || extractDate(rawText) || extractGuestCount2(normalizedText) || extractName(rawText) || detectAccommodationType(normalizedText)
+  );
+}
+function getSession(senderId, lang) {
+  const existing = senderSessions.get(senderId);
+  if (existing) return existing;
+  const created = {
+    senderId,
+    lastIntent: "general",
+    lastTopic: "general",
+    language: lang,
+    bookingState: "idle",
+    bookingData: {},
+    history: []
+  };
+  senderSessions.set(senderId, created);
+  return created;
+}
+function addSessionMessage(session, role, content) {
+  session.history.push({ role, content, timestamp: Date.now() });
+  if (session.history.length > MAX_HISTORY_ITEMS) {
+    session.history = session.history.slice(-MAX_HISTORY_ITEMS);
+  }
+}
+function hasFollowUpPrompt(text2) {
+  return /^(ok|okay|tell me more|more|details|when|what else|and\??|i want to know more|شنو اكثر|شنو اكتر|زيد|زيدني|وضح|وضّح|more details|امتى|متى|وبعدين|شن بعد)$/i.test(
     text2.trim()
   );
+}
+function composeMultiIntentReply(intents, lang) {
+  const mapped = intents.map((intent) => replyForIntent(intent, lang)).filter((value) => Boolean(value));
+  const unique = Array.from(new Set(mapped));
+  if (!unique.length) return void 0;
+  return unique.slice(0, 3).join("\n");
+}
+async function sendAndTrackReply(session, text2) {
+  addSessionMessage(session, "assistant", text2);
+  session.lastBotQuestion = /[?؟]/.test(text2) ? text2 : session.lastBotQuestion;
+  const sendResult = await sendMessengerMessage(session.senderId, text2);
+  if (!sendResult.success) {
+    console.error("[messenger.webhook] Failed to send reply", {
+      senderId: session.senderId,
+      error: sendResult.error
+    });
+  }
 }
 app3.get("/", async (c) => {
   const mode = c.req.query("hub.mode");
@@ -2555,7 +2668,7 @@ async function handleMessengerMessage(messaging) {
   const senderId = messaging.sender.id;
   const text2 = messaging.message.text;
   const messageId = messaging.message.mid;
-  const lang = detectLanguage(text2);
+  const lang = detectMessageLanguage3(text2);
   if (!senderId || !text2 || !messageId) return;
   const now = Date.now();
   const seenAt = recentMessageIds.get(messageId);
@@ -2572,98 +2685,51 @@ async function handleMessengerMessage(messaging) {
     messageId,
     text: text2
   });
-  const existingInterest = bookingInterestBySender.get(senderId);
-  if (isBookingIntent(text2) && !existingInterest?.completed) {
-    const draft = existingInterest ?? { completed: false };
-    draft.name = draft.name ?? extractName(text2);
-    draft.phone = draft.phone ?? extractPhone(text2);
-    draft.accommodation = draft.accommodation ?? detectAccommodationType(text2);
-    draft.guests = draft.guests ?? extractGuestCount2(text2);
-    draft.date = draft.date ?? extractDate(text2);
-    bookingInterestBySender.set(senderId, draft);
-    const missing = [];
-    if (!draft.name) missing.push(lang === "ar" ? "\u0627\u0644\u0627\u0633\u0645" : "name");
-    if (!draft.phone) missing.push(lang === "ar" ? "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641" : "phone number");
-    if (!draft.accommodation) missing.push(lang === "ar" ? "\u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629" : "accommodation type");
-    const replyText2 = missing.length === 3 ? bookingPrompt(lang) : missing.length > 0 ? bookingMissingPrompt(missing, lang) : bookingSummary(draft, lang);
-    if (missing.length === 0) {
-      draft.completed = true;
-      bookingInterestBySender.set(senderId, draft);
-      const emailed = await sendBookingInterestEmail(draft, senderId);
-      if (emailed) {
-        const successReply = lang === "ar" ? "\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0637\u0644\u0628\u0643\u0645 \u0627\u0644\u0645\u0628\u062F\u0626\u064A \u2728\n\u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0639\u0646\u062F \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632" : "Your booking interest has been received \u2728\nThe La Vida team will contact you once booking opens";
-        const sendResult3 = await sendMessengerMessage(senderId, successReply);
-        if (!sendResult3.success) {
-          console.error("[messenger.webhook] Failed to send booking-interest confirmation", {
-            senderId,
-            error: sendResult3.error
-          });
-        }
-        return;
-      }
+  const session = getSession(senderId, lang);
+  session.language = lang;
+  session.lastMessageId = messageId;
+  addSessionMessage(session, "user", text2);
+  const normalizedText = normalizeInput(text2);
+  const intents = detectIntents(normalizedText);
+  if (intents.length > 0) {
+    session.lastIntent = intents[0];
+    session.lastTopic = intents[0];
+  }
+  if (session.bookingState === "active" || intents.includes("booking")) {
+    session.bookingState = "active";
+    session.bookingData = updateBookingData(session.bookingData, text2, normalizedText);
+    const missing = bookingMissingFields(session.bookingData, lang);
+    const replyText = missing.length ? missing.length === 5 ? bookingPrompt(lang) : bookingMissingPrompt(missing, lang) : bookingSummary(session.bookingData, lang);
+    if (!missing.length) {
+      session.bookingState = "completed";
+      await sendBookingInterestEmail(session.bookingData, senderId, session.history);
     }
-    const sendResult2 = await sendMessengerMessage(senderId, replyText2);
-    if (!sendResult2.success) {
-      console.error("[messenger.webhook] Failed to send booking-interest reply", {
-        senderId,
-        error: sendResult2.error
-      });
-    }
+    await sendAndTrackReply(session, replyText);
     return;
   }
-  if (existingInterest && !existingInterest.completed) {
-    existingInterest.name = existingInterest.name ?? extractName(text2);
-    existingInterest.phone = existingInterest.phone ?? extractPhone(text2);
-    existingInterest.accommodation = existingInterest.accommodation ?? detectAccommodationType(text2);
-    existingInterest.guests = existingInterest.guests ?? extractGuestCount2(text2);
-    existingInterest.date = existingInterest.date ?? extractDate(text2);
-    bookingInterestBySender.set(senderId, existingInterest);
-    const missing = [];
-    if (!existingInterest.name) missing.push(lang === "ar" ? "\u0627\u0644\u0627\u0633\u0645" : "name");
-    if (!existingInterest.phone) missing.push(lang === "ar" ? "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641" : "phone number");
-    if (!existingInterest.accommodation) missing.push(lang === "ar" ? "\u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629" : "accommodation type");
-    const replyText2 = missing.length > 0 ? bookingMissingPrompt(missing, lang) : bookingSummary(existingInterest, lang);
-    if (missing.length === 0) {
-      existingInterest.completed = true;
-      bookingInterestBySender.set(senderId, existingInterest);
-      const emailed = await sendBookingInterestEmail(existingInterest, senderId);
-      if (emailed) {
-        const successReply = lang === "ar" ? "\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0637\u0644\u0628\u0643\u0645 \u0627\u0644\u0645\u0628\u062F\u0626\u064A \u2728\n\u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0639\u0646\u062F \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632" : "Your booking interest has been received \u2728\nThe La Vida team will contact you once booking opens";
-        const sendResult3 = await sendMessengerMessage(senderId, successReply);
-        if (!sendResult3.success) {
-          console.error("[messenger.webhook] Failed to send booking-interest confirmation", {
-            senderId,
-            error: sendResult3.error
-          });
-        }
-        return;
-      }
+  if (session.lastTopic === "booking" && isBookingDataMessage(text2, normalizedText)) {
+    session.bookingState = "active";
+    session.bookingData = updateBookingData(session.bookingData, text2, normalizedText);
+    const missing = bookingMissingFields(session.bookingData, lang);
+    const replyText = missing.length ? bookingMissingPrompt(missing, lang) : bookingSummary(session.bookingData, lang);
+    if (!missing.length) {
+      session.bookingState = "completed";
+      await sendBookingInterestEmail(session.bookingData, senderId, session.history);
     }
-    const sendResult2 = await sendMessengerMessage(senderId, replyText2);
-    if (!sendResult2.success) {
-      console.error("[messenger.webhook] Failed to send booking-interest follow-up", {
-        senderId,
-        error: sendResult2.error
-      });
-    }
+    await sendAndTrackReply(session, replyText);
     return;
   }
-  const currentTopic = detectTopic(text2);
-  const priorTopic = lastTopicBySender.get(senderId);
-  const resolvedText = !currentTopic && priorTopic && isFollowUpPrompt(text2) ? `${text2} ${priorTopic}` : text2;
-  const aiResult = await generateAIResponse(resolvedText, []);
-  const replyText = aiResult.text;
-  const nextTopic = currentTopic ?? priorTopic;
-  if (nextTopic) {
-    lastTopicBySender.set(senderId, nextTopic);
+  const followUpToLastTopic = hasFollowUpPrompt(text2) && session.lastTopic !== "general";
+  const resolvedIntents = intents.length ? intents : followUpToLastTopic ? [session.lastTopic] : [];
+  const templateReply = composeMultiIntentReply(resolvedIntents, lang);
+  if (templateReply) {
+    await sendAndTrackReply(session, templateReply);
+    return;
   }
-  const sendResult = await sendMessengerMessage(senderId, replyText);
-  if (!sendResult.success) {
-    console.error("[messenger.webhook] Failed to send reply", {
-      senderId,
-      error: sendResult.error
-    });
-  }
+  const historyForAI = session.history.map((item) => ({ role: item.role, content: item.content }));
+  const resolvedText = followUpToLastTopic ? `${text2} ${session.lastTopic}` : text2;
+  const aiResult = await generateAIResponse(resolvedText, historyForAI, lang);
+  await sendAndTrackReply(session, aiResult.text);
 }
 var messenger_webhook_default = app3;
 
