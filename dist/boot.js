@@ -1142,31 +1142,169 @@ function bookingAnnouncement(lang) {
   }
   return "Prices, booking, reservation, availability, and full board details will be announced on May 20.";
 }
-function includesBookingQuestion(input) {
-  const text2 = input.toLowerCase();
-  const keywords = [
-    "price",
-    "prices",
-    "booking",
-    "book",
-    "reservation",
-    "availability",
-    "full board",
-    "rate",
-    "cost",
-    "\u0633\u0639\u0631",
-    "\u0627\u0644\u0627\u0633\u0639\u0627\u0631",
-    "\u0623\u0633\u0639\u0627\u0631",
-    "\u062D\u062C\u0632",
-    "\u0627\u0644\u062D\u062C\u0632",
-    "\u062D\u062C\u0648\u0632\u0627\u062A",
-    "\u062A\u0648\u0641\u0631",
-    "\u0645\u062A\u0627\u062D",
-    "\u0625\u0642\u0627\u0645\u0629 \u0643\u0627\u0645\u0644\u0629"
-  ];
+function detectMessageLanguage(message) {
+  if (/[\u0600-\u06FF]/.test(message)) return "ar";
+  return detectLanguage(message);
+}
+function normalizeText(input) {
+  return input.toLowerCase().normalize("NFKC").replace(/[أإآ]/g, "\u0627").replace(/ى/g, "\u064A").replace(/ة/g, "\u0647").replace(/[ً-ْ]/g, "").replace(/[^\p{L}\p{N}\s/+.-]/gu, " ").replace(/\s+/g, " ").trim();
+}
+function hasAny(text2, keywords) {
   return keywords.some((keyword) => text2.includes(keyword));
 }
-function buildSystemPrompt(lang) {
+function formatKnownBookingData(booking) {
+  const known = [];
+  if (booking.accommodationType) known.push(`accommodation=${booking.accommodationType}`);
+  if (booking.dates) known.push(`dates=${booking.dates}`);
+  if (booking.guestCount) known.push(`guestCount=${booking.guestCount}`);
+  if (booking.phoneNumber) known.push(`phone=${booking.phoneNumber}`);
+  return known.join(", ") || "none";
+}
+function getLastUserQuestion(history) {
+  const users2 = history.filter((item) => item.role === "user").map((item) => item.content.trim()).filter(Boolean);
+  const reversed = [...users2].reverse();
+  const candidate = reversed.find((text2) => /[?؟]/.test(text2) || text2.length > 5);
+  return candidate ?? reversed[0];
+}
+function extractAccommodationType(text2) {
+  if (hasAny(text2, ["\u0634\u0627\u0644\u064A\u0647", "\u0634\u0627\u0644\u064A\u0647\u0627\u062A", "chalet", "chalets"])) return "chalet";
+  if (hasAny(text2, ["\u0641\u064A\u0644\u0627", "\u0641\u0644\u0644", "villa", "villas"])) return "villa";
+  if (hasAny(text2, ["\u0634\u0642\u0647", "\u0634\u0642\u0642", "apartment", "apartments"])) return "apartment";
+  if (hasAny(text2, ["\u0645\u0637\u0639\u0645", "\u0645\u0637\u0627\u0639\u0645", "restaurant", "resturent", "resturant", "cafe", "caf"])) return "restaurant";
+  return void 0;
+}
+function extractGuestCount(text2) {
+  const rangeMatch = text2.match(/\b(\d{1,2})\s*[/-]\s*(\d{1,2})\b/);
+  if (rangeMatch) {
+    const value = Number.parseInt(rangeMatch[2] ?? rangeMatch[1] ?? "", 10);
+    if (Number.isFinite(value) && value > 0 && value <= 30) return value;
+  }
+  const guestRegexes = [
+    /\b(\d{1,2})\s*(?:guests?|people|persons?)\b/i,
+    /(?:عدد|ضيوف|اشخاص|أشخاص)\s*(\d{1,2})/,
+    /^(\d{1,2})$/
+  ];
+  for (const regex of guestRegexes) {
+    const match = text2.match(regex);
+    const value = Number.parseInt(match?.[1] ?? "", 10);
+    if (Number.isFinite(value) && value > 0 && value <= 30) return value;
+  }
+  return void 0;
+}
+function extractPhoneNumber(message) {
+  const phoneMatch = message.match(/(\+?\d[\d\s-]{7,}\d)/);
+  const value = phoneMatch?.[1]?.trim();
+  return value || void 0;
+}
+function extractDates(message) {
+  const datePatterns = [
+    /\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/g,
+    /\b(?:from|to|من|الى|إلى)\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/gi,
+    /\b(?:today|tomorrow|weekend|اليوم|بكره|بكرة|الويكند)\b/gi
+  ];
+  for (const pattern of datePatterns) {
+    const match = message.match(pattern);
+    if (match?.length) return match.join(" - ");
+  }
+  return void 0;
+}
+function inferConversationState(message, history) {
+  const normalizedCurrent = normalizeText(message);
+  const normalizedHistoryUsers = history.filter((item) => item.role === "user").map((item) => normalizeText(item.content)).join(" ");
+  const mergedText = `${normalizedHistoryUsers} ${normalizedCurrent}`.trim();
+  const bookingActive = hasAny(mergedText, [
+    "book",
+    "booking",
+    "reservation",
+    "availability",
+    "\u062D\u062C\u0632",
+    "\u062D\u062C\u0648\u0632\u0627\u062A",
+    "\u0646\u0628\u064A \u0646\u062D\u062C\u0632",
+    "\u0643\u064A\u0641 \u0646\u062D\u062C\u0632",
+    "\u0645\u062A\u0627\u062D"
+  ]);
+  const asksLocation = hasAny(normalizedCurrent, ["location", "maps", "where", "\u0648\u064A\u0646", "\u0645\u0648\u0642\u0639", "\u0627\u0644\u0639\u0646\u0648\u0627\u0646"]);
+  const asksFood = hasAny(normalizedCurrent, ["food", "restaurant", "resturent", "\u0645\u0637\u0627\u0639\u0645", "\u0645\u0637\u0639\u0645", "\u0643\u0627\u0641\u064A\u0647"]);
+  const asksPricing = hasAny(normalizedCurrent, ["price", "prices", "rate", "cost", "\u0627\u0633\u0639\u0627\u0631", "\u0627\u0644\u0627\u0633\u0639\u0627\u0631", "\u0633\u0639\u0631"]);
+  const asksContact = hasAny(normalizedCurrent, ["phone", "whatsapp", "\u0648\u0627\u062A\u0633\u0627\u0628", "\u0631\u0642\u0645", "\u062A\u0648\u0627\u0635\u0644"]);
+  const asksMedia = hasAny(normalizedCurrent, ["\u0635\u0648\u0631", "photo", "photos", "picture", "gallery"]);
+  const asksAmenities = hasAny(normalizedCurrent, ["pool", "\u0645\u0633\u0628\u062D", "jetski", "\u062C\u062A\u0633\u0643\u064A", "jet ski", "water sports"]);
+  let topic = "general";
+  if (bookingActive) topic = "booking";
+  else if (asksLocation) topic = "location";
+  else if (asksFood) topic = "food";
+  else if (asksPricing) topic = "pricing";
+  else if (asksContact) topic = "contact";
+  else if (asksMedia) topic = "media";
+  else if (asksAmenities) topic = "amenities";
+  const mergedRaw = [...history.map((item) => item.content), message].join(" ");
+  const booking = {
+    active: bookingActive,
+    accommodationType: extractAccommodationType(mergedText),
+    dates: extractDates(mergedRaw),
+    guestCount: extractGuestCount(normalizedCurrent) ?? extractGuestCount(mergedText),
+    phoneNumber: extractPhoneNumber(mergedRaw)
+  };
+  return {
+    topic,
+    previousQuestion: getLastUserQuestion(history),
+    booking
+  };
+}
+function bookingNextStepReply(state, lang) {
+  if (!state.booking.active) return void 0;
+  if (!state.booking.accommodationType) {
+    return lang === "ar" ? "\u0645\u0645\u062A\u0627\u0632 \u{1F30A} \u062A\u062D\u0628 \u0627\u0644\u062D\u062C\u0632 \u064A\u0643\u0648\u0646 \u0634\u0627\u0644\u064A\u0647 \u0648\u0644\u0627 \u0641\u064A\u0644\u0627\u061F" : "Perfect \u{1F30A} Would you prefer a chalet or a villa?";
+  }
+  if (!state.booking.dates) {
+    return lang === "ar" ? "\u062D\u0644\u0648 \u2728 \u0627\u0628\u0639\u062A\u0644\u064A \u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062F\u062E\u0648\u0644 \u0648\u0627\u0644\u062E\u0631\u0648\u062C\u060C \u062D\u062A\u0649 \u0644\u0648 \u0643\u0644 \u0648\u0627\u062D\u062F \u0628\u0631\u0633\u0627\u0644\u0629 \u0645\u0646\u0641\u0635\u0644\u0629." : "Lovely \u2728 Share check-in and check-out dates, even if sent in separate messages.";
+  }
+  if (!state.booking.guestCount) {
+    return lang === "ar" ? "\u0643\u0645 \u0639\u062F\u062F \u0627\u0644\u0636\u064A\u0648\u0641\u061F" : "How many guests will be staying?";
+  }
+  if (!state.booking.phoneNumber) {
+    return lang === "ar" ? "\u0645\u0645\u0643\u0646 \u0631\u0642\u0645 \u0645\u0648\u0628\u0627\u064A\u0644 \u0644\u0644\u062A\u0648\u0627\u0635\u0644 \u0648\u062A\u0623\u0643\u064A\u062F \u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632\u061F" : "May I have a phone number so our team can follow up on your booking request?";
+  }
+  return lang === "ar" ? `\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u2705 (${formatKnownBookingData(state.booking)})
+\u0641\u0631\u064A\u0642 \u0627\u0644\u062D\u062C\u0632 \u0647\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0642\u0631\u064A\u0628\u0627\u064B.` : `Details received \u2705 (${formatKnownBookingData(state.booking)})
+Our booking team will contact you shortly.`;
+}
+function getShortcutReply(message, lang) {
+  const text2 = normalizeText(message);
+  if (!text2) return void 0;
+  if (hasAny(text2, ["\u0645\u0648\u0642\u0639", "location", "maps", "address", "\u0648\u064A\u0646"])) {
+    return lang === "ar" ? `\u0627\u0644\u0645\u0648\u0642\u0639: \u0632\u0648\u0627\u0631\u0629 - \u0644\u064A\u0628\u064A\u0627 \u{1F4CD}
+Google Maps \u0639\u0628\u0631 \u0645\u0648\u0642\u0639\u0646\u0627: ${RESORT_INFO.website}` : `Location: Zuwarah, Libya \u{1F4CD}
+Maps and directions: ${RESORT_INFO.website}`;
+  }
+  if (hasAny(text2, ["\u0645\u0637\u0627\u0639\u0645", "\u0645\u0637\u0639\u0645", "restaurant", "resturent", "resturant", "food", "cafe"])) {
+    return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0639\u0646\u062F\u0646\u0627 \u0643\u0627\u0641\u064A\u0647 \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644 \u0628\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0636\u0645\u0646 \u0627\u0644\u0645\u0646\u062A\u062C\u0639." : "Absolutely \u2728 We have a beach caf\xE9 and dedicated food area inside the resort.";
+  }
+  if (hasAny(text2, ["\u062D\u062C\u0632", "booking", "book", "reservation"])) {
+    return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0646\u0628\u062F\u0623 \u0627\u0644\u062D\u062C\u0632 \u062E\u0637\u0648\u0629 \u062E\u0637\u0648\u0629. \u0634\u0627\u0644\u064A\u0647 \u0648\u0644\u0627 \u0641\u064A\u0644\u0627\u061F" : "Absolutely \u2728 Let\u2019s start your booking step by step. Chalet or villa?";
+  }
+  if (hasAny(text2, ["\u0627\u0633\u0639\u0627\u0631", "\u0627\u0644\u0627\u0633\u0639\u0627\u0631", "\u0633\u0639\u0631", "price", "prices", "cost"])) {
+    return bookingAnnouncement(lang);
+  }
+  if (hasAny(text2, ["\u0648\u0627\u062A\u0633\u0627\u0628", "whatsapp", "whats app", "wa"])) {
+    return lang === "ar" ? `\u0648\u0627\u062A\u0633\u0627\u0628/\u0627\u062A\u0635\u0627\u0644:
+${RESORT_INFO.phones[0]}
+${RESORT_INFO.phones[1]}` : `WhatsApp / Call:
+${RESORT_INFO.phones[0]}
+${RESORT_INFO.phones[1]}`;
+  }
+  if (hasAny(text2, ["\u0635\u0648\u0631", "photo", "photos", "gallery", "picture"])) {
+    return lang === "ar" ? "\u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0642\u064A\u062F \u0627\u0644\u062A\u062D\u0636\u064A\u0631 \u2728 \u0648\u062D\u0646\u0646\u0632\u0644\u0647\u0627 \u0642\u0631\u064A\u0628\u0627\u064B \u062C\u062F\u0627\u064B." : "Official photos are being finalized \u2728 and will be shared very soon.";
+  }
+  if (hasAny(text2, ["\u0645\u0633\u0628\u062D", "pool", "swimming"])) {
+    return lang === "ar" ? "\u0646\u0639\u0645 \u2728 \u0641\u064A \u0645\u0633\u0628\u062D \u0631\u0626\u064A\u0633\u064A \u0643\u0628\u064A\u0631\u060C \u0648\u0628\u0639\u0636 \u0627\u0644\u0641\u0644\u0644 \u0641\u064A\u0647\u0627 \u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629." : "Yes \u2728 There is a large main pool, and selected villas include private pools.";
+  }
+  if (hasAny(text2, ["\u062C\u062A\u0633\u0643\u064A", "jetski", "jet ski", "water sports", "jtski", "jitski"])) {
+    return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0627\u0644\u062C\u062A\u0633\u0643\u064A \u0648\u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0628\u062D\u0631\u064A\u0629 \u0645\u062A\u0648\u0641\u0631\u0629 \u0641\u064A La Vida." : "Yes \u2728 Jet ski and water sports are available at La Vida.";
+  }
+  return void 0;
+}
+function buildSystemPrompt(lang, state) {
   const base = `You are La Vida AI, the official receptionist for ${RESORT_INFO.name}.
 
 Official resort facts:
@@ -1198,12 +1336,25 @@ Style and behavior rules:
 5) For any question about prices, booking, reservation, availability, or full board, say details will be officially announced on May 20.
 6) Mention the opening date (June 1, 2026) when relevant.
 7) If you are unsure, clearly say management will confirm.
-8) Do not invent facts outside the information above.`;
+8) Do not invent facts outside the information above.
+9) Keep conversation continuity: do not reset topic during active threads.
+10) If booking is active, collect only missing booking fields naturally.
+11) Understand fragmented messages and short follow-ups.
+12) Understand Arabic Libyan slang and mixed Arabic-English.
+13) Never ask "Could you tell us more" unless absolutely necessary.`;
+  const stateContext = `
+Conversation context:
+- currentTopic: ${state.topic}
+- previousQuestion: ${state.previousQuestion ?? "none"}
+- bookingActive: ${state.booking.active ? "yes" : "no"}
+- bookingKnown: ${formatKnownBookingData(state.booking)}`;
   if (lang === "ar") {
     return `${base}
+${stateContext}
 Language rule: Reply in Arabic when the guest writes Arabic.`;
   }
   return `${base}
+${stateContext}
 Language rule: Reply in English unless the guest writes Arabic.`;
 }
 var chatRouter = createRouter({
@@ -1219,11 +1370,21 @@ var chatRouter = createRouter({
     })
   ).mutation(async ({ input }) => {
     const message = input.message.trim();
-    const lang = detectLanguage(message);
+    const lang = detectMessageLanguage(message);
     const history = input.history ?? [];
-    if (includesBookingQuestion(message)) {
+    const state = inferConversationState(message, history);
+    const bookingStepReply = bookingNextStepReply(state, lang);
+    const shortcutReply = getShortcutReply(message, lang);
+    if (shortcutReply && !state.booking.active) {
       return {
-        reply: bookingAnnouncement(lang),
+        reply: shortcutReply,
+        language: lang,
+        source: "rule"
+      };
+    }
+    if (bookingStepReply) {
+      return {
+        reply: bookingStepReply,
         language: lang,
         source: "rule"
       };
@@ -1243,10 +1404,10 @@ var chatRouter = createRouter({
       });
       const result = await client.chat.completions.create({
         model: "llama-3.3-70b-versatile",
-        temperature: 0.4,
+        temperature: 0.5,
         max_tokens: 400,
         messages: [
-          { role: "system", content: buildSystemPrompt(lang) },
+          { role: "system", content: buildSystemPrompt(lang, state) },
           ...history.map((item) => ({
             role: item.role,
             content: item.content
@@ -1421,7 +1582,7 @@ Hard rules:
 5) Ask for clarification only when truly necessary.`;
 }
 async function generateAIResponse(userMessage, history = [], forceLang) {
-  const lang = forceLang ?? detectMessageLanguage(userMessage);
+  const lang = forceLang ?? detectMessageLanguage2(userMessage);
   const intentText = getIntentResponse(userMessage, lang);
   if (intentText) {
     return { text: intentText, lang, source: "template" };
@@ -1470,11 +1631,11 @@ async function callOpenAI(userMessage, history, lang) {
 function normalizeArabic(input) {
   return input.toLowerCase().normalize("NFKC").replace(/[أإآ]/g, "\u0627").replace(/ى/g, "\u064A").replace(/ة/g, "\u0647").replace(/[ً-ْ]/g, "").replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
 }
-function detectMessageLanguage(message) {
+function detectMessageLanguage2(message) {
   if (/[\u0600-\u06FF]/.test(message)) return "ar";
   return detectLanguage(message);
 }
-function hasAny(text2, keywords) {
+function hasAny2(text2, keywords) {
   return keywords.some((keyword) => text2.includes(keyword));
 }
 function pickRandom(items) {
@@ -1518,7 +1679,7 @@ function getIntentResponse(userMessage, lang) {
     "sounds good",
     "awesome"
   ];
-  const isAcknowledgementOnly = acknowledgementPhrases.includes(compact) || compact.length <= 28 && hasAny(compact, [
+  const isAcknowledgementOnly = acknowledgementPhrases.includes(compact) || compact.length <= 28 && hasAny2(compact, [
     "\u0645\u0648\u0627\u0641\u0642",
     "\u062A\u0645\u0627\u0645",
     "\u0627\u0648\u0643\u064A",
@@ -1551,7 +1712,7 @@ function getIntentResponse(userMessage, lang) {
       "Sounds great \u2728"
     ]);
   }
-  const isGreeting = hasAny(text2, [
+  const isGreeting = hasAny2(text2, [
     "hi",
     "hello",
     "hey",
@@ -1565,7 +1726,7 @@ function getIntentResponse(userMessage, lang) {
       lang === "ar" ? "\u0645\u0631\u062D\u0628\u0627\u064B \u0628\u0643\u0645 \u0641\u064A La Vida Resort & Beach Club \u{1F30A}\n\u0646\u0648\u0631\u062A\u0648\u0646\u0627 \u2728\n\u0643\u064A\u0641 \u0646\u0642\u062F\u0631 \u0646\u0633\u0627\u0639\u062F\u0643\u0645 \u0627\u0644\u064A\u0648\u0645\u061F" : "Welcome to La Vida Resort & Beach Club \u{1F30A}\nWe\u2019re happy to assist you \u2728\nHow can we help you today?"
     );
   }
-  const isPrice = hasAny(text2, [
+  const isPrice = hasAny2(text2, [
     "price",
     "prices",
     "how much",
@@ -1590,7 +1751,7 @@ function getIntentResponse(userMessage, lang) {
       lang === "ar" ? "\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Prices will be announced officially on May 20 \u2728"
     );
   }
-  const isBooking = hasAny(text2, [
+  const isBooking = hasAny2(text2, [
     "book",
     "booking",
     "7ajz",
@@ -1613,13 +1774,13 @@ function getIntentResponse(userMessage, lang) {
       lang === "ar" ? "\u0627\u0644\u062D\u062C\u0632 \u0628\u064A\u0641\u062A\u062D \u0642\u0631\u064A\u0628\u0627\u064B \u0648\u062D\u0646\u0639\u0644\u0646\u0648\u0627 \u0643\u0644 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Bookings will open soon and all booking details will be announced officially on May 20 \u2728"
     );
   }
-  const isOpening = hasAny(text2, ["opening", "when open", "opening date", "\u0645\u062A\u0649 \u062A\u0641\u062A\u062D\u0648", "\u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D", "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D"]);
+  const isOpening = hasAny2(text2, ["opening", "when open", "opening date", "\u0645\u062A\u0649 \u062A\u0641\u062A\u062D\u0648", "\u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D", "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D"]);
   if (isOpening) {
     replies.push(
       lang === "ar" ? "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A \u064A\u0648\u0645 1 \u064A\u0648\u0646\u064A\u0648 2026 \u2728" : "La Vida officially opens on June 1 2026 \u2728"
     );
   }
-  const asksContact = hasAny(text2, ["phone", "contact", "number", "call", "\u0631\u0642\u0645", "\u062A\u0648\u0627\u0635\u0644", "\u0627\u062A\u0635\u0627\u0644", "\u062A\u0644\u0641\u0648\u0646"]);
+  const asksContact = hasAny2(text2, ["phone", "contact", "number", "call", "\u0631\u0642\u0645", "\u062A\u0648\u0627\u0635\u0644", "\u0627\u062A\u0635\u0627\u0644", "\u062A\u0644\u0641\u0648\u0646"]);
   if (asksContact) {
     replies.push(
       lang === "ar" ? `\u062A\u0642\u062F\u0631\u0648\u0627 \u062A\u062A\u0648\u0627\u0635\u0644\u0648\u0627 \u0645\u0639 \u0644\u0627\u0641\u064A\u062F\u0627 \u0639\u0644\u0649:
@@ -1629,7 +1790,7 @@ ${PHONE_1}
 ${PHONE_2} \u2728`
     );
   }
-  const asksLocation = hasAny(text2, [
+  const asksLocation = hasAny2(text2, [
     "location",
     "address",
     "maps",
@@ -1650,13 +1811,13 @@ ${PHONE_2} \u2728`
       lang === "ar" ? `\u0644\u0627\u0641\u064A\u062F\u0627 \u0645\u0648\u062C\u0648\u062F\u0629 \u0641\u064A \u0632\u0648\u0627\u0631\u0629 \u0644\u064A\u0628\u064A\u0627 \u2728 ${WEBSITE}` : `La Vida is located in Zuwarah Libya \u2728 ${WEBSITE}`
     );
   }
-  const asksMeals = hasAny(text2, ["full board", "breakfast", "meals", "food included", "\u0648\u062C\u0628\u0627\u062A", "\u0627\u0642\u0627\u0645\u0647 \u0643\u0627\u0645\u0644\u0647", "\u0641\u0648\u0644 \u0628\u0648\u0631\u062F"]);
+  const asksMeals = hasAny2(text2, ["full board", "breakfast", "meals", "food included", "\u0648\u062C\u0628\u0627\u062A", "\u0627\u0642\u0627\u0645\u0647 \u0643\u0627\u0645\u0644\u0647", "\u0641\u0648\u0644 \u0628\u0648\u0631\u062F"]);
   if (asksMeals) {
     replies.push(
       lang === "ar" ? "\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629 \u0648\u0627\u0644\u0648\u062C\u0628\u0627\u062A \u062D\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u0645\u0639 \u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062D\u062C\u0632 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Full board and meal package details will be announced officially with the booking details on May 20 \u2728"
     );
   }
-  const asksPhotos = hasAny(text2, [
+  const asksPhotos = hasAny2(text2, [
     "photo",
     "photos",
     "picture",
@@ -1679,7 +1840,7 @@ ${PHONE_2} \u2728`
   if (asksPhotos) {
     replies.push(lang === "ar" ? "\u062D\u0627\u0644\u064A\u0627\u064B \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0627\u0644\u062E\u0627\u0635\u0629 \u0628\u0627\u0644\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0648\u0627\u0644\u0645\u0646\u062A\u062C\u0639 \u0645\u0634 \u0645\u062A\u0648\u0641\u0631\u0629 \u0639\u0646\u062F\u0646\u0627 \u062A\u0648\u0627 \u2728\n\u0648\u062D\u0646\u0634\u0627\u0631\u0643\u0648\u0627 \u0643\u0644 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0627\u0644\u0628\u0635\u0631\u064A\u0629 \u0642\u0631\u064A\u0628\u0627\u064B \u0645\u0639 \u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0648\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u0631\u0633\u0645\u064A \u0644\u0644\u062D\u062C\u0632." : "Currently the official chalet and resort images are not available yet \u2728\nAll photos and visual updates will be shared closer to the opening date and official booking announcement.");
   }
-  const asksSupermarket = hasAny(text2, [
+  const asksSupermarket = hasAny2(text2, [
     "supermarket",
     "market",
     "grocery",
@@ -1694,7 +1855,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0628\u062E\u0635\u0648\u0635 \u0627\u0644\u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A \u0648\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0642\u0631\u064A\u0628\u0629\u060C \u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u0648\u062C\u0647\u0643\u0645 \u0628\u0623\u0642\u0631\u0628 \u0627\u0644\u062E\u064A\u0627\u0631\u0627\u062A \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629 \u0639\u0646\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D." : "Of course \u2728 For supermarket and nearby essentials, the La Vida team will guide you to the closest suitable options at opening."
     );
   }
-  const asksHuman = hasAny(text2, [
+  const asksHuman = hasAny2(text2, [
     "manager",
     "management",
     "human",
@@ -1710,7 +1871,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0623\u062D\u062F \u0623\u0639\u0636\u0627\u0621 \u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0642\u0631\u064A\u0628\u0627\u064B." : "Of course \u2728 A member of the La Vida team will assist you shortly."
     );
   }
-  const asksPrivatePools = hasAny(text2, [
+  const asksPrivatePools = hasAny2(text2, [
     "private pool",
     "private pools",
     "do villas have private pools",
@@ -1722,7 +1883,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0641\u0644\u0644 VIP \u0648\u0627\u0644\u0641\u0644\u0644 \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u0641\u064A\u0647\u0627 \u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629." : "Yes \u2728 VIP villas and presidential villas include private pools."
     );
   }
-  const asksAccommodation = hasAny(text2, [
+  const asksAccommodation = hasAny2(text2, [
     "room",
     "rooms",
     "villa",
@@ -1752,7 +1913,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u062A\u0648\u0641\u0631 \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 10 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u062D\u062A\u0649 5 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u062D\u062A\u0649 3 \u0623\u0634\u062E\u0627\u0635 \u2728" : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests \u2728"
     );
   }
-  const asksJetski = hasAny(text2, [
+  const asksJetski = hasAny2(text2, [
     "jetski",
     "jet ski",
     "jet-ski",
@@ -1764,7 +1925,7 @@ ${PHONE_2} \u2728`
     "\u0627\u0644\u0627\u0646\u0634\u0637\u0647 \u0627\u0644\u0628\u062D\u0631\u064A\u0647",
     "\u0627\u0646\u0634\u0637\u0647 \u0628\u062D\u0631\u064A\u0647"
   ]);
-  const asksCafe = hasAny(text2, [
+  const asksCafe = hasAny2(text2, [
     "cafe",
     "kafe",
     "caf\xE9",
@@ -1791,25 +1952,25 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0641\u064A \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u0643\u0648\u0646 \u0641\u064A\u0647 \u0643\u0627\u0641\u064A\u0647 \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644 \u0644\u0644\u0636\u064A\u0648\u0641 \u062E\u0644\u0627\u0644 \u0627\u0644\u0625\u0642\u0627\u0645\u0629." : "Yes \u2728 La Vida will include a beach caf\xE9 and food area for guests to enjoy during their stay."
     );
   }
-  const asksCourts = hasAny(text2, ["football", "soccer", "volleyball", "court", "courts", "\u0643\u0631\u0629", "\u0637\u0627\u0626\u0631\u0647", "\u0645\u0644\u0639\u0628"]);
+  const asksCourts = hasAny2(text2, ["football", "soccer", "volleyball", "court", "courts", "\u0643\u0631\u0629", "\u0637\u0627\u0626\u0631\u0647", "\u0645\u0644\u0639\u0628"]);
   if (asksCourts) {
     replies.push(
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0644\u0627\u0641\u064A\u062F\u0627 \u0641\u064A\u0647\u0627 \u0645\u0644\u0639\u0628 \u0643\u0631\u0629 \u0648\u0645\u0644\u0639\u0628 \u0637\u0627\u0626\u0631\u0629 \u0644\u0644\u0636\u064A\u0648\u0641." : "Yes \u2728 La Vida includes football and volleyball courts for guests."
     );
   }
-  const asksPool = hasAny(text2, ["pool", "swimming pool", "\u0645\u0633\u0628\u062D", "\u0633\u0628\u0627\u062D\u0647"]);
+  const asksPool = hasAny2(text2, ["pool", "swimming pool", "\u0645\u0633\u0628\u062D", "\u0633\u0628\u0627\u062D\u0647"]);
   if (asksPool) {
     replies.push(
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0644\u0627\u0641\u064A\u062F\u0627 \u0641\u064A\u0647\u0627 \u0645\u0633\u0628\u062D\u060C \u0648\u0641\u0644\u0644 \u0627\u0644\u0640 VIP \u0641\u064A\u0647\u0627 \u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629." : "Yes \u2728 La Vida includes pool access, and VIP villas include private pools."
     );
   }
-  const asksFamily = hasAny(text2, ["kids", "children", "family", "families", "\u0627\u0637\u0641\u0627\u0644", "\u0627\u0644\u0639\u0627\u0626\u0644\u0647", "\u0639\u0627\u0626\u0644\u0627\u062A", "\u0639\u0627\u0626\u0644\u064A\u0647"]);
+  const asksFamily = hasAny2(text2, ["kids", "children", "family", "families", "\u0627\u0637\u0641\u0627\u0644", "\u0627\u0644\u0639\u0627\u0626\u0644\u0647", "\u0639\u0627\u0626\u0644\u0627\u062A", "\u0639\u0627\u0626\u0644\u064A\u0647"]);
   if (asksFamily) {
     replies.push(
       lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0644\u0627\u0641\u064A\u062F\u0627 \u0645\u0646\u0627\u0633\u0628\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u062D\u064A\u0643\u0648\u0646 \u0641\u064A\u0647\u0627 \u0623\u0646\u0634\u0637\u0629 \u0644\u0644\u0623\u0637\u0641\u0627\u0644 \u0648\u0645\u0633\u0627\u062D\u0627\u062A \u0645\u0631\u064A\u062D\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0629." : "Yes \u2728 La Vida is family-friendly and will include kids activities and relaxing spaces for families."
     );
   }
-  const asksNight = hasAny(text2, [
+  const asksNight = hasAny2(text2, [
     "night",
     "entertainment",
     "evening",
@@ -1826,7 +1987,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u062A\u0648\u0641\u0631 \u0623\u062C\u0648\u0627\u0621 \u0644\u064A\u0644\u064A\u0629 \u062D\u0644\u0648\u0629\u060C \u0645\u0634\u0627\u0647\u062F\u0629 \u0645\u0628\u0627\u0631\u064A\u0627\u062A\u060C \u0623\u0644\u0639\u0627\u0628 \u062A\u0631\u0641\u064A\u0647\u064A\u0629\u060C \u0648\u062A\u062C\u0627\u0631\u0628 \u0645\u0646\u0627\u0633\u0628\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u2728" : "La Vida will include evening entertainment, football match screenings, arcade-style activities, and family-friendly night experiences \u2728"
     );
   }
-  const asksGeneralActivities = hasAny(text2, [
+  const asksGeneralActivities = hasAny2(text2, [
     "activity",
     "activities",
     "things to do",
@@ -1857,7 +2018,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u062A\u0648\u0641\u0631 \u0634\u0627\u0637\u0626\u060C \u0645\u0633\u0628\u062D\u060C \u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629\u060C \u062A\u0623\u062C\u064A\u0631 \u062C\u062A\u0633\u0643\u064A\u060C \u0645\u0644\u0639\u0628 \u0643\u0631\u0629\u060C \u0645\u0644\u0639\u0628 \u0637\u0627\u0626\u0631\u0629\u060C \u0623\u0646\u0634\u0637\u0629 \u0644\u0644\u0623\u0637\u0641\u0627\u0644\u060C \u0643\u0627\u0641\u064A\u0647\u060C \u0648\u0623\u062C\u0648\u0627\u0621 \u0639\u0627\u0626\u0644\u064A\u0629 \u0631\u0627\u0642\u064A\u0629 \u2728" : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach caf\xE9, and relaxing family-friendly spaces \u2728"
     );
   }
-  const asksGeneralResort = hasAny(text2, [
+  const asksGeneralResort = hasAny2(text2, [
     "what do you offer",
     "what do u offer",
     "what do you have",
@@ -1891,7 +2052,7 @@ ${PHONE_2} \u2728`
       lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u0631\u064A\u0632\u0648\u0631\u062A \u0622\u0646\u062F \u0628\u064A\u062A\u0634 \u0643\u0644\u0648\u0628 \u0645\u0646\u062A\u062C\u0639 \u0641\u0627\u062E\u0631 \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u0631 \u0641\u064A \u0632\u0648\u0627\u0631\u0629\u060C \u0641\u064A\u0647 \u0641\u0644\u0644 \u0648\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u0648\u0645\u0633\u0627\u0628\u062D \u0648\u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629 \u0648\u0643\u0627\u0641\u064A\u0647 \u0648\u0623\u062C\u0648\u0627\u0621 \u0639\u0627\u0626\u0644\u064A\u0629 \u0631\u0627\u0642\u064A\u0629 \u2728" : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach caf\xE9, and a calm family-friendly atmosphere \u2728"
     );
   }
-  const asksMoreGeneric = hasAny(text2, [
+  const asksMoreGeneric = hasAny2(text2, [
     "tell me more",
     "i want to know more",
     "know more",
@@ -2237,7 +2398,7 @@ function extractPhone(text2) {
   const match = text2.match(/(\+?\d[\d\s-]{6,}\d)/);
   return match?.[1]?.replace(/\s+/g, " ").trim();
 }
-function extractGuestCount(text2) {
+function extractGuestCount2(text2) {
   const digitMatch = text2.match(/\b(\d{1,2})\s*(guest|guests|people|persons|شخص|أشخاص)?\b/i);
   if (digitMatch?.[1]) return digitMatch[1];
   const arMatch = text2.match(/(\d{1,2})\s*(شخص|أشخاص)/);
@@ -2417,7 +2578,7 @@ async function handleMessengerMessage(messaging) {
     draft.name = draft.name ?? extractName(text2);
     draft.phone = draft.phone ?? extractPhone(text2);
     draft.accommodation = draft.accommodation ?? detectAccommodationType(text2);
-    draft.guests = draft.guests ?? extractGuestCount(text2);
+    draft.guests = draft.guests ?? extractGuestCount2(text2);
     draft.date = draft.date ?? extractDate(text2);
     bookingInterestBySender.set(senderId, draft);
     const missing = [];
@@ -2454,7 +2615,7 @@ async function handleMessengerMessage(messaging) {
     existingInterest.name = existingInterest.name ?? extractName(text2);
     existingInterest.phone = existingInterest.phone ?? extractPhone(text2);
     existingInterest.accommodation = existingInterest.accommodation ?? detectAccommodationType(text2);
-    existingInterest.guests = existingInterest.guests ?? extractGuestCount(text2);
+    existingInterest.guests = existingInterest.guests ?? extractGuestCount2(text2);
     existingInterest.date = existingInterest.date ?? extractDate(text2);
     bookingInterestBySender.set(senderId, existingInterest);
     const missing = [];
