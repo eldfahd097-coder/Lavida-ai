@@ -904,14 +904,14 @@ function getGreeting(_platform, lang) {
     return `\u0645\u0631\u062D\u0628\u0627\u064B \u0628\u0643\u0645 \u0641\u064A La Vida Resort & Beach Club \u{1F3D6}\uFE0F
 \u0646\u0634\u0643\u0631\u0643\u0645 \u0639\u0644\u0649 \u062A\u0648\u0627\u0635\u0644\u0643\u0645 \u0645\u0639\u0646\u0627
 
-\u0627\u0644\u062D\u062C\u0632 \u063A\u064A\u0631 \u0645\u062A\u0627\u062D \u062D\u0627\u0644\u064A\u0627\u064B \u0648\u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647 \u0642\u0631\u064A\u0628\u0627\u064B \u{1F4E2}
+\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D 1 \u064A\u0648\u0646\u064A\u0648 2026 \u2014 \u0623\u0633\u0639\u0627\u0631 \u0635\u064A\u0641 2026 \u0645\u062A\u0648\u0641\u0631\u0629 (\u0627\u0636\u063A\u0637 3)
 
 \u064A\u0631\u062C\u0649 \u0625\u0631\u0633\u0627\u0644 \u0631\u0642\u0645 \u0627\u0644\u062E\u064A\u0627\u0631:`;
   }
   return `Welcome to La Vida Resort & Beach Club \u{1F3D6}\uFE0F
 Thank you for reaching out to us
 
-Booking is not available yet and will be announced soon \u{1F4E2}
+Opening June 1, 2026 \u2014 Summer 2026 rates available (press 3)
 
 Please send the option number:`;
 }
@@ -1023,24 +1023,34 @@ Apartments:
 Your family will enjoy every moment here! \u{1F30A}`
   },
   updates: {
-    ar: `\u{1F4E2} \u0622\u062E\u0631 \u0627\u0644\u062A\u062D\u062F\u064A\u062B\u0627\u062A
+    ar: `\u{1F4E2} \u0623\u0633\u0639\u0627\u0631 \u0635\u064A\u0641 2026
 
-\u2022 \u0627\u0644\u062D\u062C\u0632 \u063A\u064A\u0631 \u0645\u062A\u0627\u062D \u062D\u0627\u0644\u064A\u0627\u064B
-\u2022 \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u062A\u064F\u0639\u0644\u0646 \u0642\u0631\u064A\u0628\u0627\u064B
-\u2022 \u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0633\u064A\u064F\u0639\u0644\u0646 \u0642\u0631\u064A\u0628\u0627\u064B
+\u2022 \u0634\u0627\u0644\u064A\u0647 VIP \u0631\u0626\u0627\u0633\u064A: 4000 \u062F.\u0644/\u0644\u064A\u0644\u0629
+\u2022 \u0634\u0627\u0644\u064A\u0647 VIP \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631: 3000 \u062F.\u0644/\u0644\u064A\u0644\u0629
+\u2022 \u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0645\u0633\u0628\u062D \u0648\u0623\u0646\u0634\u0637\u0629: 2000 \u062F.\u0644/\u0644\u064A\u0644\u0629
+\u2022 \u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A: 1500 \u062F.\u0644/\u0644\u064A\u0644\u0629
+\u2022 \u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0625\u0637\u0644\u0627\u0644\u0629 \u062D\u062F\u064A\u0642\u0629: 1000 \u062F.\u0644/\u0644\u064A\u0644\u0629
 
-\u062A\u0627\u0628\u0639\u0648\u0646\u0627 \u0639\u0644\u0649 \u0641\u064A\u0633\u0628\u0648\u0643 \u0648\u0625\u0646\u0633\u062A\u063A\u0631\u0627\u0645 \u0644\u0622\u062E\u0631 \u0627\u0644\u0623\u062E\u0628\u0627\u0631!
+\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D: 1 \u064A\u0648\u0646\u064A\u0648 2026
+\u0639\u0631\u0648\u0636: \u0644\u064A\u0644\u0629 \u0631\u0627\u0628\u0639\u0629 \u0645\u062C\u0627\u0646\u064A\u0629 \u0639\u0646\u062F \u062D\u062C\u0632 3 \u0644\u064A\u0627\u0644\u064A
+
+\u062A\u0627\u0628\u0639\u0648\u0646\u0627 \u0639\u0644\u0649 \u0641\u064A\u0633\u0628\u0648\u0643 \u0648\u0625\u0646\u0633\u062A\u063A\u0631\u0627\u0645!
 \u{1F4F1} +218 91 211 0392
 \u{1F4E7} info@lavida.ly
 
 \u0634\u0643\u0631\u0627\u064B \u0644\u0627\u0647\u062A\u0645\u0627\u0645\u0643\u0645 \u0628\u0640 La Vida Resort & Beach Club \u{1F499}`,
-    en: `\u{1F4E2} Latest Updates
+    en: `\u{1F4E2} Summer 2026 Rates
 
-\u2022 Booking is not available yet
-\u2022 Pricing will be announced soon
-\u2022 Opening date will be announced soon
+\u2022 Presidential VIP Chalet: 4000 LYD/night
+\u2022 VIP Sea View Chalet: 3000 LYD/night
+\u2022 Pool & Activities View: 2000 LYD/night
+\u2022 Side Sea View Chalet: 1500 LYD/night
+\u2022 Garden View Studio: 1000 LYD/night
 
-Follow us on Facebook and Instagram for the latest news!
+Opening: June 1, 2026
+Offers: 4th night free when booking 3 nights
+
+Follow us on Facebook and Instagram!
 \u{1F4F1} +218 91 211 0392
 \u{1F4E7} info@lavida.ly
 
@@ -1092,14 +1102,14 @@ var PhonePrompts = {
   welcome_en: "Welcome to La Vida Resort & Beach Club.",
   menu_ar: "\u0644\u0644\u062D\u062C\u0632 \u0648\u0627\u0644\u0623\u0633\u0639\u0627\u0631\u060C \u0627\u0636\u063A\u0637 1. \u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0627\u0644\u0634\u0627\u0644\u064A\u0647\u0627\u062A\u060C \u0627\u0636\u063A\u0637 2. \u0644\u0644\u0623\u0646\u0634\u0637\u0629 \u0648\u0627\u0644\u0645\u0631\u0627\u0641\u0642\u060C \u0627\u0636\u063A\u0637 3. \u0644\u0644\u0645\u0648\u0642\u0639 \u0648\u0645\u0648\u0627\u0639\u064A\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D\u060C \u0627\u0636\u063A\u0637 4. \u0644\u0644\u062A\u062D\u062F\u062B \u0645\u0639 \u0627\u0644\u0625\u062F\u0627\u0631\u0629\u060C \u0627\u0636\u063A\u0637 5.",
   menu_en: "For booking and prices, press 1. For chalet information, press 2. For resort activities, press 3. For location and opening updates, press 4. To speak with management, press 5.",
-  option_1_ar: "\u0627\u0644\u062D\u062C\u0632 \u063A\u064A\u0631 \u0645\u062A\u0627\u062D \u062D\u0627\u0644\u064A\u0627\u064B \u0648\u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646 \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0642\u0631\u064A\u0628\u0627\u064B. \u0634\u0643\u0631\u0627\u064B \u0644\u0627\u0647\u062A\u0645\u0627\u0645\u0643\u0645.",
-  option_1_en: "Booking is not available yet and pricing will be announced soon. Thank you for your interest.",
+  option_1_ar: "\u0623\u0633\u0639\u0627\u0631 \u0635\u064A\u0641 2026 \u0645\u0646 1000 \u0625\u0644\u0649 4000 \u062F\u064A\u0646\u0627\u0631 \u0644\u0644\u064A\u0644\u0629. \u0644\u0644\u062D\u062C\u0632 \u062A\u0648\u0627\u0635\u0644\u0648\u0627 \u0639\u0628\u0631 \u0627\u0644\u0648\u0627\u062A\u0633\u0627\u0628 \u0623\u0648 \u0627\u0644\u0645\u0627\u0633\u0646\u062C\u0631. \u0627\u0644\u0641\u0631\u064A\u0642 \u064A\u0623\u0643\u062F \u0627\u0644\u062A\u0648\u0641\u0631.",
+  option_1_en: "Summer 2026 rates from 1000 to 4000 dinars per night. For booking contact us on WhatsApp or Messenger. Our team confirms availability.",
   option_2_ar: "\u0644\u062F\u064A\u0646\u0627 20 \u0634\u0627\u0644\u064A\u0647 \u0639\u0627\u0626\u0644\u064A \u0648 10 \u0641\u064A\u0644\u0627\u062A \u0641\u0627\u062E\u0631\u0629 \u0648 12 \u0634\u0642\u0629. \u0633\u064A\u062A\u0645 \u0645\u0634\u0627\u0631\u0643\u0629 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0643\u0627\u0645\u0644\u0629 \u0642\u0631\u064A\u0628\u0627\u064B.",
   option_2_en: "We have 20 family chalets, 10 luxury villas, and 12 apartments. Full details will be shared soon.",
   option_3_ar: "\u0645\u0631\u0627\u0641\u0642\u0646\u0627 \u062A\u0634\u0645\u0644 \u0645\u0633\u0628\u062D \u0645\u0631\u0643\u0632\u064A\u060C \u0634\u0627\u0637\u0626 \u062E\u0627\u0635\u060C \u0631\u064A\u0627\u0636\u0627\u062A \u0645\u0627\u0626\u064A\u0629\u060C \u0645\u0644\u0627\u0639\u0628\u060C \u0645\u0646\u0637\u0642\u0629 \u0623\u0637\u0641\u0627\u0644\u060C \u0648\u0645\u0642\u0647\u0649.",
   option_3_en: "Our facilities include a central pool, private beach, water sports, courts, kids area, and a beach cafe.",
-  option_4_ar: "\u0646\u062D\u0646 \u0641\u064A \u0632\u0648\u0627\u0631\u0629\u060C \u0644\u064A\u0628\u064A\u0627. \u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0648\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u062A\u064F\u0639\u0644\u0646 \u0642\u0631\u064A\u0628\u0627\u064B. \u062A\u0627\u0628\u0639\u0648\u0646\u0627 \u0639\u0644\u0649 \u0648\u0633\u0627\u0626\u0644 \u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0627\u0644\u0627\u062C\u062A\u0645\u0627\u0639\u064A.",
-  option_4_en: "We are located in Zuwarah, Libya. Opening date and pricing will be announced soon. Follow us on social media.",
+  option_4_ar: "\u0646\u062D\u0646 \u0641\u064A \u0632\u0648\u0627\u0631\u0629\u060C \u0644\u064A\u0628\u064A\u0627. \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A 1 \u064A\u0648\u0646\u064A\u0648 2026. \u0627\u0644\u0645\u0648\u0642\u0639 lavidaresort.ly",
+  option_4_en: "We are located in Zuwarah, Libya. Official opening June 1, 2026. Website lavidaresort.ly",
   option_5_ar: "\u0633\u064A\u062A\u0645 \u062A\u0648\u0635\u064A\u0644\u0643\u0645 \u0645\u0639 \u0627\u0644\u0625\u062F\u0627\u0631\u0629. \u0625\u0630\u0627 \u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0631\u062F\u060C \u064A\u0631\u062C\u0649 \u062A\u0631\u0643 \u0627\u0633\u0645\u0643\u0645 \u0648\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641 \u0628\u0639\u062F \u0627\u0644\u0646\u063A\u0645\u0629.",
   option_5_en: "Connecting you to management. If no one answers, please leave your name and phone number after the tone.",
   voicemail_ar: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0631\u062F. \u064A\u0631\u062C\u0649 \u062A\u0631\u0643 \u0627\u0633\u0645\u0643\u0645 \u0648\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641 \u0648\u0633\u0646\u0642\u0648\u0645 \u0628\u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0643\u0645 \u0641\u064A \u0623\u0642\u0631\u0628 \u0648\u0642\u062A. \u0634\u0643\u0631\u0627\u064B.",
@@ -1130,18 +1140,260 @@ function getResponseByChoice(choice, lang) {
 // api/chat-router.ts
 import { TRPCError as TRPCError3 } from "@trpc/server";
 import OpenAI from "openai";
+
+// api/resort-knowledge.ts
+var ACCOMMODATIONS = [
+  {
+    id: "presidential",
+    nameEn: "Presidential VIP Chalet",
+    nameAr: "\u0634\u0627\u0644\u064A\u0647 VIP \u0627\u0644\u0631\u0626\u0627\u0633\u064A",
+    priceLyd: 4e3,
+    detailsEn: [
+      "Fits two families",
+      "Private pool",
+      "Large outdoor seating",
+      "Spacious living area",
+      "High privacy",
+      "Partial sea view",
+      "Nearby parking"
+    ],
+    detailsAr: [
+      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0639\u0627\u0626\u0644\u062A\u064A\u0646",
+      "\u0645\u0633\u0628\u062D \u062E\u0627\u0635",
+      "\u062C\u0644\u0633\u0629 \u062E\u0627\u0631\u062C\u064A\u0629 \u0648\u0627\u0633\u0639\u0629",
+      "\u0635\u0627\u0644\u0629 \u0645\u0639\u064A\u0634\u0629 \u0648\u0627\u0633\u0639\u0629",
+      "\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629",
+      "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u062C\u0632\u0626\u064A\u0629",
+      "\u0645\u0648\u0642\u0641 \u0642\u0631\u064A\u0628"
+    ],
+    keywords: ["presidential", "\u0631\u0626\u0627\u0633\u064A", "\u0631\u0626\u0627\u0633\u064A\u0629", "vip \u0631\u0626\u0627\u0633\u064A", "4000"]
+  },
+  {
+    id: "vip_sea",
+    nameEn: "VIP Sea View Chalet",
+    nameAr: "\u0634\u0627\u0644\u064A\u0647 VIP \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629",
+    priceLyd: 3e3,
+    detailsEn: [
+      "Direct sea view",
+      "Private pool",
+      "Outdoor sea-facing seating",
+      "High privacy",
+      "Suitable for families and couples"
+    ],
+    detailsAr: [
+      "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0645\u0628\u0627\u0634\u0631\u0629",
+      "\u0645\u0633\u0628\u062D \u062E\u0627\u0635",
+      "\u062C\u0644\u0633\u0629 \u062E\u0627\u0631\u062C\u064A\u0629 \u0628\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631",
+      "\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629",
+      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0627\u0644\u0623\u0632\u0648\u0627\u062C"
+    ],
+    keywords: ["vip sea", "sea view chalet", "vip chalet", "\u0628\u062D\u0631 \u0645\u0628\u0627\u0634\u0631", "3000"]
+  },
+  {
+    id: "pool_view",
+    nameEn: "Pool and Activities View Chalet",
+    nameAr: "\u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u0645\u0633\u0628\u062D \u0648\u0627\u0644\u0623\u0646\u0634\u0637\u0629",
+    priceLyd: 2e3,
+    detailsEn: [
+      "View of main pool",
+      "Close to entertainment areas",
+      "Easy access to restaurant and beach",
+      "Suitable for families"
+    ],
+    detailsAr: [
+      "\u0625\u0637\u0644\u0627\u0644\u0629 \u0639\u0644\u0649 \u0627\u0644\u0645\u0633\u0628\u062D \u0627\u0644\u0631\u0626\u064A\u0633\u064A",
+      "\u0642\u0631\u064A\u0628 \u0645\u0646 \u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u062A\u0631\u0641\u064A\u0647",
+      "\u0633\u0647\u0648\u0644\u0629 \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u0645\u0637\u0639\u0645 \u0648\u0627\u0644\u0634\u0627\u0637\u0626",
+      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A"
+    ],
+    keywords: ["pool view", "activities view", "\u0645\u0633\u0628\u062D \u0631\u0626\u064A\u0633\u064A", "2000"]
+  },
+  {
+    id: "side_sea",
+    nameEn: "Side Sea View Chalet",
+    nameAr: "\u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629",
+    priceLyd: 1500,
+    detailsEn: [
+      "Side sea view",
+      "Private balcony",
+      "Quiet location",
+      "Suitable for small families and couples"
+    ],
+    detailsAr: [
+      "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629",
+      "\u0634\u0631\u0641\u0629 \u062E\u0627\u0635\u0629",
+      "\u0645\u0648\u0642\u0639 \u0647\u0627\u062F\u0626",
+      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0627\u0644\u0635\u063A\u064A\u0631\u0629 \u0648\u0627\u0644\u0623\u0632\u0648\u0627\u062C"
+    ],
+    keywords: ["side sea", "\u062C\u0627\u0646\u0628\u064A", "1500"]
+  },
+  {
+    id: "garden_studio",
+    nameEn: "Garden View Studio",
+    nameAr: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u062D\u062F\u064A\u0642\u0629",
+    priceLyd: 1e3,
+    detailsEn: [
+      "Garden view",
+      "Close to main facilities",
+      "Practical and comfortable design",
+      "Good value for couples or small families"
+    ],
+    detailsAr: [
+      "\u0625\u0637\u0644\u0627\u0644\u0629 \u0639\u0644\u0649 \u0627\u0644\u062D\u062F\u064A\u0642\u0629",
+      "\u0642\u0631\u064A\u0628 \u0645\u0646 \u0627\u0644\u0645\u0631\u0627\u0641\u0642 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629",
+      "\u062A\u0635\u0645\u064A\u0645 \u0639\u0645\u0644\u064A \u0648\u0645\u0631\u064A\u062D",
+      "\u062E\u064A\u0627\u0631 \u0627\u0642\u062A\u0635\u0627\u062F\u064A \u0644\u0644\u0623\u0632\u0648\u0627\u062C \u0623\u0648 \u0627\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0627\u0644\u0635\u063A\u064A\u0631\u0629"
+    ],
+    keywords: ["garden", "studio", "\u0627\u0633\u062A\u0648\u062F\u064A\u0648", "\u062D\u062F\u064A\u0642\u0629", "1000"]
+  }
+];
+var INCLUDED_SERVICES_EN = [
+  "Private beach access",
+  "Pool access",
+  "Free parking",
+  "24 hour reception",
+  "24 hour security",
+  "Free internet in public areas",
+  "Beach seating and umbrellas",
+  "Family rest areas"
+];
+var INCLUDED_SERVICES_AR = [
+  "\u062F\u062E\u0648\u0644 \u0634\u0627\u0637\u0626 \u062E\u0627\u0635",
+  "\u062F\u062E\u0648\u0644 \u0627\u0644\u0645\u0633\u0628\u062D",
+  "\u0645\u0648\u0642\u0641 \u0633\u064A\u0627\u0631\u0627\u062A \u0645\u062C\u0627\u0646\u064A",
+  "\u0627\u0633\u062A\u0642\u0628\u0627\u0644 24 \u0633\u0627\u0639\u0629",
+  "\u0623\u0645\u0646 24 \u0633\u0627\u0639\u0629",
+  "\u0625\u0646\u062A\u0631\u0646\u062A \u0645\u062C\u0627\u0646\u064A \u0641\u064A \u0627\u0644\u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u0639\u0627\u0645\u0629",
+  "\u0645\u0642\u0627\u0639\u062F \u0648\u0645\u0638\u0644\u0627\u062A \u0627\u0644\u0634\u0627\u0637\u0626",
+  "\u0645\u0646\u0627\u0637\u0642 \u0631\u0627\u062D\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A"
+];
+var OPENING_OFFERS_EN = [
+  "Book 3 nights and get the 4th night free",
+  "15% discount for confirmed bookings before the official opening",
+  "10% discount for families and groups",
+  "Free stay for 2 children up to 10 years old in the same unit",
+  "VIP and Presidential chalets include welcome fruit basket and drinks",
+  "VIP and Presidential chalets include special beach seating",
+  "Discounts on water activities for VIP and Presidential chalets",
+  "Special corporate and group booking offers available"
+];
+var OPENING_OFFERS_AR = [
+  "\u0627\u062D\u062C\u0632 3 \u0644\u064A\u0627\u0644\u064A \u0648\u0627\u062D\u0635\u0644 \u0639\u0644\u0649 \u0627\u0644\u0644\u064A\u0644\u0629 \u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062C\u0627\u0646\u0627\u064B",
+  "\u062E\u0635\u0645 15% \u0644\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0627\u0644\u0645\u0624\u0643\u062F\u0629 \u0642\u0628\u0644 \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A",
+  "\u062E\u0635\u0645 10% \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0627\u062A",
+  "\u0625\u0642\u0627\u0645\u0629 \u0645\u062C\u0627\u0646\u064A\u0629 \u0644\u0637\u0641\u0644\u064A\u0646 \u062D\u062A\u0649 10 \u0633\u0646\u0648\u0627\u062A \u0641\u064A \u0646\u0641\u0633 \u0627\u0644\u0648\u062D\u062F\u0629",
+  "\u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u062A\u0634\u0645\u0644 \u0633\u0644\u0629 \u0641\u0648\u0627\u0643\u0647 \u0648\u0645\u0634\u0631\u0648\u0628\u0627\u062A \u062A\u0631\u062D\u064A\u0628\u064A\u0629",
+  "\u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u062A\u0634\u0645\u0644 \u062C\u0644\u0633\u0629 \u0634\u0627\u0637\u0626\u064A\u0629 \u0645\u0645\u064A\u0632\u0629",
+  "\u062E\u0635\u0648\u0645\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0645\u0627\u0626\u064A\u0629 \u0644\u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629",
+  "\u0639\u0631\u0648\u0636 \u062E\u0627\u0635\u0629 \u0644\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0627\u0644\u0634\u0631\u0643\u0627\u062A \u0648\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0627\u062A"
+];
+function matchAccommodation(text2) {
+  const normalized = text2.toLowerCase();
+  for (const unit of ACCOMMODATIONS) {
+    if (unit.keywords.some((kw) => normalized.includes(kw.toLowerCase()))) {
+      return unit;
+    }
+  }
+  if (/شاليه|chalet/.test(normalized) && !/presidential|رئاس/.test(normalized)) {
+    return ACCOMMODATIONS.find((u) => u.id === "side_sea");
+  }
+  if (/فيلا|villa|vip/.test(normalized)) {
+    return ACCOMMODATIONS.find((u) => u.id === "vip_sea");
+  }
+  if (/استوديو|studio|شقه|apartment/.test(normalized)) {
+    return ACCOMMODATIONS.find((u) => u.id === "garden_studio");
+  }
+  return void 0;
+}
+function accommodationBookingLabel(unit) {
+  return `${unit.nameEn} \u2014 ${unit.priceLyd} LYD/night`;
+}
+function getPriceListReply(lang) {
+  if (lang === "ar") {
+    const lines2 = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameAr}: ${u.priceLyd} \u062F.\u0644 / \u0644\u064A\u0644\u0629`);
+    return `\u0623\u0633\u0639\u0627\u0631 \u0635\u064A\u0641 2026 \u2728
+${lines2.join("\n")}
+
+\u0644\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0623\u0648 \u0627\u0644\u062D\u062C\u0632\u060C \u0627\u0628\u0639\u062A \u0646\u0648\u0639 \u0627\u0644\u0648\u062D\u062F\u0629 \u0627\u0644\u0644\u064A \u062A\u0647\u0645\u0643.`;
+  }
+  const lines = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameEn}: ${u.priceLyd} LYD/night`);
+  return `Summer 2026 rates \u2728
+${lines.join("\n")}
+
+For details or booking, tell us which unit interests you.`;
+}
+function getUnitReply(unit, lang) {
+  if (lang === "ar") {
+    const details2 = unit.detailsAr.map((d) => `\u2022 ${d}`).join("\n");
+    return `${unit.nameAr} \u2728
+${unit.priceLyd} \u062F.\u0644 / \u0644\u064A\u0644\u0629
+${details2}`;
+  }
+  const details = unit.detailsEn.map((d) => `\u2022 ${d}`).join("\n");
+  return `${unit.nameEn} \u2728
+${unit.priceLyd} LYD/night
+${details}`;
+}
+function getIncludedServicesReply(lang) {
+  if (lang === "ar") {
+    return `\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0629 \u2728
+${INCLUDED_SERVICES_AR.map((s) => `\u2022 ${s}`).join("\n")}`;
+  }
+  return `Included services \u2728
+${INCLUDED_SERVICES_EN.map((s) => `\u2022 ${s}`).join("\n")}`;
+}
+function getOffersReply(lang) {
+  if (lang === "ar") {
+    return `\u0639\u0631\u0648\u0636 \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u2728
+${OPENING_OFFERS_AR.map((s) => `\u2022 ${s}`).join("\n")}`;
+  }
+  return `Opening offers \u2728
+${OPENING_OFFERS_EN.map((s) => `\u2022 ${s}`).join("\n")}`;
+}
+function getBookingInterestPrompt(lang) {
+  return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0646\u0642\u062F\u0631 \u0646\u0627\u062E\u0630 \u0637\u0644\u0628 \u062D\u062C\u0632 \u0645\u0628\u062F\u0626\u064A. \u0627\u0628\u0639\u062A \u0627\u0644\u0627\u0633\u0645\u060C \u0627\u0644\u0647\u0627\u062A\u0641\u060C \u0646\u0648\u0639 \u0627\u0644\u0648\u062D\u062F\u0629\u060C \u0639\u062F\u062F \u0627\u0644\u0636\u064A\u0648\u0641\u060C \u0648\u0627\u0644\u062A\u0627\u0631\u064A\u062E. \u0627\u0644\u0641\u0631\u064A\u0642 \u064A\u0623\u0643\u062F \u0627\u0644\u062A\u0648\u0641\u0631." : "Of course \u2728 We can take a booking interest. Share name, phone, unit type, guests, and dates. Our team will confirm availability.";
+}
+function getKnowledgeBlockForPrompt(lang) {
+  const units = lang === "ar" ? ACCOMMODATIONS.map((u) => `- ${u.nameAr}: ${u.priceLyd} \u062F.\u0644/\u0644\u064A\u0644\u0629`).join("\n") : ACCOMMODATIONS.map((u) => `- ${u.nameEn}: ${u.priceLyd} LYD/night`).join("\n");
+  const included = lang === "ar" ? INCLUDED_SERVICES_AR.join("; ") : INCLUDED_SERVICES_EN.join("; ");
+  const offers = lang === "ar" ? OPENING_OFFERS_AR.join("; ") : OPENING_OFFERS_EN.join("; ");
+  return `
+Official Summer 2026 accommodation prices (use these exact prices):
+${units}
+
+Included: ${included}
+
+Opening offers: ${offers}
+
+Rules: Give real prices when asked. Never confirm a booking or guarantee availability. For booking, collect details and say the team will confirm availability. Keep replies short and luxury in tone.`;
+}
+function resolvePriceOrUnitReply(message, lang) {
+  const normalized = message.toLowerCase();
+  const asksIncluded = /included|what is included|services included|مشمول|الخدمات|شنو مشمول|شن مشمول/.test(
+    normalized
+  );
+  if (asksIncluded) return getIncludedServicesReply(lang);
+  const asksOffers = /offer|offers|promo|discount|عروض|خصم|تخفيض/.test(normalized);
+  if (asksOffers) return getOffersReply(lang);
+  const unit = matchAccommodation(normalized);
+  if (unit && /price|prices|how much|cost|بكم|قداش|سعر|اسعار|details|تفاصيل|about|عن|this|هذا|هذه/.test(normalized)) {
+    return getUnitReply(unit, lang);
+  }
+  if (unit && !/book|booking|حجز/.test(normalized)) {
+    return getUnitReply(unit, lang);
+  }
+  const asksPrices = /price|prices|how much|cost|rates|as3ar|بكم|قداش|سعر|اسعار|الاسعار|rates/.test(normalized);
+  if (asksPrices) return getPriceListReply(lang);
+  return void 0;
+}
+
+// api/chat-router.ts
 var RESORT_INFO = {
   name: "La Vida Resort & Beach Club",
   location: "Zuwarah, Libya",
   website: "lavidaresort.ly",
   phones: ["093 888 8868", "093 888 8878"]
 };
-function bookingAnnouncement(lang) {
-  if (lang === "ar") {
-    return "\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0648\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062D\u062C\u0632 \u0648\u0627\u0644\u062A\u0648\u0641\u0631 \u0648\u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629 \u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648.";
-  }
-  return "Prices, booking, reservation, availability, and full board details will be announced on May 20.";
-}
 function detectMessageLanguage(message) {
   if (/[\u0600-\u06FF]/.test(message)) return "ar";
   return detectLanguage(message);
@@ -1167,9 +1419,8 @@ function getLastUserQuestion(history) {
   return candidate ?? reversed[0];
 }
 function extractAccommodationType(text2) {
-  if (hasAny(text2, ["\u0634\u0627\u0644\u064A\u0647", "\u0634\u0627\u0644\u064A\u0647\u0627\u062A", "chalet", "chalets"])) return "chalet";
-  if (hasAny(text2, ["\u0641\u064A\u0644\u0627", "\u0641\u0644\u0644", "villa", "villas"])) return "villa";
-  if (hasAny(text2, ["\u0634\u0642\u0647", "\u0634\u0642\u0642", "apartment", "apartments"])) return "apartment";
+  const unit = matchAccommodation(text2);
+  if (unit) return accommodationBookingLabel(unit);
   if (hasAny(text2, ["\u0645\u0637\u0639\u0645", "\u0645\u0637\u0627\u0639\u0645", "restaurant", "resturent", "resturant", "cafe", "caf"])) return "restaurant";
   return void 0;
 }
@@ -1254,7 +1505,7 @@ function inferConversationState(message, history) {
 function bookingNextStepReply(state, lang) {
   if (!state.booking.active) return void 0;
   if (!state.booking.accommodationType) {
-    return lang === "ar" ? "\u0645\u0645\u062A\u0627\u0632 \u{1F30A} \u062A\u062D\u0628 \u0627\u0644\u062D\u062C\u0632 \u064A\u0643\u0648\u0646 \u0634\u0627\u0644\u064A\u0647 \u0648\u0644\u0627 \u0641\u064A\u0644\u0627\u061F" : "Perfect \u{1F30A} Would you prefer a chalet or a villa?";
+    return lang === "ar" ? "\u0645\u0645\u062A\u0627\u0632 \u{1F30A} \u0623\u064A \u0648\u062D\u062F\u0629 \u062A\u0647\u0645\u0643\u0645\u061F (\u0631\u0626\u0627\u0633\u064A 4000\u060C VIP \u0628\u062D\u0631 3000\u060C \u0645\u0633\u0628\u062D 2000\u060C \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A 1500\u060C \u0627\u0633\u062A\u0648\u062F\u064A\u0648 1000 \u062F.\u0644/\u0644\u064A\u0644\u0629)" : "Perfect \u{1F30A} Which unit interests you? (Presidential 4000, VIP sea 3000, pool view 2000, side sea 1500, garden studio 1000 LYD/night)";
   }
   if (!state.booking.dates) {
     return lang === "ar" ? "\u062D\u0644\u0648 \u2728 \u0627\u0628\u0639\u062A\u0644\u064A \u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062F\u062E\u0648\u0644 \u0648\u0627\u0644\u062E\u0631\u0648\u062C\u060C \u062D\u062A\u0649 \u0644\u0648 \u0643\u0644 \u0648\u0627\u062D\u062F \u0628\u0631\u0633\u0627\u0644\u0629 \u0645\u0646\u0641\u0635\u0644\u0629." : "Lovely \u2728 Share check-in and check-out dates, even if sent in separate messages.";
@@ -1265,9 +1516,9 @@ function bookingNextStepReply(state, lang) {
   if (!state.booking.phoneNumber) {
     return lang === "ar" ? "\u0645\u0645\u0643\u0646 \u0631\u0642\u0645 \u0645\u0648\u0628\u0627\u064A\u0644 \u0644\u0644\u062A\u0648\u0627\u0635\u0644 \u0648\u062A\u0623\u0643\u064A\u062F \u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632\u061F" : "May I have a phone number so our team can follow up on your booking request?";
   }
-  return lang === "ar" ? `\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u2705 (${formatKnownBookingData(state.booking)})
-\u0641\u0631\u064A\u0642 \u0627\u0644\u062D\u062C\u0632 \u0647\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0642\u0631\u064A\u0628\u0627\u064B.` : `Details received \u2705 (${formatKnownBookingData(state.booking)})
-Our booking team will contact you shortly.`;
+  return lang === "ar" ? `\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632 \u0627\u0644\u0645\u0628\u062F\u0626\u064A \u2705 (${formatKnownBookingData(state.booking)})
+\u0641\u0631\u064A\u0642 \u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u064A\u0623\u0643\u062F \u0627\u0644\u062A\u0648\u0641\u0631 \u0648\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645.` : `Booking interest received \u2705 (${formatKnownBookingData(state.booking)})
+The La Vida team will confirm availability and contact you.`;
 }
 function getShortcutReply(message, lang) {
   const text2 = normalizeText(message);
@@ -1281,10 +1532,14 @@ Maps and directions: ${RESORT_INFO.website}`;
     return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0639\u0646\u062F\u0646\u0627 \u0643\u0627\u0641\u064A\u0647 \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644 \u0628\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0636\u0645\u0646 \u0627\u0644\u0645\u0646\u062A\u062C\u0639." : "Absolutely \u2728 We have a beach caf\xE9 and dedicated food area inside the resort.";
   }
   if (hasAny(text2, ["\u062D\u062C\u0632", "booking", "book", "reservation"])) {
-    return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0646\u0628\u062F\u0623 \u0627\u0644\u062D\u062C\u0632 \u062E\u0637\u0648\u0629 \u062E\u0637\u0648\u0629. \u0634\u0627\u0644\u064A\u0647 \u0648\u0644\u0627 \u0641\u064A\u0644\u0627\u061F" : "Absolutely \u2728 Let\u2019s start your booking step by step. Chalet or villa?";
+    return getBookingInterestPrompt(lang);
   }
-  if (hasAny(text2, ["\u0627\u0633\u0639\u0627\u0631", "\u0627\u0644\u0627\u0633\u0639\u0627\u0631", "\u0633\u0639\u0631", "price", "prices", "cost"])) {
-    return bookingAnnouncement(lang);
+  const priceReply = resolvePriceOrUnitReply(text2, lang);
+  if (priceReply && hasAny(text2, ["\u0627\u0633\u0639\u0627\u0631", "\u0627\u0644\u0627\u0633\u0639\u0627\u0631", "\u0633\u0639\u0631", "price", "prices", "cost", "\u0628\u0643\u0645", "offer", "\u0639\u0631\u0648\u0636", "included", "\u0645\u0634\u0645\u0648\u0644"])) {
+    return priceReply;
+  }
+  if (hasAny(text2, ["\u0627\u0633\u0639\u0627\u0631", "\u0627\u0644\u0627\u0633\u0639\u0627\u0631", "\u0633\u0639\u0631", "price", "prices", "cost", "\u0628\u0643\u0645"])) {
+    return resolvePriceOrUnitReply("prices", lang);
   }
   if (hasAny(text2, ["\u0648\u0627\u062A\u0633\u0627\u0628", "whatsapp", "whats app", "wa"])) {
     return lang === "ar" ? `\u0648\u0627\u062A\u0633\u0627\u0628/\u0627\u062A\u0635\u0627\u0644:
@@ -1313,6 +1568,7 @@ Official resort facts:
 - Website: ${RESORT_INFO.website}
 - Phones: ${RESORT_INFO.phones.join(" and ")}
 - Opening date: June 1, 2026
+${getKnowledgeBlockForPrompt(lang)}
 
 Resort features you can mention naturally when relevant:
 - Beach access
@@ -1332,8 +1588,8 @@ Style and behavior rules:
 1) Sound luxury, calm, warm, elegant, and natural.
 2) Keep replies short, clear, and helpful.
 3) Never sound robotic.
-4) Never invent prices, booking details, or availability.
-5) For any question about prices, booking, reservation, availability, or full board, say details will be officially announced on May 20.
+4) Use only official Summer 2026 prices from the knowledge block.
+5) Never confirm bookings or guarantee availability \u2014 team confirms availability.
 6) Mention the opening date (June 1, 2026) when relevant.
 7) If you are unsure, clearly say management will confirm.
 8) Do not invent facts outside the information above.
@@ -1373,6 +1629,10 @@ var chatRouter = createRouter({
     const lang = detectMessageLanguage(message);
     const history = input.history ?? [];
     const state = inferConversationState(message, history);
+    const priceReply = resolvePriceOrUnitReply(message, lang);
+    if (priceReply && !state.booking.active) {
+      return { reply: priceReply, language: lang, source: "rule" };
+    }
     const bookingStepReply = bookingNextStepReply(state, lang);
     const shortcutReply = getShortcutReply(message, lang);
     if (shortcutReply && !state.booking.active) {
@@ -1528,13 +1788,7 @@ function buildSystemPrompt2(lang) {
 - \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A: ${WEBSITE}
 - \u0623\u0631\u0642\u0627\u0645 \u0627\u0644\u062A\u0648\u0627\u0635\u0644: ${PHONE_1} / ${PHONE_2}
 - \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A: 1 \u064A\u0648\u0646\u064A\u0648 2026
-- \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0648\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062D\u062C\u0632: \u0625\u0639\u0644\u0627\u0646 \u0631\u0633\u0645\u064A \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 2026
-
-\u0627\u0644\u0625\u0642\u0627\u0645\u0629:
-- \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635
-- \u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 10 \u0623\u0634\u062E\u0627\u0635
-- \u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u062D\u062A\u0649 5 \u0623\u0634\u062E\u0627\u0635
-- \u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u062D\u062A\u0649 3 \u0623\u0634\u062E\u0627\u0635
+${getKnowledgeBlockForPrompt("ar")}
 
 \u0627\u0644\u0645\u0631\u0627\u0641\u0642:
 - \u0634\u0627\u0637\u0626 \u0648\u0645\u0633\u0628\u062D \u0643\u0628\u064A\u0631
@@ -1544,10 +1798,10 @@ function buildSystemPrompt2(lang) {
 - \u0623\u0646\u0634\u0637\u0629 \u0623\u0637\u0641\u0627\u0644\u060C \u0623\u062C\u0648\u0627\u0621 \u0639\u0627\u0626\u0644\u064A\u0629\u060C \u062A\u0631\u0641\u064A\u0647 \u0644\u064A\u0644\u064A\u060C \u0645\u0634\u0627\u0647\u062F\u0629 \u0645\u0628\u0627\u0631\u064A\u0627\u062A\u060C \u0648\u0623\u0644\u0639\u0627\u0628 \u0634\u0628\u0627\u0628\u064A\u0629
 
 \u0642\u0648\u0627\u0639\u062F \u0625\u0644\u0632\u0627\u0645\u064A\u0629:
-1) \u0644\u0627 \u062A\u062E\u062A\u0631\u0639 \u0623\u0633\u0639\u0627\u0631 \u0623\u0648 \u062D\u062C\u0648\u0632\u0627\u062A \u0623\u0648 \u062A\u0648\u0641\u0631.
-2) \u0644\u0627 \u062A\u0624\u0643\u062F \u0623\u064A \u062D\u062C\u0632.
-3) \u0625\u0630\u0627 \u0627\u0644\u0633\u0624\u0627\u0644 \u0639\u0646 \u0627\u0644\u0623\u0633\u0639\u0627\u0631/\u0627\u0644\u062D\u062C\u0632/\u0627\u0644\u062A\u0648\u0641\u0631\u060C \u0627\u0633\u062A\u062E\u062F\u0645 \u0627\u0644\u0635\u064A\u0627\u063A\u0627\u062A \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0627\u0644\u0642\u0635\u064A\u0631\u0629.
-4) \u0625\u0630\u0627 \u0627\u0644\u0633\u0624\u0627\u0644 \u0639\u0646 \u0645\u0631\u0641\u0642 \u0645\u0639\u064A\u0646\u060C \u062C\u0627\u0648\u0628 \u0639\u0644\u0649 \u0646\u0641\u0633 \u0627\u0644\u0645\u0631\u0641\u0642 \u0641\u0642\u0637 \u0628\u062F\u0648\u0646 \u0625\u0637\u0627\u0644\u0629.
+1) \u0627\u0633\u062A\u062E\u062F\u0645 \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0623\u0639\u0644\u0627\u0647 \u0641\u0642\u0637 \u2014 \u0644\u0627 \u062A\u062E\u062A\u0631\u0639 \u0623\u0633\u0639\u0627\u0631\u0627\u064B.
+2) \u0644\u0627 \u062A\u0624\u0643\u062F \u0623\u064A \u062D\u062C\u0632 \u0648\u0644\u0627 \u062A\u0639\u062F \u0628\u0627\u0644\u062A\u0648\u0641\u0631.
+3) \u0644\u0644\u062D\u062C\u0632: \u0627\u062C\u0645\u0639 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0648\u0642\u0644 \u0625\u0646 \u0627\u0644\u0641\u0631\u064A\u0642 \u064A\u0623\u0643\u062F \u0627\u0644\u062A\u0648\u0641\u0631.
+4) \u0625\u0630\u0627 \u0627\u0644\u0633\u0624\u0627\u0644 \u0639\u0646 \u0645\u0631\u0641\u0642 \u0623\u0648 \u0648\u062D\u062F\u0629 \u0645\u0639\u064A\u0646\u0629\u060C \u062C\u0627\u0648\u0628 \u0639\u0644\u0649 \u0646\u0641\u0633 \u0627\u0644\u0645\u0648\u0636\u0648\u0639 \u0641\u0642\u0637 \u0648\u0628\u0627\u062E\u062A\u0635\u0627\u0631.
 5) \u0625\u0630\u0627 \u0627\u0644\u0637\u0644\u0628 \u063A\u064A\u0631 \u0648\u0627\u0636\u062D \u062C\u062F\u0627\u064B\u060C \u0627\u0637\u0644\u0628 \u062A\u0648\u0636\u064A\u062D \u0642\u0635\u064A\u0631 \u0648\u0644\u0637\u064A\u0641.`;
   }
   return `You are La Vida AI, the official receptionist for ${RESORT_NAME}.
@@ -1559,13 +1813,7 @@ Official facts:
 - Website: ${WEBSITE}
 - Contact numbers: ${PHONE_1} / ${PHONE_2}
 - Official opening date: June 1, 2026
-- Prices and booking details: officially announced on May 20, 2026
-
-Accommodation:
-- VIP villas with private pools (up to 8 guests)
-- Presidential villas with private pools (up to 10 guests)
-- Family chalets (up to 5 guests)
-- Hotel apartments (up to 3 guests)
+${getKnowledgeBlockForPrompt("en")}
 
 Facilities:
 - Beachfront access and large pool
@@ -1575,10 +1823,10 @@ Facilities:
 - Kids activities, family atmosphere, evening entertainment, match screenings, arcade-style youth area
 
 Hard rules:
-1) Never invent prices, booking availability, or policies.
-2) Never confirm bookings.
-3) For price/booking/availability questions, use the official short announcements.
-4) For specific facility questions, answer only that point briefly.
+1) Use only the official Summer 2026 prices above \u2014 never invent prices.
+2) Never confirm bookings or guarantee availability.
+3) For booking: collect details and say the team will confirm availability.
+4) For specific facility or unit questions, answer only that point briefly.
 5) Ask for clarification only when truly necessary.`;
 }
 async function generateAIResponse(userMessage, history = [], forceLang) {
@@ -1650,6 +1898,8 @@ function getIntentResponse(userMessage, lang) {
   const text2 = normalizeArabic(rawText);
   const compact = text2.replace(/\s+/g, " ").trim();
   const replies = [];
+  const priceOrUnit = resolvePriceOrUnitReply(`${text2} ${rawText}`, lang);
+  if (priceOrUnit) return priceOrUnit;
   const acknowledgementPhrases = [
     "\u0645\u0648\u0627\u0641\u0642",
     "\u0645\u0648\u0627\u0641\u064A\u0646",
@@ -1747,9 +1997,7 @@ function getIntentResponse(userMessage, lang) {
     "\u0627\u0633\u0639\u0627\u0631"
   ]);
   if (isPrice) {
-    replies.push(
-      lang === "ar" ? "\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Prices will be announced officially on May 20 \u2728"
-    );
+    replies.push(getPriceListReply(lang));
   }
   const isBooking = hasAny2(text2, [
     "book",
@@ -1770,9 +2018,22 @@ function getIntentResponse(userMessage, lang) {
     "\u0641\u064A\u0647 \u062D\u062C\u0632"
   ]);
   if (isBooking) {
-    replies.push(
-      lang === "ar" ? "\u0627\u0644\u062D\u062C\u0632 \u0628\u064A\u0641\u062A\u062D \u0642\u0631\u064A\u0628\u0627\u064B \u0648\u062D\u0646\u0639\u0644\u0646\u0648\u0627 \u0643\u0644 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Bookings will open soon and all booking details will be announced officially on May 20 \u2728"
-    );
+    replies.push(getBookingInterestPrompt(lang));
+  }
+  const asksOffers = hasAny2(text2, ["offer", "offers", "promo", "discount", "\u0639\u0631\u0648\u0636", "\u062E\u0635\u0645", "\u062A\u062E\u0641\u064A\u0636"]);
+  if (asksOffers) {
+    replies.push(getOffersReply(lang));
+  }
+  const asksIncluded = hasAny2(text2, [
+    "included",
+    "what is included",
+    "services included",
+    "\u0645\u0634\u0645\u0648\u0644",
+    "\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0647",
+    "\u0634\u0646 \u0645\u0634\u0645\u0648\u0644"
+  ]);
+  if (asksIncluded) {
+    replies.push(getIncludedServicesReply(lang));
   }
   const isOpening = hasAny2(text2, ["opening", "when open", "opening date", "\u0645\u062A\u0649 \u062A\u0641\u062A\u062D\u0648", "\u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D", "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D"]);
   if (isOpening) {
@@ -1814,7 +2075,7 @@ ${PHONE_2} \u2728`
   const asksMeals = hasAny2(text2, ["full board", "breakfast", "meals", "food included", "\u0648\u062C\u0628\u0627\u062A", "\u0627\u0642\u0627\u0645\u0647 \u0643\u0627\u0645\u0644\u0647", "\u0641\u0648\u0644 \u0628\u0648\u0631\u062F"]);
   if (asksMeals) {
     replies.push(
-      lang === "ar" ? "\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629 \u0648\u0627\u0644\u0648\u062C\u0628\u0627\u062A \u062D\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u0645\u0639 \u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062D\u062C\u0632 \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Full board and meal package details will be announced officially with the booking details on May 20 \u2728"
+      lang === "ar" ? "\u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u062A\u0634\u0645\u0644 \u062F\u062E\u0648\u0644 \u0627\u0644\u0634\u0627\u0637\u0626 \u0648\u0627\u0644\u0645\u0633\u0628\u062D \u0648\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0630\u0643\u0648\u0631\u0629 \u0641\u064A \u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0629 \u2728 \u0627\u0633\u0623\u0644\u0646\u0627 \u0639\u0646 \xAB\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0629\xBB \u0644\u0644\u062A\u0641\u0627\u0635\u064A\u0644." : "Your stay includes beach and pool access plus the listed included services \u2728 Ask us about included services for details."
     );
   }
   const asksPhotos = hasAny2(text2, [
@@ -1909,9 +2170,8 @@ ${PHONE_2} \u2728`
     "\u0625\u0642\u0627\u0645\u0629"
   ]);
   if (asksAccommodation) {
-    replies.push(
-      lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u062A\u0648\u0641\u0631 \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 10 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u062D\u062A\u0649 5 \u0623\u0634\u062E\u0627\u0635\u060C \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u062D\u062A\u0649 3 \u0623\u0634\u062E\u0627\u0635 \u2728" : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests \u2728"
-    );
+    const unit = matchAccommodation(text2);
+    replies.push(unit ? getUnitReply(unit, lang) : getPriceListReply(lang));
   }
   const asksJetski = hasAny2(text2, [
     "jetski",
@@ -2372,21 +2632,8 @@ function hasAny3(text2, keywords) {
   return keywords.some((keyword) => text2.includes(keyword));
 }
 function detectAccommodationType(text2) {
-  if (hasAny3(text2, ["vip villa", "\u0641\u064A\u0644\u0627 vip", "\u0641\u0644\u0644 vip", "\u0641\u064A\u0644\u0627 \u0641\u064A \u0627\u064A \u0628\u064A"])) {
-    return "VIP Villa private pool up to 8 guests";
-  }
-  if (hasAny3(text2, ["presidential", "\u0631\u0626\u0627\u0633\u064A", "\u0631\u0626\u0627\u0633\u064A\u0629"])) {
-    return "Presidential Villa private pool up to 10 guests";
-  }
-  if (hasAny3(text2, ["family chalet", "\u0634\u0627\u0644\u064A\u0647", "\u0634\u0627\u0644\u064A\u0647\u0627\u062A", "chalet"])) {
-    return "Family Chalet up to 5 guests";
-  }
-  if (hasAny3(text2, ["hotel apartment", "apartment", "\u0634\u0642\u0647", "\u0634\u0642\u0642"])) {
-    return "Hotel Apartment up to 3 guests";
-  }
-  if (hasAny3(text2, ["villa", "\u0641\u064A\u0644\u0627", "\u0641\u0644\u0644"])) {
-    return "VIP Villa private pool up to 8 guests";
-  }
+  const unit = matchAccommodation(text2);
+  if (unit) return accommodationBookingLabel(unit);
   return void 0;
 }
 function extractPhone(text2) {
@@ -2442,11 +2689,16 @@ function detectIntents(text2) {
   push("thanks", hasAny3(text2, ["thanks", "thank you", "\u0634\u0643\u0631\u0627", "\u064A\u0633\u0644\u0645\u0648", "\u062A\u0633\u0644\u0645"]));
   push("greeting", hasAny3(text2, ["hi", "hello", "hey", "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064A\u0643\u0645", "\u0633\u0644\u0627\u0645", "\u0645\u0631\u062D\u0628\u0627", "\u0627\u0647\u0644\u0627"]));
   push("human_handoff", hasAny3(text2, ["human", "agent", "manager", "admin", "complaint", "problem", "\u0645\u0648\u0638\u0641", "\u0627\u0644\u0625\u062F\u0627\u0631\u0629", "\u0645\u0634\u0643\u0644\u0629"]));
+  push("offers", hasAny3(text2, ["offer", "offers", "promo", "discount", "\u0639\u0631\u0648\u0636", "\u062E\u0635\u0645", "\u062A\u062E\u0641\u064A\u0636"]));
+  push("included", hasAny3(text2, ["included", "what is included", "services included", "\u0645\u0634\u0645\u0648\u0644", "\u0627\u0644\u062E\u062F\u0645\u0627\u062A", "\u0634\u0646 \u0645\u0634\u0645\u0648\u0644"]));
   push("general", hasAny3(text2, ["what do you offer", "tell me more", "what else", "\u0645\u0645\u0643\u0646 \u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u062A\u0641\u0627\u0635\u064A\u0644", "\u0634\u0646\u0648 \u0639\u0646\u062F\u0643\u0645"]));
   return intents;
 }
-function replyForIntent(intent, lang) {
-  if (intent === "prices") return lang === "ar" ? "\u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646\u0647\u0627 \u0631\u0633\u0645\u064A\u0627\u064B \u064A\u0648\u0645 20 \u0645\u0627\u064A\u0648 \u2728" : "Prices will be announced officially on May 20 \u2728";
+function replyForIntent(intent, lang, messageText) {
+  if (intent === "prices") return getPriceListReply(lang);
+  if (intent === "offers") return getOffersReply(lang);
+  if (intent === "included") return getIncludedServicesReply(lang);
+  if (intent === "booking") return getBookingInterestPrompt(lang);
   if (intent === "opening") return lang === "ar" ? "\u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A \u064A\u0648\u0645 1 \u064A\u0648\u0646\u064A\u0648 2026 \u2728" : "La Vida officially opens on June 1 2026 \u2728";
   if (intent === "photos") {
     return lang === "ar" ? "\u062D\u0627\u0644\u064A\u0627\u064B \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0627\u0644\u062E\u0627\u0635\u0629 \u0628\u0627\u0644\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0648\u0627\u0644\u0645\u0646\u062A\u062C\u0639 \u0645\u0634 \u0645\u062A\u0648\u0641\u0631\u0629 \u0639\u0646\u062F\u0646\u0627 \u062A\u0648\u0627 \u2728 \u0648\u062D\u0646\u0634\u0627\u0631\u0643\u0648\u0627 \u0643\u0644 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0627\u0644\u0628\u0635\u0631\u064A\u0629 \u0642\u0631\u064A\u0628\u0627\u064B \u0645\u0639 \u0645\u0648\u0639\u062F \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0648\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u0631\u0633\u0645\u064A \u0644\u0644\u062D\u062C\u0632" : "Official chalet and resort images are not available yet \u2728 Photos and visual updates will be shared closer to opening and the official booking announcement";
@@ -2458,7 +2710,8 @@ function replyForIntent(intent, lang) {
   if (intent === "jetski") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0627\u0644\u062C\u062A\u0633\u0643\u064A \u0648\u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0628\u062D\u0631\u064A\u0629 \u0645\u062A\u0648\u0641\u0631\u0629 \u0641\u064A \u0644\u0627\u0641\u064A\u062F\u0627." : "Yes \u2728 Jet ski and water sports are available at La Vida.";
   if (intent === "cafe_food") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0641\u064A \u0644\u0627\u0641\u064A\u062F\u0627 \u0643\u0627\u0641\u064A\u0647 \u0634\u0627\u0637\u0626\u064A \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644." : "Yes \u2728 La Vida has a beach caf\xE9 and food area.";
   if (intent === "rooms") {
-    return lang === "ar" ? "\u0644\u062F\u064A\u0646\u0627 \u0641\u0644\u0644 VIP \u0628\u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629 \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635\u060C \u0641\u0644\u0644 \u0631\u0626\u0627\u0633\u064A\u0629 \u062D\u062A\u0649 10\u060C \u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629 \u062D\u062A\u0649 5\u060C \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u062D\u062A\u0649 3 \u2728" : "We offer VIP villas with private pools up to 8 guests, presidential villas up to 10, family chalets up to 5, and hotel apartments up to 3 \u2728";
+    const unit = messageText ? matchAccommodation(normalizeInput(messageText)) : void 0;
+    return unit ? getUnitReply(unit, lang) : getPriceListReply(lang);
   }
   if (intent === "private_pool") return lang === "ar" ? "\u0646\u0639\u0645 \u2728 \u0641\u0644\u0644 VIP \u0648\u0627\u0644\u0641\u0644\u0644 \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u0641\u064A\u0647\u0627 \u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629." : "Yes \u2728 VIP and presidential villas include private pools.";
   if (intent === "supermarket") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0645\u062A\u0648\u0641\u0631 \u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A \u0636\u0645\u0646 \u0627\u0644\u062E\u062F\u0645\u0627\u062A." : "Yes \u2728 A supermarket is available within resort services.";
@@ -2614,8 +2867,8 @@ function hasFollowUpPrompt(text2) {
     text2.trim()
   );
 }
-function composeMultiIntentReply(intents, lang) {
-  const mapped = intents.map((intent) => replyForIntent(intent, lang)).filter((value) => Boolean(value));
+function composeMultiIntentReply(intents, lang, messageText) {
+  const mapped = intents.map((intent) => replyForIntent(intent, lang, messageText)).filter((value) => Boolean(value));
   const unique = Array.from(new Set(mapped));
   if (!unique.length) return void 0;
   return unique.slice(0, 3).join("\n");
@@ -2695,6 +2948,11 @@ async function handleMessengerMessage(messaging) {
     session.lastIntent = intents[0];
     session.lastTopic = intents[0];
   }
+  const priceOrUnitReply = resolvePriceOrUnitReply(`${normalizedText} ${text2}`, lang);
+  if (priceOrUnitReply && session.bookingState !== "active" && !intents.includes("booking")) {
+    await sendAndTrackReply(session, priceOrUnitReply);
+    return;
+  }
   if (session.bookingState === "active" || intents.includes("booking")) {
     session.bookingState = "active";
     session.bookingData = updateBookingData(session.bookingData, text2, normalizedText);
@@ -2721,7 +2979,7 @@ async function handleMessengerMessage(messaging) {
   }
   const followUpToLastTopic = hasFollowUpPrompt(text2) && session.lastTopic !== "general";
   const resolvedIntents = intents.length ? intents : followUpToLastTopic ? [session.lastTopic] : [];
-  const templateReply = composeMultiIntentReply(resolvedIntents, lang);
+  const templateReply = composeMultiIntentReply(resolvedIntents, lang, text2);
   if (templateReply) {
     await sendAndTrackReply(session, templateReply);
     return;
