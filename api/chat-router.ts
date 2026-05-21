@@ -3,6 +3,13 @@ import { publicQuery, createRouter } from "./middleware";
 import { detectLanguage, type Language } from "@contracts/templates";
 import { TRPCError } from "@trpc/server";
 import OpenAI from "openai";
+import {
+  getBookingInterestPrompt,
+  getKnowledgeBlockForPrompt,
+  matchAccommodation,
+  accommodationBookingLabel,
+  resolvePriceOrUnitReply,
+} from "./resort-knowledge";
 
 const RESORT_INFO = {
   name: "La Vida Resort & Beach Club",
@@ -20,7 +27,7 @@ type ChatHistoryItem = {
 
 type BookingState = {
   active: boolean;
-  accommodationType?: "chalet" | "villa" | "apartment" | "restaurant";
+  accommodationType?: string;
   dates?: string;
   guestCount?: number;
   phoneNumber?: string;
@@ -31,13 +38,6 @@ type ConversationState = {
   previousQuestion?: string;
   booking: BookingState;
 };
-
-function bookingAnnouncement(lang: Language): string {
-  if (lang === "ar") {
-    return "الأسعار وتفاصيل الحجز والتوفر والإقامة الكاملة سيتم الإعلان عنها يوم 20 مايو.";
-  }
-  return "Prices, booking, reservation, availability, and full board details will be announced on May 20.";
-}
 
 function detectMessageLanguage(message: string): Language {
   if (/[\u0600-\u06FF]/.test(message)) return "ar";
@@ -80,10 +80,9 @@ function getLastUserQuestion(history: ChatHistoryItem[]): string | undefined {
   return candidate ?? reversed[0];
 }
 
-function extractAccommodationType(text: string): BookingState["accommodationType"] | undefined {
-  if (hasAny(text, ["شاليه", "شاليهات", "chalet", "chalets"])) return "chalet";
-  if (hasAny(text, ["فيلا", "فلل", "villa", "villas"])) return "villa";
-  if (hasAny(text, ["شقه", "شقق", "apartment", "apartments"])) return "apartment";
+function extractAccommodationType(text: string): string | undefined {
+  const unit = matchAccommodation(text);
+  if (unit) return accommodationBookingLabel(unit);
   if (hasAny(text, ["مطعم", "مطاعم", "restaurant", "resturent", "resturant", "cafe", "caf"])) return "restaurant";
   return undefined;
 }
@@ -182,8 +181,8 @@ function bookingNextStepReply(state: ConversationState, lang: Language): string 
 
   if (!state.booking.accommodationType) {
     return lang === "ar"
-      ? "ممتاز 🌊 تحب الحجز يكون شاليه ولا فيلا؟"
-      : "Perfect 🌊 Would you prefer a chalet or a villa?";
+      ? "ممتاز 🌊 أي وحدة تهمكم؟ (رئاسي 4000، VIP بحر 3000، مسبح 2000، بحر جانبي 1500، استوديو 1000 د.ل/ليلة)"
+      : "Perfect 🌊 Which unit interests you? (Presidential 4000, VIP sea 3000, pool view 2000, side sea 1500, garden studio 1000 LYD/night)";
   }
 
   if (!state.booking.dates) {
@@ -205,8 +204,8 @@ function bookingNextStepReply(state: ConversationState, lang: Language): string 
   }
 
   return lang === "ar"
-    ? `تم استلام التفاصيل ✅ (${formatKnownBookingData(state.booking)})\nفريق الحجز هيتواصل معاكم قريباً.`
-    : `Details received ✅ (${formatKnownBookingData(state.booking)})\nOur booking team will contact you shortly.`;
+    ? `تم استلام طلب الحجز المبدئي ✅ (${formatKnownBookingData(state.booking)})\nفريق لافيدا حيأكد التوفر ويتواصل معاكم.`
+    : `Booking interest received ✅ (${formatKnownBookingData(state.booking)})\nThe La Vida team will confirm availability and contact you.`;
 }
 
 function getShortcutReply(message: string, lang: Language): string | undefined {
@@ -224,12 +223,14 @@ function getShortcutReply(message: string, lang: Language): string | undefined {
       : "Absolutely ✨ We have a beach café and dedicated food area inside the resort.";
   }
   if (hasAny(text, ["حجز", "booking", "book", "reservation"])) {
-    return lang === "ar"
-      ? "أكيد ✨ نبدأ الحجز خطوة خطوة. شاليه ولا فيلا؟"
-      : "Absolutely ✨ Let’s start your booking step by step. Chalet or villa?";
+    return getBookingInterestPrompt(lang);
   }
-  if (hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost"])) {
-    return bookingAnnouncement(lang);
+  const priceReply = resolvePriceOrUnitReply(text, lang);
+  if (priceReply && hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost", "بكم", "offer", "عروض", "included", "مشمول"])) {
+    return priceReply;
+  }
+  if (hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost", "بكم"])) {
+    return resolvePriceOrUnitReply("prices", lang);
   }
   if (hasAny(text, ["واتساب", "whatsapp", "whats app", "wa"])) {
     return lang === "ar"
@@ -263,6 +264,7 @@ Official resort facts:
 - Website: ${RESORT_INFO.website}
 - Phones: ${RESORT_INFO.phones.join(" and ")}
 - Opening date: June 1, 2026
+${getKnowledgeBlockForPrompt(lang)}
 
 Resort features you can mention naturally when relevant:
 - Beach access
@@ -282,8 +284,8 @@ Style and behavior rules:
 1) Sound luxury, calm, warm, elegant, and natural.
 2) Keep replies short, clear, and helpful.
 3) Never sound robotic.
-4) Never invent prices, booking details, or availability.
-5) For any question about prices, booking, reservation, availability, or full board, say details will be officially announced on May 20.
+4) Use only official Summer 2026 prices from the knowledge block.
+5) Never confirm bookings or guarantee availability — team confirms availability.
 6) Mention the opening date (June 1, 2026) when relevant.
 7) If you are unsure, clearly say management will confirm.
 8) Do not invent facts outside the information above.
@@ -332,6 +334,11 @@ export const chatRouter = createRouter({
       const lang = detectMessageLanguage(message);
       const history = input.history ?? [];
       const state = inferConversationState(message, history);
+
+      const priceReply = resolvePriceOrUnitReply(message, lang);
+      if (priceReply && !state.booking.active) {
+        return { reply: priceReply, language: lang, source: "rule" as const };
+      }
 
       const bookingStepReply = bookingNextStepReply(state, lang);
       const shortcutReply = getShortcutReply(message, lang);

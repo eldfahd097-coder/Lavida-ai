@@ -1,6 +1,16 @@
 import { env } from "./lib/env";
 import { detectLanguage } from "@contracts/templates";
 import type { Language } from "@contracts/templates";
+import {
+  getBookingInterestPrompt,
+  getKnowledgeBlockForPrompt,
+  getOffersReply,
+  getIncludedServicesReply,
+  getPriceListReply,
+  getUnitReply,
+  matchAccommodation,
+  resolvePriceOrUnitReply,
+} from "./resort-knowledge";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const RESORT_NAME = "La Vida Resort & Beach Club";
@@ -20,13 +30,7 @@ function buildSystemPrompt(lang: Language): string {
 - الموقع الإلكتروني: ${WEBSITE}
 - أرقام التواصل: ${PHONE_1} / ${PHONE_2}
 - الافتتاح الرسمي: 1 يونيو 2026
-- الأسعار وتفاصيل الحجز: إعلان رسمي يوم 20 مايو 2026
-
-الإقامة:
-- فلل VIP بمسابح خاصة حتى 8 أشخاص
-- فلل رئاسية بمسابح خاصة حتى 10 أشخاص
-- شاليهات عائلية حتى 5 أشخاص
-- شقق فندقية حتى 3 أشخاص
+${getKnowledgeBlockForPrompt("ar")}
 
 المرافق:
 - شاطئ ومسبح كبير
@@ -36,10 +40,10 @@ function buildSystemPrompt(lang: Language): string {
 - أنشطة أطفال، أجواء عائلية، ترفيه ليلي، مشاهدة مباريات، وألعاب شبابية
 
 قواعد إلزامية:
-1) لا تخترع أسعار أو حجوزات أو توفر.
-2) لا تؤكد أي حجز.
-3) إذا السؤال عن الأسعار/الحجز/التوفر، استخدم الصياغات الرسمية القصيرة.
-4) إذا السؤال عن مرفق معين، جاوب على نفس المرفق فقط بدون إطالة.
+1) استخدم الأسعار الرسمية أعلاه فقط — لا تخترع أسعاراً.
+2) لا تؤكد أي حجز ولا تعد بالتوفر.
+3) للحجز: اجمع البيانات وقل إن الفريق يأكد التوفر.
+4) إذا السؤال عن مرفق أو وحدة معينة، جاوب على نفس الموضوع فقط وباختصار.
 5) إذا الطلب غير واضح جداً، اطلب توضيح قصير ولطيف.`;
   }
   return `You are La Vida AI, the official receptionist for ${RESORT_NAME}.
@@ -51,13 +55,7 @@ Official facts:
 - Website: ${WEBSITE}
 - Contact numbers: ${PHONE_1} / ${PHONE_2}
 - Official opening date: June 1, 2026
-- Prices and booking details: officially announced on May 20, 2026
-
-Accommodation:
-- VIP villas with private pools (up to 8 guests)
-- Presidential villas with private pools (up to 10 guests)
-- Family chalets (up to 5 guests)
-- Hotel apartments (up to 3 guests)
+${getKnowledgeBlockForPrompt("en")}
 
 Facilities:
 - Beachfront access and large pool
@@ -67,10 +65,10 @@ Facilities:
 - Kids activities, family atmosphere, evening entertainment, match screenings, arcade-style youth area
 
 Hard rules:
-1) Never invent prices, booking availability, or policies.
-2) Never confirm bookings.
-3) For price/booking/availability questions, use the official short announcements.
-4) For specific facility questions, answer only that point briefly.
+1) Use only the official Summer 2026 prices above — never invent prices.
+2) Never confirm bookings or guarantee availability.
+3) For booking: collect details and say the team will confirm availability.
+4) For specific facility or unit questions, answer only that point briefly.
 5) Ask for clarification only when truly necessary.`;
 }
 
@@ -184,6 +182,9 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   const compact = text.replace(/\s+/g, " ").trim();
   const replies: string[] = [];
 
+  const priceOrUnit = resolvePriceOrUnitReply(`${text} ${rawText}`, lang);
+  if (priceOrUnit) return priceOrUnit;
+
   const acknowledgementPhrases = [
     "موافق",
     "موافين",
@@ -288,11 +289,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "اسعار",
   ]);
   if (isPrice) {
-    replies.push(
-      lang === "ar"
-      ? "الأسعار سيتم الإعلان عنها رسمياً يوم 20 مايو ✨"
-      : "Prices will be announced officially on May 20 ✨",
-    );
+    replies.push(getPriceListReply(lang));
   }
 
   const isBooking = hasAny(text, [
@@ -314,11 +311,24 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "فيه حجز",
   ]);
   if (isBooking) {
-    replies.push(
-      lang === "ar"
-      ? "الحجز بيفتح قريباً وحنعلنوا كل التفاصيل الرسمية يوم 20 مايو ✨"
-      : "Bookings will open soon and all booking details will be announced officially on May 20 ✨",
-    );
+    replies.push(getBookingInterestPrompt(lang));
+  }
+
+  const asksOffers = hasAny(text, ["offer", "offers", "promo", "discount", "عروض", "خصم", "تخفيض"]);
+  if (asksOffers) {
+    replies.push(getOffersReply(lang));
+  }
+
+  const asksIncluded = hasAny(text, [
+    "included",
+    "what is included",
+    "services included",
+    "مشمول",
+    "الخدمات المشموله",
+    "شن مشمول",
+  ]);
+  if (asksIncluded) {
+    replies.push(getIncludedServicesReply(lang));
   }
 
   const isOpening = hasAny(text, ["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
@@ -367,8 +377,8 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   if (asksMeals) {
     replies.push(
       lang === "ar"
-      ? "تفاصيل الإقامة الكاملة والوجبات حيتم الإعلان عنها رسمياً مع تفاصيل الحجز يوم 20 مايو ✨"
-      : "Full board and meal package details will be announced officially with the booking details on May 20 ✨",
+        ? "الإقامة تشمل دخول الشاطئ والمسبح والخدمات المذكورة في قائمة الخدمات المشمولة ✨ اسألنا عن «الخدمات المشمولة» للتفاصيل."
+        : "Your stay includes beach and pool access plus the listed included services ✨ Ask us about included services for details.",
     );
   }
 
@@ -476,11 +486,8 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "إقامة",
   ]);
   if (asksAccommodation) {
-    replies.push(
-      lang === "ar"
-      ? "لافيدا توفر فلل VIP بمسابح خاصة حتى 8 أشخاص، وفلل رئاسية بمسابح خاصة حتى 10 أشخاص، وشاليهات عائلية حتى 5 أشخاص، وشقق فندقية حتى 3 أشخاص ✨"
-      : "La Vida offers VIP villas with private pools for up to 8 guests, presidential villas for up to 10 guests, family chalets for up to 5 guests, and hotel apartments for up to 3 guests ✨",
-    );
+    const unit = matchAccommodation(text);
+    replies.push(unit ? getUnitReply(unit, lang) : getPriceListReply(lang));
   }
 
   const asksJetski = hasAny(text, [

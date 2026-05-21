@@ -4,6 +4,16 @@ import { sendMessengerMessage } from "./lib/messenger";
 import { generateAIResponse } from "./ai-engine";
 import { detectLanguage, type Language } from "@contracts/templates";
 import nodemailer from "nodemailer";
+import {
+  accommodationBookingLabel,
+  getBookingInterestPrompt,
+  getIncludedServicesReply,
+  getOffersReply,
+  getPriceListReply,
+  getUnitReply,
+  matchAccommodation,
+  resolvePriceOrUnitReply,
+} from "./resort-knowledge";
 
 const app = new Hono();
 const senderSessions = new Map<string, SenderSession>();
@@ -43,21 +53,8 @@ function hasAny(text: string, keywords: string[]): boolean {
 }
 
 function detectAccommodationType(text: string): BookingData["accommodation"] | undefined {
-  if (hasAny(text, ["vip villa", "فيلا vip", "فلل vip", "فيلا في اي بي"])) {
-    return "VIP Villa private pool up to 8 guests";
-  }
-  if (hasAny(text, ["presidential", "رئاسي", "رئاسية"])) {
-    return "Presidential Villa private pool up to 10 guests";
-  }
-  if (hasAny(text, ["family chalet", "شاليه", "شاليهات", "chalet"])) {
-    return "Family Chalet up to 5 guests";
-  }
-  if (hasAny(text, ["hotel apartment", "apartment", "شقه", "شقق"])) {
-    return "Hotel Apartment up to 3 guests";
-  }
-  if (hasAny(text, ["villa", "فيلا", "فلل"])) {
-    return "VIP Villa private pool up to 8 guests";
-  }
+  const unit = matchAccommodation(text);
+  if (unit) return accommodationBookingLabel(unit);
   return undefined;
 }
 
@@ -120,13 +117,18 @@ function detectIntents(text: string): IntentName[] {
   push("thanks", hasAny(text, ["thanks", "thank you", "شكرا", "يسلمو", "تسلم"]));
   push("greeting", hasAny(text, ["hi", "hello", "hey", "السلام عليكم", "سلام", "مرحبا", "اهلا"]));
   push("human_handoff", hasAny(text, ["human", "agent", "manager", "admin", "complaint", "problem", "موظف", "الإدارة", "مشكلة"]));
+  push("offers", hasAny(text, ["offer", "offers", "promo", "discount", "عروض", "خصم", "تخفيض"]));
+  push("included", hasAny(text, ["included", "what is included", "services included", "مشمول", "الخدمات", "شن مشمول"]));
   push("general", hasAny(text, ["what do you offer", "tell me more", "what else", "ممكن معلومات", "معلومات", "تفاصيل", "شنو عندكم"]));
 
   return intents;
 }
 
-function replyForIntent(intent: IntentName, lang: Language): string | undefined {
-  if (intent === "prices") return lang === "ar" ? "الأسعار سيتم الإعلان عنها رسمياً يوم 20 مايو ✨" : "Prices will be announced officially on May 20 ✨";
+function replyForIntent(intent: IntentName, lang: Language, messageText?: string): string | undefined {
+  if (intent === "prices") return getPriceListReply(lang);
+  if (intent === "offers") return getOffersReply(lang);
+  if (intent === "included") return getIncludedServicesReply(lang);
+  if (intent === "booking") return getBookingInterestPrompt(lang);
   if (intent === "opening") return lang === "ar" ? "الافتتاح الرسمي يوم 1 يونيو 2026 ✨" : "La Vida officially opens on June 1 2026 ✨";
   if (intent === "photos") {
     return lang === "ar"
@@ -142,9 +144,8 @@ function replyForIntent(intent: IntentName, lang: Language): string | undefined 
   if (intent === "jetski") return lang === "ar" ? "أكيد ✨ الجتسكي والأنشطة البحرية متوفرة في لافيدا." : "Yes ✨ Jet ski and water sports are available at La Vida.";
   if (intent === "cafe_food") return lang === "ar" ? "أكيد ✨ في لافيدا كافيه شاطئي ومنطقة أكل." : "Yes ✨ La Vida has a beach café and food area.";
   if (intent === "rooms") {
-    return lang === "ar"
-      ? "لدينا فلل VIP بمسابح خاصة حتى 8 أشخاص، فلل رئاسية حتى 10، شاليهات عائلية حتى 5، وشقق فندقية حتى 3 ✨"
-      : "We offer VIP villas with private pools up to 8 guests, presidential villas up to 10, family chalets up to 5, and hotel apartments up to 3 ✨";
+    const unit = messageText ? matchAccommodation(normalizeInput(messageText)) : undefined;
+    return unit ? getUnitReply(unit, lang) : getPriceListReply(lang);
   }
   if (intent === "private_pool") return lang === "ar" ? "نعم ✨ فلل VIP والفلل الرئاسية فيها مسابح خاصة." : "Yes ✨ VIP and presidential villas include private pools.";
   if (intent === "supermarket") return lang === "ar" ? "أكيد ✨ متوفر سوبرماركت ضمن الخدمات." : "Yes ✨ A supermarket is available within resort services.";
@@ -328,9 +329,9 @@ function hasFollowUpPrompt(text: string): boolean {
   );
 }
 
-function composeMultiIntentReply(intents: IntentName[], lang: Language): string | undefined {
+function composeMultiIntentReply(intents: IntentName[], lang: Language, messageText?: string): string | undefined {
   const mapped = intents
-    .map((intent) => replyForIntent(intent, lang))
+    .map((intent) => replyForIntent(intent, lang, messageText))
     .filter((value): value is string => Boolean(value));
   const unique = Array.from(new Set(mapped));
   if (!unique.length) return undefined;
@@ -430,6 +431,12 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
     session.lastTopic = intents[0];
   }
 
+  const priceOrUnitReply = resolvePriceOrUnitReply(`${normalizedText} ${text}`, lang);
+  if (priceOrUnitReply && session.bookingState !== "active" && !intents.includes("booking")) {
+    await sendAndTrackReply(session, priceOrUnitReply);
+    return;
+  }
+
   if (session.bookingState === "active" || intents.includes("booking")) {
     session.bookingState = "active";
     session.bookingData = updateBookingData(session.bookingData, text, normalizedText);
@@ -465,7 +472,7 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
       ? [session.lastTopic]
       : [];
 
-  const templateReply = composeMultiIntentReply(resolvedIntents, lang);
+  const templateReply = composeMultiIntentReply(resolvedIntents, lang, text);
   if (templateReply) {
     await sendAndTrackReply(session, templateReply);
     return;
@@ -531,6 +538,8 @@ type IntentName =
   | "thanks"
   | "greeting"
   | "human_handoff"
+  | "offers"
+  | "included"
   | "general";
 
 type SenderSession = {

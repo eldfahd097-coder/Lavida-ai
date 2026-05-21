@@ -59,14 +59,14 @@ export function getGreeting(_platform: Platform, lang: Language): string {
     return `مرحباً بكم في La Vida Resort & Beach Club 🏖️
 نشكركم على تواصلكم معنا
 
-الحجز غير متاح حالياً وسيتم الإعلان عنه قريباً 📢
+الافتتاح 1 يونيو 2026 — أسعار صيف 2026 متوفرة (اضغط 3)
 
 يرجى إرسال رقم الخيار:`;
   }
   return `Welcome to La Vida Resort & Beach Club 🏖️
 Thank you for reaching out to us
 
-Booking is not available yet and will be announced soon 📢
+Opening June 1, 2026 — Summer 2026 rates available (press 3)
 
 Please send the option number:`;
 }
@@ -185,24 +185,34 @@ Your family will enjoy every moment here! 🌊`,
   },
 
   updates: {
-    ar: `📢 آخر التحديثات
+    ar: `📢 أسعار صيف 2026
 
-• الحجز غير متاح حالياً
-• الأسعار ستُعلن قريباً
-• موعد الافتتاح سيُعلن قريباً
+• شاليه VIP رئاسي: 4000 د.ل/ليلة
+• شاليه VIP إطلالة بحر: 3000 د.ل/ليلة
+• شاليه إطلالة مسبح وأنشطة: 2000 د.ل/ليلة
+• شاليه إطلالة بحر جانبي: 1500 د.ل/ليلة
+• استوديو إطلالة حديقة: 1000 د.ل/ليلة
 
-تابعونا على فيسبوك وإنستغرام لآخر الأخبار!
+الافتتاح: 1 يونيو 2026
+عروض: ليلة رابعة مجانية عند حجز 3 ليالي
+
+تابعونا على فيسبوك وإنستغرام!
 📱 +218 91 211 0392
 📧 info@lavida.ly
 
 شكراً لاهتمامكم بـ La Vida Resort & Beach Club 💙`,
-    en: `📢 Latest Updates
+    en: `📢 Summer 2026 Rates
 
-• Booking is not available yet
-• Pricing will be announced soon
-• Opening date will be announced soon
+• Presidential VIP Chalet: 4000 LYD/night
+• VIP Sea View Chalet: 3000 LYD/night
+• Pool & Activities View: 2000 LYD/night
+• Side Sea View Chalet: 1500 LYD/night
+• Garden View Studio: 1000 LYD/night
 
-Follow us on Facebook and Instagram for the latest news!
+Opening: June 1, 2026
+Offers: 4th night free when booking 3 nights
+
+Follow us on Facebook and Instagram!
 📱 +218 91 211 0392
 📧 info@lavida.ly
 
@@ -259,14 +269,14 @@ export const PhonePrompts = {
   welcome_en: "Welcome to La Vida Resort & Beach Club.",
   menu_ar: "للحجز والأسعار، اضغط 1. لمعلومات الشاليهات، اضغط 2. للأنشطة والمرافق، اضغط 3. للموقع ومواعيد الافتتاح، اضغط 4. للتحدث مع الإدارة، اضغط 5.",
   menu_en: "For booking and prices, press 1. For chalet information, press 2. For resort activities, press 3. For location and opening updates, press 4. To speak with management, press 5.",
-  option_1_ar: "الحجز غير متاح حالياً وسيتم الإعلان عن الأسعار قريباً. شكراً لاهتمامكم.",
-  option_1_en: "Booking is not available yet and pricing will be announced soon. Thank you for your interest.",
+  option_1_ar: "أسعار صيف 2026 من 1000 إلى 4000 دينار لليلة. للحجز تواصلوا عبر الواتساب أو الماسنجر. الفريق يأكد التوفر.",
+  option_1_en: "Summer 2026 rates from 1000 to 4000 dinars per night. For booking contact us on WhatsApp or Messenger. Our team confirms availability.",
   option_2_ar: "لدينا 20 شاليه عائلي و 10 فيلات فاخرة و 12 شقة. سيتم مشاركة التفاصيل الكاملة قريباً.",
   option_2_en: "We have 20 family chalets, 10 luxury villas, and 12 apartments. Full details will be shared soon.",
   option_3_ar: "مرافقنا تشمل مسبح مركزي، شاطئ خاص، رياضات مائية، ملاعب، منطقة أطفال، ومقهى.",
   option_3_en: "Our facilities include a central pool, private beach, water sports, courts, kids area, and a beach cafe.",
-  option_4_ar: "نحن في زوارة، ليبيا. موعد الافتتاح والأسعار ستُعلن قريباً. تابعونا على وسائل التواصل الاجتماعي.",
-  option_4_en: "We are located in Zuwarah, Libya. Opening date and pricing will be announced soon. Follow us on social media.",
+  option_4_ar: "نحن في زوارة، ليبيا. الافتتاح الرسمي 1 يونيو 2026. الموقع lavidaresort.ly",
+  option_4_en: "We are located in Zuwarah, Libya. Official opening June 1, 2026. Website lavidaresort.ly",
   option_5_ar: "سيتم توصيلكم مع الإدارة. إذا لم يتم الرد، يرجى ترك اسمكم ورقم الهاتف بعد النغمة.",
   option_5_en: "Connecting you to management. If no one answers, please leave your name and phone number after the tone.",
   voicemail_ar: "لم يتم الرد. يرجى ترك اسمكم ورقم الهاتف وسنقوم بالتواصل معكم في أقرب وقت. شكراً.",
