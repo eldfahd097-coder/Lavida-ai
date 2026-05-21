@@ -6,6 +6,7 @@ import {
   getKnowledgeBlockForPrompt,
   getOffersReply,
   getIncludedServicesReply,
+  getOpeningDateReply,
   getPriceListReply,
   getUnitReply,
   matchAccommodation,
@@ -29,7 +30,6 @@ function buildSystemPrompt(lang: Language): string {
 - الموقع: زوارة، ليبيا
 - الموقع الإلكتروني: ${WEBSITE}
 - أرقام التواصل: ${PHONE_1} / ${PHONE_2}
-- الافتتاح الرسمي: 1 يونيو 2026
 ${getKnowledgeBlockForPrompt("ar")}
 
 المرافق:
@@ -54,7 +54,6 @@ Official facts:
 - Location: Zuwarah, Libya
 - Website: ${WEBSITE}
 - Contact numbers: ${PHONE_1} / ${PHONE_2}
-- Official opening date: June 1, 2026
 ${getKnowledgeBlockForPrompt("en")}
 
 Facilities:
@@ -333,11 +332,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
 
   const isOpening = hasAny(text, ["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
   if (isOpening) {
-    replies.push(
-      lang === "ar"
-      ? "الافتتاح الرسمي يوم 1 يونيو 2026 ✨"
-      : "La Vida officially opens on June 1 2026 ✨",
-    );
+    replies.push(getOpeningDateReply(lang));
   }
 
   const asksContact = hasAny(text, ["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال", "تلفون"]);

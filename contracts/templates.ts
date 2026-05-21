@@ -59,14 +59,14 @@ export function getGreeting(_platform: Platform, lang: Language): string {
     return `مرحباً بكم في La Vida Resort & Beach Club 🏖️
 نشكركم على تواصلكم معنا
 
-الافتتاح 1 يونيو 2026 — أسعار صيف 2026 متوفرة (اضغط 3)
+أسعار صيف 2026 متوفرة (اضغط 3)
 
 يرجى إرسال رقم الخيار:`;
   }
   return `Welcome to La Vida Resort & Beach Club 🏖️
 Thank you for reaching out to us
 
-Opening June 1, 2026 — Summer 2026 rates available (press 3)
+Summer 2026 rates available (press 3)
 
 Please send the option number:`;
 }
@@ -193,7 +193,7 @@ Your family will enjoy every moment here! 🌊`,
 • شاليه إطلالة بحر جانبي: 1500 د.ل/ليلة
 • استوديو إطلالة حديقة: 1000 د.ل/ليلة
 
-الافتتاح: 1 يونيو 2026
+موعد الافتتاح: سيتم الإعلان قريباً ✨
 عروض: ليلة رابعة مجانية عند حجز 3 ليالي
 
 تابعونا على فيسبوك وإنستغرام!
@@ -209,7 +209,7 @@ Your family will enjoy every moment here! 🌊`,
 • Side Sea View Chalet: 1500 LYD/night
 • Garden View Studio: 1000 LYD/night
 
-Opening: June 1, 2026
+Opening date: to be announced soon ✨
 Offers: 4th night free when booking 3 nights
 
 Follow us on Facebook and Instagram!
@@ -275,8 +275,8 @@ export const PhonePrompts = {
   option_2_en: "We have 20 family chalets, 10 luxury villas, and 12 apartments. Full details will be shared soon.",
   option_3_ar: "مرافقنا تشمل مسبح مركزي، شاطئ خاص، رياضات مائية، ملاعب، منطقة أطفال، ومقهى.",
   option_3_en: "Our facilities include a central pool, private beach, water sports, courts, kids area, and a beach cafe.",
-  option_4_ar: "نحن في زوارة، ليبيا. الافتتاح الرسمي 1 يونيو 2026. الموقع lavidaresort.ly",
-  option_4_en: "We are located in Zuwarah, Libya. Official opening June 1, 2026. Website lavidaresort.ly",
+  option_4_ar: "نحن في زوارة، ليبيا. سيتم الإعلان عن موعد الافتتاح الرسمي قريباً ✨ الموقع lavidaresort.ly",
+  option_4_en: "We are located in Zuwarah, Libya. The official opening date will be announced soon ✨ Website lavidaresort.ly",
   option_5_ar: "سيتم توصيلكم مع الإدارة. إذا لم يتم الرد، يرجى ترك اسمكم ورقم الهاتف بعد النغمة.",
   option_5_en: "Connecting you to management. If no one answers, please leave your name and phone number after the tone.",
   voicemail_ar: "لم يتم الرد. يرجى ترك اسمكم ورقم الهاتف وسنقوم بالتواصل معكم في أقرب وقت. شكراً.",

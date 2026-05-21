@@ -9,6 +9,7 @@ import {
   getBookingInterestPrompt,
   getIncludedServicesReply,
   getOffersReply,
+  getOpeningDateReply,
   getPriceListReply,
   getUnitReply,
   matchAccommodation,
@@ -129,7 +130,7 @@ function replyForIntent(intent: IntentName, lang: Language, messageText?: string
   if (intent === "offers") return getOffersReply(lang);
   if (intent === "included") return getIncludedServicesReply(lang);
   if (intent === "booking") return getBookingInterestPrompt(lang);
-  if (intent === "opening") return lang === "ar" ? "الافتتاح الرسمي يوم 1 يونيو 2026 ✨" : "La Vida officially opens on June 1 2026 ✨";
+  if (intent === "opening") return getOpeningDateReply(lang);
   if (intent === "photos") {
     return lang === "ar"
       ? "حالياً الصور الرسمية الخاصة بالشاليهات والمنتجع مش متوفرة عندنا توا ✨ وحنشاركوا كل الصور والتحديثات البصرية قريباً مع موعد الافتتاح والإعلان الرسمي للحجز"

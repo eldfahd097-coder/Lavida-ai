@@ -254,6 +254,13 @@ export function getOffersReply(lang: Language): string {
   return `Opening offers ✨\n${OPENING_OFFERS_EN.map((s) => `• ${s}`).join("\n")}`;
 }
 
+export function getOpeningDateReply(lang: Language): string {
+  if (lang === "ar") {
+    return "سيتم الإعلان عن موعد الافتتاح الرسمي قريباً ✨";
+  }
+  return "The official opening date will be announced soon ✨";
+}
+
 export function getBookingInterestPrompt(lang: Language): string {
   return lang === "ar"
     ? "أكيد ✨ نقدر ناخذ طلب حجز مبدئي. ابعت الاسم، الهاتف، نوع الوحدة، عدد الضيوف، والتاريخ. الفريق يأكد التوفر."
@@ -277,11 +284,23 @@ Included: ${included}
 
 Opening offers: ${offers}
 
-Rules: Give real prices when asked. Never confirm a booking or guarantee availability. For booking, collect details and say the team will confirm availability. Keep replies short and luxury in tone.`;
+Rules: Give real prices when asked. Never confirm a booking or guarantee availability. For booking, collect details and say the team will confirm availability. Never state a fixed opening date; if asked, say the official opening date will be announced soon. Keep replies short and luxury in tone.`;
+}
+
+export function resolveOpeningDateReply(message: string, lang: Language): string | undefined {
+  const normalized = message.toLowerCase();
+  const asksOpening = /opening|when open|opening date|متى تفتح|متى تفتحو|موعد الافتتاح|الافتتاح|امتى الافتتاح|تاريخ الافتتاح/.test(
+    normalized,
+  );
+  if (asksOpening) return getOpeningDateReply(lang);
+  return undefined;
 }
 
 export function resolvePriceOrUnitReply(message: string, lang: Language): string | undefined {
   const normalized = message.toLowerCase();
+
+  const openingReply = resolveOpeningDateReply(message, lang);
+  if (openingReply) return openingReply;
 
   const asksIncluded = /included|what is included|services included|مشمول|الخدمات|شنو مشمول|شن مشمول/.test(
     normalized,
