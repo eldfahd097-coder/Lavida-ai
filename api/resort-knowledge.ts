@@ -13,9 +13,9 @@ export type AccommodationUnit = {
 export const ACCOMMODATIONS: AccommodationUnit[] = [
   {
     id: "presidential",
-    nameEn: "Presidential VIP Chalet",
+    nameEn: "VIP Presidential Chalet",
     nameAr: "شاليه VIP الرئاسي",
-    priceLyd: 4000,
+    priceLyd: 3900,
     detailsEn: [
       "Fits two families",
       "Private pool",
@@ -34,13 +34,13 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "إطلالة بحرية جزئية",
       "موقف قريب",
     ],
-    keywords: ["presidential", "رئاسي", "رئاسية", "vip رئاسي", "4000"],
+    keywords: ["presidential", "رئاسي", "رئاسية", "vip رئاسي", "presidential vip", "3900"],
   },
   {
     id: "vip_sea",
-    nameEn: "VIP Sea View Chalet",
-    nameAr: "شاليه VIP إطلالة بحرية",
-    priceLyd: 3000,
+    nameEn: "VIP Sea View Chalet with private pool",
+    nameAr: "شاليه VIP إطلالة بحرية بمسبح خاص",
+    priceLyd: 2900,
     detailsEn: [
       "Direct sea view",
       "Private pool",
@@ -55,13 +55,13 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "خصوصية عالية",
       "مناسب للعائلات والأزواج",
     ],
-    keywords: ["vip sea", "sea view chalet", "vip chalet", "بحر مباشر", "3000"],
+    keywords: ["vip sea", "sea view chalet", "vip chalet", "بحر مباشر", "private pool", "2900"],
   },
   {
     id: "pool_view",
-    nameEn: "Pool and Activities View Chalet",
+    nameEn: "Pool & Activities View Chalet",
     nameAr: "شاليه إطلالة المسبح والأنشطة",
-    priceLyd: 2000,
+    priceLyd: 1900,
     detailsEn: [
       "View of main pool",
       "Close to entertainment areas",
@@ -74,13 +74,13 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "سهولة الوصول للمطعم والشاطئ",
       "مناسب للعائلات",
     ],
-    keywords: ["pool view", "activities view", "مسبح رئيسي", "2000"],
+    keywords: ["pool view", "activities view", "مسبح رئيسي", "pool activities", "1900"],
   },
   {
     id: "side_sea",
     nameEn: "Side Sea View Chalet",
     nameAr: "شاليه إطلالة بحر جانبية",
-    priceLyd: 1500,
+    priceLyd: 1400,
     detailsEn: [
       "Side sea view",
       "Private balcony",
@@ -93,7 +93,7 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "موقع هادئ",
       "مناسب للعائلات الصغيرة والأزواج",
     ],
-    keywords: ["side sea", "جانبي", "1500"],
+    keywords: ["side sea", "جانبي", "1400"],
   },
   {
     id: "garden_studio",
@@ -171,8 +171,8 @@ export const ACTIVITIES_AR = [
 ];
 
 export const OPENING_OFFERS_EN = [
-  "Book 3 nights and get the 4th night free",
-  "15% discount for confirmed bookings before the official opening",
+  "4th night free when booking 3 nights (when booking opens)",
+  "15% discount for early confirmed reservations before the official opening",
   "10% discount for families and groups",
   "Free stay for 2 children up to 10 years old in the same unit",
   "VIP and Presidential chalets include welcome fruit basket and drinks",
@@ -182,8 +182,8 @@ export const OPENING_OFFERS_EN = [
 ];
 
 export const OPENING_OFFERS_AR = [
-  "احجز 3 ليالي واحصل على الليلة الرابعة مجاناً",
-  "خصم 15% للحجوزات المؤكدة قبل الافتتاح الرسمي",
+  "الليلة الرابعة مجانية عند الإقامة 3 ليالي (عند فتح الحجز)",
+  "خصم 15% للحجوزات المؤكدة المبكرة قبل الافتتاح الرسمي",
   "خصم 10% للعائلات والمجموعات",
   "إقامة مجانية لطفلين حتى 10 سنوات في نفس الوحدة",
   "شاليهات VIP والرئاسية تشمل سلة فواكه ومشروبات ترحيبية",
@@ -218,10 +218,10 @@ export function accommodationBookingLabel(unit: AccommodationUnit): string {
 export function getPriceListReply(lang: Language): string {
   if (lang === "ar") {
     const lines = ACCOMMODATIONS.map((u) => `• ${u.nameAr}: ${u.priceLyd} د.ل / ليلة`);
-    return `أسعار صيف 2026 ✨\n${lines.join("\n")}\n\nللتفاصيل أو الحجز، ابعت نوع الوحدة اللي تهمك.`;
+    return `أسعار صيف 2026 ✨\n${lines.join("\n")}\n\nلتفاصيل أي وحدة، ابعت اسمها.`;
   }
   const lines = ACCOMMODATIONS.map((u) => `• ${u.nameEn}: ${u.priceLyd} LYD/night`);
-  return `Summer 2026 rates ✨\n${lines.join("\n")}\n\nFor details or booking, tell us which unit interests you.`;
+  return `Summer 2026 rates ✨\n${lines.join("\n")}\n\nFor details on any unit, tell us which one interests you.`;
 }
 
 export function getUnitReply(unit: AccommodationUnit, lang: Language): string {
@@ -261,10 +261,26 @@ export function getOpeningDateReply(lang: Language): string {
   return "The official opening date will be announced soon ✨";
 }
 
+/** Booking is not open yet — use for any booking/reservation request. */
+export function getBookingUnavailableReply(lang: Language): string {
+  if (lang === "ar") {
+    return "حاليًا الحجز مازال غير متوفر وقريب حيتم الإعلان عن تفاصيل وآلية الحجز الرسمية 🤍";
+  }
+  return "Booking is not available yet 🤍 Official booking details and how to reserve will be announced soon.";
+}
+
+/** @deprecated Use getBookingUnavailableReply */
 export function getBookingInterestPrompt(lang: Language): string {
-  return lang === "ar"
-    ? "أكيد ✨ نقدر ناخذ طلب حجز مبدئي. ابعت الاسم، الهاتف، نوع الوحدة، عدد الضيوف، والتاريخ. الفريق يأكد التوفر."
-    : "Of course ✨ We can take a booking interest. Share name, phone, unit type, guests, and dates. Our team will confirm availability.";
+  return getBookingUnavailableReply(lang);
+}
+
+export function resolveBookingReply(message: string, lang: Language): string | undefined {
+  const normalized = message.toLowerCase();
+  const asksBooking = /book|booking|reservation|reserve|availability|حجز|الحجز|نحجز|نبي نحجز|كيف نحجز|متاح|فيه حجز|7ajz|hajz/.test(
+    normalized,
+  );
+  if (asksBooking) return getBookingUnavailableReply(lang);
+  return undefined;
 }
 
 export function getKnowledgeBlockForPrompt(lang: Language): string {
@@ -284,7 +300,7 @@ Included: ${included}
 
 Opening offers: ${offers}
 
-Rules: Give real prices when asked. Never confirm a booking or guarantee availability. For booking, collect details and say the team will confirm availability. Never state a fixed opening date; if asked, say the official opening date will be announced soon. Keep replies short and luxury in tone.`;
+Rules: Give real prices when asked. Booking is NOT open — never ask for booking details or say book now. If asked about booking, say booking is not available yet and official booking details will be announced soon. Never confirm reservations. Never state a fixed opening date. Keep replies short and luxury in tone.`;
 }
 
 export function resolveOpeningDateReply(message: string, lang: Language): string | undefined {
@@ -298,6 +314,9 @@ export function resolveOpeningDateReply(message: string, lang: Language): string
 
 export function resolvePriceOrUnitReply(message: string, lang: Language): string | undefined {
   const normalized = message.toLowerCase();
+
+  const bookingReply = resolveBookingReply(message, lang);
+  if (bookingReply) return bookingReply;
 
   const openingReply = resolveOpeningDateReply(message, lang);
   if (openingReply) return openingReply;

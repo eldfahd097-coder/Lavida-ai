@@ -187,10 +187,10 @@ Your family will enjoy every moment here! 🌊`,
   updates: {
     ar: `📢 أسعار صيف 2026
 
-• شاليه VIP رئاسي: 4000 د.ل/ليلة
-• شاليه VIP إطلالة بحر: 3000 د.ل/ليلة
-• شاليه إطلالة مسبح وأنشطة: 2000 د.ل/ليلة
-• شاليه إطلالة بحر جانبي: 1500 د.ل/ليلة
+• شاليه VIP الرئاسي: 3900 د.ل/ليلة
+• شاليه VIP إطلالة بحر بمسبح خاص: 2900 د.ل/ليلة
+• شاليه إطلالة مسبح وأنشطة: 1900 د.ل/ليلة
+• شاليه إطلالة بحر جانبي: 1400 د.ل/ليلة
 • استوديو إطلالة حديقة: 1000 د.ل/ليلة
 
 موعد الافتتاح: سيتم الإعلان قريباً ✨
@@ -203,10 +203,10 @@ Your family will enjoy every moment here! 🌊`,
 شكراً لاهتمامكم بـ La Vida Resort & Beach Club 💙`,
     en: `📢 Summer 2026 Rates
 
-• Presidential VIP Chalet: 4000 LYD/night
-• VIP Sea View Chalet: 3000 LYD/night
-• Pool & Activities View: 2000 LYD/night
-• Side Sea View Chalet: 1500 LYD/night
+• VIP Presidential Chalet: 3900 LYD/night
+• VIP Sea View Chalet with private pool: 2900 LYD/night
+• Pool & Activities View Chalet: 1900 LYD/night
+• Side Sea View Chalet: 1400 LYD/night
 • Garden View Studio: 1000 LYD/night
 
 Opening date: to be announced soon ✨
@@ -269,8 +269,8 @@ export const PhonePrompts = {
   welcome_en: "Welcome to La Vida Resort & Beach Club.",
   menu_ar: "للحجز والأسعار، اضغط 1. لمعلومات الشاليهات، اضغط 2. للأنشطة والمرافق، اضغط 3. للموقع ومواعيد الافتتاح، اضغط 4. للتحدث مع الإدارة، اضغط 5.",
   menu_en: "For booking and prices, press 1. For chalet information, press 2. For resort activities, press 3. For location and opening updates, press 4. To speak with management, press 5.",
-  option_1_ar: "أسعار صيف 2026 من 1000 إلى 4000 دينار لليلة. للحجز تواصلوا عبر الواتساب أو الماسنجر. الفريق يأكد التوفر.",
-  option_1_en: "Summer 2026 rates from 1000 to 4000 dinars per night. For booking contact us on WhatsApp or Messenger. Our team confirms availability.",
+  option_1_ar: "أسعار صيف 2026 من 1000 إلى 3900 دينار لليلة. الحجز غير متوفر حالياً وسيتم الإعلان عن آلية الحجز الرسمية قريباً.",
+  option_1_en: "Summer 2026 rates from 1000 to 3900 dinars per night. Booking is not available yet; official booking details will be announced soon.",
   option_2_ar: "لدينا 20 شاليه عائلي و 10 فيلات فاخرة و 12 شقة. سيتم مشاركة التفاصيل الكاملة قريباً.",
   option_2_en: "We have 20 family chalets, 10 luxury villas, and 12 apartments. Full details will be shared soon.",
   option_3_ar: "مرافقنا تشمل مسبح مركزي، شاطئ خاص، رياضات مائية، ملاعب، منطقة أطفال، ومقهى.",

@@ -4,7 +4,7 @@ import { detectLanguage, type Language } from "@contracts/templates";
 import { TRPCError } from "@trpc/server";
 import OpenAI from "openai";
 import {
-  getBookingInterestPrompt,
+  getBookingUnavailableReply,
   getKnowledgeBlockForPrompt,
   matchAccommodation,
   accommodationBookingLabel,
@@ -178,34 +178,7 @@ function inferConversationState(message: string, history: ChatHistoryItem[]): Co
 
 function bookingNextStepReply(state: ConversationState, lang: Language): string | undefined {
   if (!state.booking.active) return undefined;
-
-  if (!state.booking.accommodationType) {
-    return lang === "ar"
-      ? "ممتاز 🌊 أي وحدة تهمكم؟ (رئاسي 4000، VIP بحر 3000، مسبح 2000، بحر جانبي 1500، استوديو 1000 د.ل/ليلة)"
-      : "Perfect 🌊 Which unit interests you? (Presidential 4000, VIP sea 3000, pool view 2000, side sea 1500, garden studio 1000 LYD/night)";
-  }
-
-  if (!state.booking.dates) {
-    return lang === "ar"
-      ? "حلو ✨ ابعتلي تاريخ الدخول والخروج، حتى لو كل واحد برسالة منفصلة."
-      : "Lovely ✨ Share check-in and check-out dates, even if sent in separate messages.";
-  }
-
-  if (!state.booking.guestCount) {
-    return lang === "ar"
-      ? "كم عدد الضيوف؟"
-      : "How many guests will be staying?";
-  }
-
-  if (!state.booking.phoneNumber) {
-    return lang === "ar"
-      ? "ممكن رقم موبايل للتواصل وتأكيد طلب الحجز؟"
-      : "May I have a phone number so our team can follow up on your booking request?";
-  }
-
-  return lang === "ar"
-    ? `تم استلام طلب الحجز المبدئي ✅ (${formatKnownBookingData(state.booking)})\nفريق لافيدا حيأكد التوفر ويتواصل معاكم.`
-    : `Booking interest received ✅ (${formatKnownBookingData(state.booking)})\nThe La Vida team will confirm availability and contact you.`;
+  return getBookingUnavailableReply(lang);
 }
 
 function getShortcutReply(message: string, lang: Language): string | undefined {
@@ -223,7 +196,7 @@ function getShortcutReply(message: string, lang: Language): string | undefined {
       : "Absolutely ✨ We have a beach café and dedicated food area inside the resort.";
   }
   if (hasAny(text, ["حجز", "booking", "book", "reservation"])) {
-    return getBookingInterestPrompt(lang);
+    return getBookingUnavailableReply(lang);
   }
   const priceReply = resolvePriceOrUnitReply(text, lang);
   if (priceReply && hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost", "بكم", "offer", "عروض", "included", "مشمول"])) {
@@ -284,15 +257,14 @@ Style and behavior rules:
 2) Keep replies short, clear, and helpful.
 3) Never sound robotic.
 4) Use only official Summer 2026 prices from the knowledge block.
-5) Never confirm bookings or guarantee availability — team confirms availability.
+5) Booking is not open — never ask for booking details or say book now.
 6) Never state a fixed opening date; if asked, say the official opening date will be announced soon.
 7) If you are unsure, clearly say management will confirm.
 8) Do not invent facts outside the information above.
 9) Keep conversation continuity: do not reset topic during active threads.
-10) If booking is active, collect only missing booking fields naturally.
-11) Understand fragmented messages and short follow-ups.
-12) Understand Arabic Libyan slang and mixed Arabic-English.
-13) Never ask "Could you tell us more" unless absolutely necessary.`;
+10) Understand fragmented messages and short follow-ups.
+11) Understand Arabic Libyan slang and mixed Arabic-English.
+12) Never ask "Could you tell us more" unless absolutely necessary.`;
 
   const stateContext = `
 Conversation context:
@@ -335,14 +307,14 @@ export const chatRouter = createRouter({
       const state = inferConversationState(message, history);
 
       const priceReply = resolvePriceOrUnitReply(message, lang);
-      if (priceReply && !state.booking.active) {
+      if (priceReply) {
         return { reply: priceReply, language: lang, source: "rule" as const };
       }
 
       const bookingStepReply = bookingNextStepReply(state, lang);
       const shortcutReply = getShortcutReply(message, lang);
 
-      if (shortcutReply && !state.booking.active) {
+      if (shortcutReply) {
         return {
           reply: shortcutReply,
           language: lang,

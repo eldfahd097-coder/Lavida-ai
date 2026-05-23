@@ -3,10 +3,9 @@ import { env } from "./lib/env";
 import { sendMessengerMessage } from "./lib/messenger";
 import { generateAIResponse } from "./ai-engine";
 import { detectLanguage, type Language } from "@contracts/templates";
-import nodemailer from "nodemailer";
 import {
   accommodationBookingLabel,
-  getBookingInterestPrompt,
+  getBookingUnavailableReply,
   getIncludedServicesReply,
   getOffersReply,
   getOpeningDateReply,
@@ -129,7 +128,7 @@ function replyForIntent(intent: IntentName, lang: Language, messageText?: string
   if (intent === "prices") return getPriceListReply(lang);
   if (intent === "offers") return getOffersReply(lang);
   if (intent === "included") return getIncludedServicesReply(lang);
-  if (intent === "booking") return getBookingInterestPrompt(lang);
+  if (intent === "booking") return getBookingUnavailableReply(lang);
   if (intent === "opening") return getOpeningDateReply(lang);
   if (intent === "photos") {
     return lang === "ar"
@@ -163,132 +162,6 @@ function replyForIntent(intent: IntentName, lang: Language, messageText?: string
       : "La Vida is a luxury beachfront resort in Zuwarah with varied stays, water activities, café options, and family-friendly facilities ✨";
   }
   return undefined;
-}
-
-function bookingPrompt(lang: Language): string {
-  return lang === "ar"
-    ? "ممتاز ✨ خلونا نكمل طلب الحجز المبدئي. ابعت الاسم، رقم الهاتف، نوع الإقامة، عدد الضيوف، والتاريخ."
-    : "Great ✨ Let’s complete your booking interest. Please share name, phone, accommodation type, guest count, and preferred date.";
-}
-
-function bookingSummary(interest: BookingData, lang: Language): string {
-  if (lang === "ar") {
-    return `تم استلام طلب الحجز المبدئي ✨
-الاسم: ${interest.name ?? "-"}
-رقم الهاتف: ${interest.phone ?? "-"}
-نوع الإقامة: ${interest.accommodation ?? "-"}
-عدد الضيوف: ${interest.guests ?? "-"}
-التاريخ: ${interest.date ?? "-"}
-فريق لافيدا حيتواصل معاكم عند فتح الحجز`;
-  }
-  return `Your booking interest has been received ✨
-Name: ${interest.name ?? "-"}
-Phone: ${interest.phone ?? "-"}
-Accommodation: ${interest.accommodation ?? "-"}
-Guests: ${interest.guests ?? "-"}
-Date: ${interest.date ?? "-"}
-The La Vida team will contact you once booking opens`;
-}
-
-async function sendBookingInterestEmail(
-  interest: BookingData,
-  senderId: string,
-  history: SessionMessage[],
-): Promise<boolean> {
-  if (!env.smtpHost || !env.smtpPort || !env.smtpUser || !env.smtpPass) {
-    console.error("EMAIL FAILED", "SMTP config missing");
-    return false;
-  }
-
-  try {
-    const transporter = nodemailer.createTransport({
-      host: env.smtpHost,
-      port: Number(env.smtpPort),
-      secure: Number(env.smtpPort) === 465,
-      auth: {
-        user: env.smtpUser,
-        pass: env.smtpPass,
-      },
-    });
-
-    const timestamp = new Date().toISOString();
-    const formattedHistory = history
-      .map((item) => `${new Date(item.timestamp).toISOString()} [${item.role}] ${item.content}`)
-      .join("\n");
-    await transporter.sendMail({
-      from: `"La Vida AI" <${env.smtpUser}>`,
-      to: "info@lavidaresort.ly",
-      subject: "New Booking Interest - La Vida AI",
-      text: [
-        "New booking interest received from Messenger.",
-        "",
-        `Name: ${interest.name ?? "-"}`,
-        `Phone number: ${interest.phone ?? "-"}`,
-        `Accommodation type: ${interest.accommodation ?? "-"}`,
-        `Guest count: ${interest.guests ?? "-"}`,
-        `Preferred dates: ${interest.date ?? "-"}`,
-        `Notes: ${interest.notes ?? "-"}`,
-        `Messenger sender ID: ${senderId}`,
-        `Timestamp: ${timestamp}`,
-        "",
-        "Full conversation history:",
-        formattedHistory || "-",
-      ].join("\n"),
-      html: `
-        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
-          <h2>New Booking Interest - La Vida AI</h2>
-          <p>A new booking interest was received from Messenger.</p>
-          <table cellpadding="6" cellspacing="0" border="0">
-            <tr><td><strong>Name</strong></td><td>${interest.name ?? "-"}</td></tr>
-            <tr><td><strong>Phone number</strong></td><td>${interest.phone ?? "-"}</td></tr>
-            <tr><td><strong>Accommodation type</strong></td><td>${interest.accommodation ?? "-"}</td></tr>
-            <tr><td><strong>Guest count</strong></td><td>${interest.guests ?? "-"}</td></tr>
-            <tr><td><strong>Preferred dates</strong></td><td>${interest.date ?? "-"}</td></tr>
-            <tr><td><strong>Notes</strong></td><td>${interest.notes ?? "-"}</td></tr>
-            <tr><td><strong>Messenger sender ID</strong></td><td>${senderId}</td></tr>
-            <tr><td><strong>Timestamp</strong></td><td>${timestamp}</td></tr>
-          </table>
-          <h3>Conversation History</h3>
-          <pre>${formattedHistory || "-"}</pre>
-        </div>
-      `,
-    });
-
-    return true;
-  } catch (error) {
-    console.error("EMAIL FAILED", error);
-    return false;
-  }
-}
-
-function bookingMissingPrompt(missing: string[], lang: Language): string {
-  if (lang === "ar") {
-    return `ممتاز ✨ باقي فقط: ${missing.join("، ")}.`;
-  }
-  return `Great ✨ I still need: ${missing.join(", ")}.`;
-}
-
-function updateBookingData(bookingData: BookingData, rawText: string, normalizedText: string): BookingData {
-  const updated: BookingData = { ...bookingData };
-  updated.name = updated.name ?? extractName(rawText);
-  updated.phone = updated.phone ?? extractPhone(rawText);
-  updated.accommodation = updated.accommodation ?? detectAccommodationType(normalizedText);
-  updated.guests = updated.guests ?? extractGuestCount(normalizedText);
-  updated.date = updated.date ?? extractDate(rawText);
-  if (!updated.notes && rawText.length > 10 && !updated.name && !updated.phone && !updated.date && !updated.guests) {
-    updated.notes = rawText;
-  }
-  return updated;
-}
-
-function bookingMissingFields(data: BookingData, lang: Language): string[] {
-  const missing: string[] = [];
-  if (!data.name) missing.push(lang === "ar" ? "الاسم" : "name");
-  if (!data.phone) missing.push(lang === "ar" ? "رقم الهاتف" : "phone");
-  if (!data.accommodation) missing.push(lang === "ar" ? "نوع الإقامة" : "accommodation");
-  if (!data.guests) missing.push(lang === "ar" ? "عدد الضيوف" : "guests");
-  if (!data.date) missing.push(lang === "ar" ? "التاريخ" : "date");
-  return missing;
 }
 
 function isBookingDataMessage(rawText: string, normalizedText: string): boolean {
@@ -439,30 +312,12 @@ async function handleMessengerMessage(messaging: MessengerMessagingEvent) {
   }
 
   if (session.bookingState === "active" || intents.includes("booking")) {
-    session.bookingState = "active";
-    session.bookingData = updateBookingData(session.bookingData, text, normalizedText);
-    const missing = bookingMissingFields(session.bookingData, lang);
-    const replyText = missing.length ? (missing.length === 5 ? bookingPrompt(lang) : bookingMissingPrompt(missing, lang)) : bookingSummary(session.bookingData, lang);
-
-    if (!missing.length) {
-      session.bookingState = "completed";
-      await sendBookingInterestEmail(session.bookingData, senderId, session.history);
-    }
-
-    await sendAndTrackReply(session, replyText);
+    await sendAndTrackReply(session, getBookingUnavailableReply(lang));
     return;
   }
 
   if (session.lastTopic === "booking" && isBookingDataMessage(text, normalizedText)) {
-    session.bookingState = "active";
-    session.bookingData = updateBookingData(session.bookingData, text, normalizedText);
-    const missing = bookingMissingFields(session.bookingData, lang);
-    const replyText = missing.length ? bookingMissingPrompt(missing, lang) : bookingSummary(session.bookingData, lang);
-    if (!missing.length) {
-      session.bookingState = "completed";
-      await sendBookingInterestEmail(session.bookingData, senderId, session.history);
-    }
-    await sendAndTrackReply(session, replyText);
+    await sendAndTrackReply(session, getBookingUnavailableReply(lang));
     return;
   }
 

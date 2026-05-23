@@ -2,7 +2,7 @@ import { env } from "./lib/env";
 import { detectLanguage } from "@contracts/templates";
 import type { Language } from "@contracts/templates";
 import {
-  getBookingInterestPrompt,
+  getBookingUnavailableReply,
   getKnowledgeBlockForPrompt,
   getOffersReply,
   getIncludedServicesReply,
@@ -41,8 +41,8 @@ ${getKnowledgeBlockForPrompt("ar")}
 
 قواعد إلزامية:
 1) استخدم الأسعار الرسمية أعلاه فقط — لا تخترع أسعاراً.
-2) لا تؤكد أي حجز ولا تعد بالتوفر.
-3) للحجز: اجمع البيانات وقل إن الفريق يأكد التوفر.
+2) الحجز غير متوفر حالياً — لا تطلب بيانات حجز ولا تقل احجز الآن.
+3) إذا سُئل عن الحجز: قل إن الحجز غير متوفر وسيتم الإعلان عن آلية الحجز الرسمية قريباً.
 4) إذا السؤال عن مرفق أو وحدة معينة، جاوب على نفس الموضوع فقط وباختصار.
 5) إذا الطلب غير واضح جداً، اطلب توضيح قصير ولطيف.`;
   }
@@ -65,8 +65,8 @@ Facilities:
 
 Hard rules:
 1) Use only the official Summer 2026 prices above — never invent prices.
-2) Never confirm bookings or guarantee availability.
-3) For booking: collect details and say the team will confirm availability.
+2) Booking is not open — never ask for booking details or say book now.
+3) If asked about booking: say booking is not available yet and official booking details will be announced soon.
 4) For specific facility or unit questions, answer only that point briefly.
 5) Ask for clarification only when truly necessary.`;
 }
@@ -310,7 +310,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "فيه حجز",
   ]);
   if (isBooking) {
-    replies.push(getBookingInterestPrompt(lang));
+    replies.push(getBookingUnavailableReply(lang));
   }
 
   const asksOffers = hasAny(text, ["offer", "offers", "promo", "discount", "عروض", "خصم", "تخفيض"]);
@@ -664,8 +664,8 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   if (asksMoreGeneric && replies.length === 0) {
     replies.push(
       lang === "ar"
-        ? "أكيد ✨ تحبوا تعرفوا أكثر على الغرف، الأنشطة، الحجز، الموقع ولا المرافق؟"
-        : "Of course ✨ What would you like to know more about? Rooms, activities, booking, location, or facilities?",
+        ? "أكيد ✨ تحبوا تعرفوا أكثر على الغرف، الأنشطة، الأسعار، الموقع ولا المرافق؟"
+        : "Of course ✨ What would you like to know more about? Rooms, activities, prices, location, or facilities?",
     );
   }
 
