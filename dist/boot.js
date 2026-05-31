@@ -1145,66 +1145,66 @@ import OpenAI from "openai";
 var ACCOMMODATIONS = [
   {
     id: "presidential",
-    nameEn: "VIP Presidential Chalet",
+    nameEn: "Presidential VIP Chalet",
     nameAr: "\u0634\u0627\u0644\u064A\u0647 VIP \u0627\u0644\u0631\u0626\u0627\u0633\u064A",
     priceLyd: 3900,
+    capacityEn: "Two families",
+    capacityAr: "\u0639\u0627\u0626\u0644\u062A\u064A\u0646",
     detailsEn: [
-      "Fits two families",
       "Private pool",
-      "Large outdoor seating",
-      "Spacious living area",
+      "Private outdoor seating",
       "High privacy",
+      "Spacious living area",
       "Partial sea view",
-      "Nearby parking"
+      "Parking near the unit"
     ],
     detailsAr: [
-      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0639\u0627\u0626\u0644\u062A\u064A\u0646",
       "\u0645\u0633\u0628\u062D \u062E\u0627\u0635",
-      "\u062C\u0644\u0633\u0629 \u062E\u0627\u0631\u062C\u064A\u0629 \u0648\u0627\u0633\u0639\u0629",
-      "\u0635\u0627\u0644\u0629 \u0645\u0639\u064A\u0634\u0629 \u0648\u0627\u0633\u0639\u0629",
+      "\u062C\u0644\u0633\u0629 \u062E\u0627\u0631\u062C\u064A\u0629 \u062E\u0627\u0635\u0629",
       "\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629",
+      "\u0635\u0627\u0644\u0629 \u0645\u0639\u064A\u0634\u0629 \u0648\u0627\u0633\u0639\u0629",
       "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u062C\u0632\u0626\u064A\u0629",
-      "\u0645\u0648\u0642\u0641 \u0642\u0631\u064A\u0628"
+      "\u0645\u0648\u0642\u0641 \u0642\u0631\u064A\u0628 \u0645\u0646 \u0627\u0644\u0648\u062D\u062F\u0629"
     ],
     keywords: ["presidential", "\u0631\u0626\u0627\u0633\u064A", "\u0631\u0626\u0627\u0633\u064A\u0629", "vip \u0631\u0626\u0627\u0633\u064A", "presidential vip", "3900"]
   },
   {
     id: "vip_sea",
-    nameEn: "VIP Sea View Chalet with private pool",
-    nameAr: "\u0634\u0627\u0644\u064A\u0647 VIP \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0628\u0645\u0633\u0628\u062D \u062E\u0627\u0635",
+    nameEn: "VIP Sea View Chalet",
+    nameAr: "\u0634\u0627\u0644\u064A\u0647 VIP \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629",
     priceLyd: 2900,
+    capacityEn: "Families and couples",
+    capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0623\u0632\u0648\u0627\u062C",
     detailsEn: [
       "Direct sea view",
       "Private pool",
       "Outdoor sea-facing seating",
-      "High privacy",
-      "Suitable for families and couples"
+      "High privacy"
     ],
     detailsAr: [
       "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0645\u0628\u0627\u0634\u0631\u0629",
       "\u0645\u0633\u0628\u062D \u062E\u0627\u0635",
       "\u062C\u0644\u0633\u0629 \u062E\u0627\u0631\u062C\u064A\u0629 \u0628\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631",
-      "\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629",
-      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0627\u0644\u0623\u0632\u0648\u0627\u062C"
+      "\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629"
     ],
     keywords: ["vip sea", "sea view chalet", "vip chalet", "\u0628\u062D\u0631 \u0645\u0628\u0627\u0634\u0631", "private pool", "2900"]
   },
   {
     id: "pool_view",
-    nameEn: "Pool & Activities View Chalet",
+    nameEn: "Pool and Activities View Chalet",
     nameAr: "\u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u0645\u0633\u0628\u062D \u0648\u0627\u0644\u0623\u0646\u0634\u0637\u0629",
     priceLyd: 1900,
+    capacityEn: "Families",
+    capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A",
     detailsEn: [
-      "View of main pool",
+      "Main pool view",
       "Close to entertainment areas",
-      "Easy access to restaurant and beach",
-      "Suitable for families"
+      "Easy access to restaurant, beach, and facilities"
     ],
     detailsAr: [
       "\u0625\u0637\u0644\u0627\u0644\u0629 \u0639\u0644\u0649 \u0627\u0644\u0645\u0633\u0628\u062D \u0627\u0644\u0631\u0626\u064A\u0633\u064A",
       "\u0642\u0631\u064A\u0628 \u0645\u0646 \u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u062A\u0631\u0641\u064A\u0647",
-      "\u0633\u0647\u0648\u0644\u0629 \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u0645\u0637\u0639\u0645 \u0648\u0627\u0644\u0634\u0627\u0637\u0626",
-      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A"
+      "\u0633\u0647\u0648\u0644\u0629 \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u0645\u0637\u0639\u0645 \u0648\u0627\u0644\u0634\u0627\u0637\u0626 \u0648\u0627\u0644\u0645\u0631\u0627\u0641\u0642"
     ],
     keywords: ["pool view", "activities view", "\u0645\u0633\u0628\u062D \u0631\u0626\u064A\u0633\u064A", "pool activities", "1900"]
   },
@@ -1213,18 +1213,10 @@ var ACCOMMODATIONS = [
     nameEn: "Side Sea View Chalet",
     nameAr: "\u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629",
     priceLyd: 1400,
-    detailsEn: [
-      "Side sea view",
-      "Private balcony",
-      "Quiet location",
-      "Suitable for small families and couples"
-    ],
-    detailsAr: [
-      "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629",
-      "\u0634\u0631\u0641\u0629 \u062E\u0627\u0635\u0629",
-      "\u0645\u0648\u0642\u0639 \u0647\u0627\u062F\u0626",
-      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0627\u0644\u0635\u063A\u064A\u0631\u0629 \u0648\u0627\u0644\u0623\u0632\u0648\u0627\u062C"
-    ],
+    capacityEn: "Small families and couples",
+    capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u0635\u063A\u064A\u0631\u0629 \u0648\u0623\u0632\u0648\u0627\u062C",
+    detailsEn: ["Side sea view", "Private balcony", "Quiet location"],
+    detailsAr: ["\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629", "\u0634\u0631\u0641\u0629 \u062E\u0627\u0635\u0629", "\u0645\u0648\u0642\u0639 \u0647\u0627\u062F\u0626"],
     keywords: ["side sea", "\u062C\u0627\u0646\u0628\u064A", "1400"]
   },
   {
@@ -1232,17 +1224,19 @@ var ACCOMMODATIONS = [
     nameEn: "Garden View Studio",
     nameAr: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u062D\u062F\u064A\u0642\u0629",
     priceLyd: 1e3,
+    capacityEn: "Couples or small families",
+    capacityAr: "\u0623\u0632\u0648\u0627\u062C \u0623\u0648 \u0639\u0627\u0626\u0644\u0627\u062A \u0635\u063A\u064A\u0631\u0629",
     detailsEn: [
       "Garden view",
       "Close to main facilities",
-      "Practical and comfortable design",
-      "Good value for couples or small families"
+      "Practical comfortable layout",
+      "Good value option"
     ],
     detailsAr: [
       "\u0625\u0637\u0644\u0627\u0644\u0629 \u0639\u0644\u0649 \u0627\u0644\u062D\u062F\u064A\u0642\u0629",
       "\u0642\u0631\u064A\u0628 \u0645\u0646 \u0627\u0644\u0645\u0631\u0627\u0641\u0642 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629",
       "\u062A\u0635\u0645\u064A\u0645 \u0639\u0645\u0644\u064A \u0648\u0645\u0631\u064A\u062D",
-      "\u062E\u064A\u0627\u0631 \u0627\u0642\u062A\u0635\u0627\u062F\u064A \u0644\u0644\u0623\u0632\u0648\u0627\u062C \u0623\u0648 \u0627\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0627\u0644\u0635\u063A\u064A\u0631\u0629"
+      "\u062E\u064A\u0627\u0631 \u0627\u0642\u062A\u0635\u0627\u062F\u064A"
     ],
     keywords: ["garden", "studio", "\u0627\u0633\u062A\u0648\u062F\u064A\u0648", "\u062D\u062F\u064A\u0642\u0629", "1000"]
   }
@@ -1251,40 +1245,90 @@ var INCLUDED_SERVICES_EN = [
   "Private beach access",
   "Pool access",
   "Free parking",
-  "24 hour reception",
+  "24 hour reception and customer service",
   "24 hour security",
   "Free internet in public areas",
   "Beach seating and umbrellas",
-  "Family rest areas"
+  "Family rest areas",
+  "Beach Cafe",
+  "Restaurants and cafes",
+  "Supermarket",
+  "Kids area",
+  "Game Room and TV Lounge",
+  "Ping Pong and Pool Table",
+  "Beach sports areas"
 ];
 var INCLUDED_SERVICES_AR = [
   "\u062F\u062E\u0648\u0644 \u0634\u0627\u0637\u0626 \u062E\u0627\u0635",
   "\u062F\u062E\u0648\u0644 \u0627\u0644\u0645\u0633\u0628\u062D",
   "\u0645\u0648\u0642\u0641 \u0633\u064A\u0627\u0631\u0627\u062A \u0645\u062C\u0627\u0646\u064A",
-  "\u0627\u0633\u062A\u0642\u0628\u0627\u0644 24 \u0633\u0627\u0639\u0629",
+  "\u0627\u0633\u062A\u0642\u0628\u0627\u0644 \u0648\u062E\u062F\u0645\u0629 \u0639\u0645\u0644\u0627\u0621 24 \u0633\u0627\u0639\u0629",
   "\u0623\u0645\u0646 24 \u0633\u0627\u0639\u0629",
   "\u0625\u0646\u062A\u0631\u0646\u062A \u0645\u062C\u0627\u0646\u064A \u0641\u064A \u0627\u0644\u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u0639\u0627\u0645\u0629",
   "\u0645\u0642\u0627\u0639\u062F \u0648\u0645\u0638\u0644\u0627\u062A \u0627\u0644\u0634\u0627\u0637\u0626",
-  "\u0645\u0646\u0627\u0637\u0642 \u0631\u0627\u062D\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A"
+  "\u0645\u0646\u0627\u0637\u0642 \u0631\u0627\u062D\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A",
+  "\u0643\u0627\u0641\u064A\u0647 \u0627\u0644\u0634\u0627\u0637\u0626",
+  "\u0645\u0637\u0627\u0639\u0645 \u0648\u0645\u0642\u0627\u0647\u064A",
+  "\u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A",
+  "\u0645\u0646\u0637\u0642\u0629 \u0623\u0637\u0641\u0627\u0644",
+  "\u0635\u0627\u0644\u0629 \u0623\u0644\u0639\u0627\u0628 \u0648\u062A\u0644\u0641\u0632\u064A\u0648\u0646",
+  "\u062A\u0646\u0633 \u0637\u0627\u0648\u0644\u0629 \u0648\u0628\u0644\u064A\u0627\u0631\u062F\u0648",
+  "\u0645\u0646\u0627\u0637\u0642 \u0631\u064A\u0627\u0636\u0627\u062A \u0634\u0627\u0637\u0626\u064A\u0629"
+];
+var ACTIVITIES_EN = [
+  "Sea trips",
+  "Kayaks",
+  "Paddle boards",
+  "Pedal boats for families",
+  "Seasonal water games",
+  "Water activities",
+  "Beach football court",
+  "Beach volleyball court",
+  "Sports competitions",
+  "Group games",
+  "Kids Club",
+  "Trampoline",
+  "Outdoor kids games",
+  "Drawing and coloring workshops",
+  "Daily kids competitions and prizes",
+  "Children entertainment activities"
+];
+var ACTIVITIES_AR = [
+  "\u0631\u062D\u0644\u0627\u062A \u0628\u062D\u0631\u064A\u0629",
+  "\u0643\u0627\u064A\u0627\u0643",
+  "\u062A\u062C\u062F\u064A\u0641",
+  "\u0642\u0648\u0627\u0631\u0628 \u0628\u062F\u0627\u0644\u064A\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A",
+  "\u0623\u0644\u0639\u0627\u0628 \u0645\u0627\u0626\u064A\u0629 \u0645\u0648\u0633\u0645\u064A\u0629",
+  "\u0623\u0646\u0634\u0637\u0629 \u0645\u0627\u0626\u064A\u0629",
+  "\u0645\u0644\u0639\u0628 \u0643\u0631\u0629 \u0642\u062F\u0645 \u0634\u0627\u0637\u0626\u064A",
+  "\u0645\u0644\u0639\u0628 \u0643\u0631\u0629 \u0637\u0627\u0626\u0631\u0629 \u0634\u0627\u0637\u0626\u064A",
+  "\u0645\u0633\u0627\u0628\u0642\u0627\u062A \u0631\u064A\u0627\u0636\u064A\u0629",
+  "\u0623\u0644\u0639\u0627\u0628 \u062C\u0645\u0627\u0639\u064A\u0629",
+  "\u0646\u0627\u062F\u064A \u0623\u0637\u0641\u0627\u0644",
+  "\u062A\u0631\u0627\u0645\u0628\u0648\u0644\u064A\u0646",
+  "\u0623\u0644\u0639\u0627\u0628 \u0623\u0637\u0641\u0627\u0644 \u062E\u0627\u0631\u062C\u064A\u0629",
+  "\u0648\u0631\u0634 \u0631\u0633\u0645 \u0648\u062A\u0644\u0648\u064A\u0646",
+  "\u0645\u0633\u0627\u0628\u0642\u0627\u062A \u0648\u062C\u0648\u0627\u0626\u0632 \u064A\u0648\u0645\u064A\u0629 \u0644\u0644\u0623\u0637\u0641\u0627\u0644",
+  "\u0623\u0646\u0634\u0637\u0629 \u062A\u0631\u0641\u064A\u0647 \u0644\u0644\u0623\u0637\u0641\u0627\u0644"
 ];
 var OPENING_OFFERS_EN = [
-  "4th night free when booking 3 nights (when booking opens)",
-  "15% discount for early confirmed reservations before the official opening",
+  "Book 3 nights and get the 4th night free",
+  "15% discount for confirmed early bookings before official opening",
   "10% discount for families and groups",
   "Free stay for 2 children up to 10 years old in the same unit",
-  "VIP and Presidential chalets include welcome fruit basket and drinks",
-  "VIP and Presidential chalets include special beach seating",
-  "Discounts on water activities for VIP and Presidential chalets",
+  "Welcome fruit basket and drinks for VIP and Presidential units",
+  "Special beach seating for VIP and Presidential units",
+  "Discounts on water activities for VIP and Presidential units",
   "Special corporate and group booking offers available"
 ];
 var OPENING_OFFERS_AR = [
-  "\u0627\u0644\u0644\u064A\u0644\u0629 \u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062C\u0627\u0646\u064A\u0629 \u0639\u0646\u062F \u0627\u0644\u0625\u0642\u0627\u0645\u0629 3 \u0644\u064A\u0627\u0644\u064A (\u0639\u0646\u062F \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0632)",
+  "\u0627\u062D\u062C\u0632 3 \u0644\u064A\u0627\u0644\u064A \u0648\u0627\u062D\u0635\u0644 \u0639\u0644\u0649 \u0627\u0644\u0644\u064A\u0644\u0629 \u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062C\u0627\u0646\u0627\u064B",
   "\u062E\u0635\u0645 15% \u0644\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0627\u0644\u0645\u0624\u0643\u062F\u0629 \u0627\u0644\u0645\u0628\u0643\u0631\u0629 \u0642\u0628\u0644 \u0627\u0644\u0627\u0641\u062A\u062A\u0627\u062D \u0627\u0644\u0631\u0633\u0645\u064A",
   "\u062E\u0635\u0645 10% \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0627\u062A",
   "\u0625\u0642\u0627\u0645\u0629 \u0645\u062C\u0627\u0646\u064A\u0629 \u0644\u0637\u0641\u0644\u064A\u0646 \u062D\u062A\u0649 10 \u0633\u0646\u0648\u0627\u062A \u0641\u064A \u0646\u0641\u0633 \u0627\u0644\u0648\u062D\u062F\u0629",
-  "\u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u062A\u0634\u0645\u0644 \u0633\u0644\u0629 \u0641\u0648\u0627\u0643\u0647 \u0648\u0645\u0634\u0631\u0648\u0628\u0627\u062A \u062A\u0631\u062D\u064A\u0628\u064A\u0629",
-  "\u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u062A\u0634\u0645\u0644 \u062C\u0644\u0633\u0629 \u0634\u0627\u0637\u0626\u064A\u0629 \u0645\u0645\u064A\u0632\u0629",
-  "\u062E\u0635\u0648\u0645\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0645\u0627\u0626\u064A\u0629 \u0644\u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629",
+  "\u0633\u0644\u0629 \u0641\u0648\u0627\u0643\u0647 \u0648\u0645\u0634\u0631\u0648\u0628\u0627\u062A \u062A\u0631\u062D\u064A\u0628\u064A\u0629 \u0644\u0648\u062D\u062F\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629",
+  "\u062C\u0644\u0633\u0629 \u0634\u0627\u0637\u0626\u064A\u0629 \u0645\u0645\u064A\u0632\u0629 \u0644\u0648\u062D\u062F\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629",
+  "\u062E\u0635\u0648\u0645\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0645\u0627\u0626\u064A\u0629 \u0644\u0648\u062D\u062F\u0627\u062A VIP \u0648\u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629",
   "\u0639\u0631\u0648\u0636 \u062E\u0627\u0635\u0629 \u0644\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0627\u0644\u0634\u0631\u0643\u0627\u062A \u0648\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0627\u062A"
 ];
 function matchAccommodation(text2) {
@@ -1327,20 +1371,52 @@ function getUnitReply(unit, lang) {
     const details2 = unit.detailsAr.map((d) => `\u2022 ${d}`).join("\n");
     return `${unit.nameAr} \u2728
 ${unit.priceLyd} \u062F.\u0644 / \u0644\u064A\u0644\u0629
+\u0627\u0644\u0633\u0639\u0629: ${unit.capacityAr}
 ${details2}`;
   }
   const details = unit.detailsEn.map((d) => `\u2022 ${d}`).join("\n");
   return `${unit.nameEn} \u2728
 ${unit.priceLyd} LYD/night
+Capacity: ${unit.capacityEn}
 ${details}`;
+}
+function getUnitCapacityReply(unit, lang) {
+  if (lang === "ar") {
+    return `${unit.nameAr} \u2728
+\u0627\u0644\u0633\u0639\u0629: ${unit.capacityAr}
+\u0644\u0644\u0639\u062F\u062F \u0627\u0644\u062F\u0642\u064A\u0642\u060C \u0627\u0644\u0625\u062F\u0627\u0631\u0629 \u062A\u0642\u062F\u0631 \u062A\u0623\u0643\u062F \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644.`;
+  }
+  return `${unit.nameEn} \u2728
+Capacity: ${unit.capacityEn}
+For an exact guest count, management can confirm details.`;
+}
+function getAllCapacitiesReply(lang) {
+  if (lang === "ar") {
+    const lines2 = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameAr}: ${u.capacityAr}`);
+    return `\u0633\u0639\u0629 \u0627\u0644\u0648\u062D\u062F\u0627\u062A \u2728
+${lines2.join("\n")}
+\u0644\u0644\u0639\u062F\u062F \u0627\u0644\u062F\u0642\u064A\u0642\u060C \u0627\u0644\u0625\u062F\u0627\u0631\u0629 \u062A\u0642\u062F\u0631 \u062A\u0623\u0643\u062F \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644.`;
+  }
+  const lines = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameEn}: ${u.capacityEn}`);
+  return `Unit capacity \u2728
+${lines.join("\n")}
+For exact numbers, management can confirm details.`;
 }
 function getIncludedServicesReply(lang) {
   if (lang === "ar") {
-    return `\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0629 \u2728
+    return `\u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0648\u0627\u0644\u0645\u0631\u0627\u0641\u0642 \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0629 \u2728
 ${INCLUDED_SERVICES_AR.map((s) => `\u2022 ${s}`).join("\n")}`;
   }
-  return `Included services \u2728
+  return `Included services & facilities \u2728
 ${INCLUDED_SERVICES_EN.map((s) => `\u2022 ${s}`).join("\n")}`;
+}
+function getActivitiesReply(lang) {
+  if (lang === "ar") {
+    return `\u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u2728
+${ACTIVITIES_AR.map((s) => `\u2022 ${s}`).join("\n")}`;
+  }
+  return `Activities \u2728
+${ACTIVITIES_EN.map((s) => `\u2022 ${s}`).join("\n")}`;
 }
 function getOffersReply(lang) {
   if (lang === "ar") {
@@ -1370,19 +1446,42 @@ function resolveBookingReply(message, lang) {
   if (asksBooking) return getBookingUnavailableReply(lang);
   return void 0;
 }
+function asksCapacityQuestion(normalized) {
+  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة|capacity/.test(
+    normalized
+  );
+}
+function asksActivitiesQuestion(normalized) {
+  return /activit|things to do|what to do|أنشطة|الانشطة|نشاط|نشاطات|شن النشاطات|شنو النشاطات/.test(normalized);
+}
 function getKnowledgeBlockForPrompt(lang) {
-  const units = lang === "ar" ? ACCOMMODATIONS.map((u) => `- ${u.nameAr}: ${u.priceLyd} \u062F.\u0644/\u0644\u064A\u0644\u0629`).join("\n") : ACCOMMODATIONS.map((u) => `- ${u.nameEn}: ${u.priceLyd} LYD/night`).join("\n");
+  const units = lang === "ar" ? ACCOMMODATIONS.map(
+    (u) => `- ${u.nameAr}: ${u.priceLyd} \u062F.\u0644/\u0644\u064A\u0644\u0629\u060C \u0627\u0644\u0633\u0639\u0629: ${u.capacityAr}`
+  ).join("\n") : ACCOMMODATIONS.map(
+    (u) => `- ${u.nameEn}: ${u.priceLyd} LYD/night, capacity: ${u.capacityEn}`
+  ).join("\n");
   const included = lang === "ar" ? INCLUDED_SERVICES_AR.join("; ") : INCLUDED_SERVICES_EN.join("; ");
+  const activities = lang === "ar" ? ACTIVITIES_AR.join("; ") : ACTIVITIES_EN.join("; ");
   const offers = lang === "ar" ? OPENING_OFFERS_AR.join("; ") : OPENING_OFFERS_EN.join("; ");
   return `
 Official Summer 2026 accommodation prices (use these exact prices):
 ${units}
 
-Included: ${included}
+Included services & facilities: ${included}
+
+Activities: ${activities}
 
 Opening offers: ${offers}
 
-Rules: Give real prices when asked. Booking is NOT open \u2014 never ask for booking details or say book now. If asked about booking, say booking is not available yet and official booking details will be announced soon. Never confirm reservations. Never state a fixed opening date. Keep replies short and luxury in tone.`;
+Behavior rules:
+- If asked how many people a unit fits, use capacity listed above; if exact number unknown, say suitable for families/couples/small families as listed and management can confirm exact capacity.
+- If asked what is included, list services and facilities.
+- If asked about activities, list all activity categories.
+- If asked about offers, list opening offers.
+- Never invent room counts, bathrooms, or bed counts.
+- Booking is NOT open \u2014 never ask for booking details or say book now.
+- Never confirm reservations. Never state a fixed opening date.
+- Keep replies short, elegant, and attractive.`;
 }
 function getResponseStyleRules(lang) {
   const features = lang === "ar" ? `\u0645\u0631\u0627\u0641\u0642 \u064A\u0645\u0643\u0646 \u0630\u0643\u0631\u0647\u0627 \u0628\u0634\u0643\u0644 \u0637\u0628\u064A\u0639\u064A \u0639\u0646\u062F \u0627\u0644\u0635\u0644\u0629: \u0634\u0627\u0637\u0626 \u062E\u0627\u0635\u060C \u0645\u0633\u0627\u0628\u062D\u060C \u0643\u0627\u0641\u064A\u0647 \u0627\u0644\u0634\u0627\u0637\u0626\u060C \u0645\u0637\u0627\u0639\u0645 \u0648\u0645\u0642\u0627\u0647\u064A\u060C \u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629\u060C \u062C\u062A\u0633\u0643\u064A\u060C \u0645\u0646\u0637\u0642\u0629 \u0623\u0637\u0641\u0627\u0644\u060C \u0635\u0627\u0644\u0629 \u0623\u0644\u0639\u0627\u0628 \u0648\u062A\u0644\u0641\u0632\u064A\u0648\u0646\u060C \u062A\u0646\u0633 \u0637\u0627\u0648\u0644\u0629 \u0648\u0628\u0644\u064A\u0627\u0631\u062F\u0648\u060C \u0631\u064A\u0627\u0636\u0627\u062A \u0634\u0627\u0637\u0626\u064A\u0629\u060C \u062C\u0644\u0633\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629\u060C \u0623\u0645\u0646 24/7\u060C \u0645\u0648\u0642\u0641 \u0645\u062C\u0627\u0646\u064A\u060C \u0648\u0627\u064A \u0641\u0627\u064A \u0641\u064A \u0627\u0644\u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u0639\u0627\u0645\u0629.` : `Features you may mention naturally when relevant: private beach, swimming pools, Beach Cafe, restaurants and cafes, water activities, Jet Ski, kids area, Game Room & TV Lounge, ping pong & pool table, beach sports, family seating areas, 24/7 security, free parking, public area WiFi.`;
@@ -1415,7 +1514,14 @@ function resolvePriceOrUnitReply(message, lang) {
   if (bookingReply) return bookingReply;
   const openingReply = resolveOpeningDateReply(message, lang);
   if (openingReply) return openingReply;
-  const asksIncluded = /included|what is included|services included|مشمول|الخدمات|شنو مشمول|شن مشمول/.test(
+  if (asksCapacityQuestion(normalized)) {
+    const unit2 = matchAccommodation(normalized);
+    return unit2 ? getUnitCapacityReply(unit2, lang) : getAllCapacitiesReply(lang);
+  }
+  if (asksActivitiesQuestion(normalized)) {
+    return getActivitiesReply(lang);
+  }
+  const asksIncluded = /included|what is included|services included|facilities|مشمول|الخدمات|المرافق|شنو مشمول|شن مشمول/.test(
     normalized
   );
   if (asksIncluded) return getIncludedServicesReply(lang);
