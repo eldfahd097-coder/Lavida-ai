@@ -422,6 +422,12 @@ function asksActivitiesQuestion(normalized: string): boolean {
   return /activit|things to do|what to do|أنشطة|الانشطة|نشاط|نشاطات|شن النشاطات|شنو النشاطات/.test(normalized);
 }
 
+function asksFacilitiesQuestion(normalized: string): boolean {
+  return /facilit|amenit|what services|services available|service do you|المرافق|الخدمات|شن الخدمات|شنو الخدمات|خدمات متوفرة|مرافق/.test(
+    normalized,
+  );
+}
+
 export function getKnowledgeBlockForPrompt(lang: Language): string {
   const units =
     lang === "ar"

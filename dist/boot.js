@@ -1544,6 +1544,11 @@ function asksCapacityQuestion(normalized) {
 function asksActivitiesQuestion(normalized) {
   return /activit|things to do|what to do|أنشطة|الانشطة|نشاط|نشاطات|شن النشاطات|شنو النشاطات/.test(normalized);
 }
+function asksFacilitiesQuestion(normalized) {
+  return /facilit|amenit|what services|services available|service do you|المرافق|الخدمات|شن الخدمات|شنو الخدمات|خدمات متوفرة|مرافق/.test(
+    normalized
+  );
+}
 function getKnowledgeBlockForPrompt(lang) {
   const units = lang === "ar" ? ACCOMMODATIONS.map(
     (u) => `- ${u.nameAr}: ${u.priceLyd} \u062F.\u0644/\u0644\u064A\u0644\u0629\u060C \u0627\u0644\u0633\u0639\u0629: ${u.capacityAr}`
