@@ -1150,6 +1150,8 @@ var ACCOMMODATIONS = [
     priceLyd: 3900,
     capacityEn: "Two families",
     capacityAr: "\u0639\u0627\u0626\u0644\u062A\u064A\u0646",
+    viewEn: "Partial sea view",
+    viewAr: "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u062C\u0632\u0626\u064A\u0629",
     detailsEn: [
       "Private pool",
       "Private outdoor seating",
@@ -1175,6 +1177,8 @@ var ACCOMMODATIONS = [
     priceLyd: 2900,
     capacityEn: "Families and couples",
     capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0623\u0632\u0648\u0627\u062C",
+    viewEn: "Direct sea view",
+    viewAr: "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0645\u0628\u0627\u0634\u0631\u0629",
     detailsEn: [
       "Direct sea view",
       "Private pool",
@@ -1196,6 +1200,8 @@ var ACCOMMODATIONS = [
     priceLyd: 1900,
     capacityEn: "Families",
     capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A",
+    viewEn: "Main pool view",
+    viewAr: "\u0625\u0637\u0644\u0627\u0644\u0629 \u0639\u0644\u0649 \u0627\u0644\u0645\u0633\u0628\u062D \u0627\u0644\u0631\u0626\u064A\u0633\u064A",
     detailsEn: [
       "Main pool view",
       "Close to entertainment areas",
@@ -1215,6 +1221,8 @@ var ACCOMMODATIONS = [
     priceLyd: 1400,
     capacityEn: "Small families and couples",
     capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u0635\u063A\u064A\u0631\u0629 \u0648\u0623\u0632\u0648\u0627\u062C",
+    viewEn: "Side sea view",
+    viewAr: "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629",
     detailsEn: ["Side sea view", "Private balcony", "Quiet location"],
     detailsAr: ["\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631 \u062C\u0627\u0646\u0628\u064A\u0629", "\u0634\u0631\u0641\u0629 \u062E\u0627\u0635\u0629", "\u0645\u0648\u0642\u0639 \u0647\u0627\u062F\u0626"],
     keywords: ["side sea", "\u062C\u0627\u0646\u0628\u064A", "1400"]
@@ -1226,6 +1234,8 @@ var ACCOMMODATIONS = [
     priceLyd: 1e3,
     capacityEn: "Couples or small families",
     capacityAr: "\u0623\u0632\u0648\u0627\u062C \u0623\u0648 \u0639\u0627\u0626\u0644\u0627\u062A \u0635\u063A\u064A\u0631\u0629",
+    viewEn: "Garden view",
+    viewAr: "\u0625\u0637\u0644\u0627\u0644\u0629 \u0639\u0644\u0649 \u0627\u0644\u062D\u062F\u064A\u0642\u0629",
     detailsEn: [
       "Garden view",
       "Close to main facilities",
@@ -1380,6 +1390,76 @@ ${unit.priceLyd} LYD/night
 Capacity: ${unit.capacityEn}
 ${details}`;
 }
+var NEARBY_AMENITIES_EN = "Beach, Beach Cafe, restaurants, supermarket, main pool, entertainment areas, and family zones";
+var NEARBY_AMENITIES_AR = "\u0627\u0644\u0634\u0627\u0637\u0626\u060C \u0643\u0627\u0641\u064A\u0647 \u0627\u0644\u0634\u0627\u0637\u0626\u060C \u0627\u0644\u0645\u0637\u0627\u0639\u0645\u060C \u0627\u0644\u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A\u060C \u0627\u0644\u0645\u0633\u0628\u062D \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u060C \u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u062A\u0631\u0641\u064A\u0647\u060C \u0648\u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u0639\u0627\u0626\u0644\u0627\u062A";
+var INCLUDED_SNIPPET_EN = "Resort access includes private beach, pool, parking, 24h reception & security, WiFi, beach seating, kids area, and more";
+var INCLUDED_SNIPPET_AR = "\u062A\u0634\u0645\u0644 \u0627\u0644\u0625\u0642\u0627\u0645\u0629: \u0634\u0627\u0637\u0626 \u062E\u0627\u0635\u060C \u0645\u0633\u0628\u062D\u060C \u0645\u0648\u0642\u0641\u060C \u0627\u0633\u062A\u0642\u0628\u0627\u0644 \u0648\u0623\u0645\u0646 24 \u0633\u0627\u0639\u0629\u060C \u0648\u0627\u064A \u0641\u0627\u064A\u060C \u062C\u0644\u0633\u0627\u062A \u0627\u0644\u0634\u0627\u0637\u0626\u060C \u0645\u0646\u0637\u0642\u0629 \u0623\u0637\u0641\u0627\u0644\u060C \u0648\u0627\u0644\u0645\u0632\u064A\u062F";
+function getChaletDetailReply(unit, lang, includePrice = false) {
+  if (lang === "ar") {
+    const features2 = unit.detailsAr.map((d) => `\u2022 ${d}`).join("\n");
+    const priceLine2 = includePrice ? `
+\u0627\u0644\u0633\u0639\u0631: ${unit.priceLyd} \u062F.\u0644 / \u0644\u064A\u0644\u0629` : "";
+    return `${unit.nameAr} \u2728
+\u0627\u0644\u0633\u0639\u0629: ${unit.capacityAr}
+\u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629: ${unit.viewAr}
+\u0627\u0644\u0645\u0645\u064A\u0632\u0627\u062A:
+${features2}
+${INCLUDED_SNIPPET_AR}
+\u0642\u0631\u064A\u0628 \u0645\u0646: ${NEARBY_AMENITIES_AR}${priceLine2}`;
+  }
+  const features = unit.detailsEn.map((d) => `\u2022 ${d}`).join("\n");
+  const priceLine = includePrice ? `
+Rate: ${unit.priceLyd} LYD/night` : "";
+  return `${unit.nameEn} \u2728
+Capacity: ${unit.capacityEn}
+View: ${unit.viewEn}
+Features:
+${features}
+${INCLUDED_SNIPPET_EN}
+Nearby: ${NEARBY_AMENITIES_EN}${priceLine}`;
+}
+function getAccommodationsOverviewReply(lang) {
+  if (lang === "ar") {
+    const lines2 = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameAr} \u2014 ${u.capacityAr} \u2014 ${u.viewAr}`);
+    return `\u0648\u062D\u062F\u0627\u062A \u0644\u0627\u0641\u064A\u062F\u0627 \u2728
+${lines2.join("\n")}
+\u0627\u0628\u0639\u062A \u0627\u0633\u0645 \u0627\u0644\u0648\u062D\u062F\u0629 \u0648\u0646\u0634\u0631\u062D\u0644\u0643 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644 \u0643\u0627\u0645\u0644\u0629.`;
+  }
+  const lines = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameEn} \u2014 ${u.capacityEn} \u2014 ${u.viewEn}`);
+  return `La Vida accommodations \u2728
+${lines.join("\n")}
+Tell us which unit interests you and we will share full details.`;
+}
+function getResortOverviewReply(lang) {
+  if (lang === "ar") {
+    return `La Vida Resort & Beach Club \u2728
+\u0645\u0646\u062A\u062C\u0639 \u0641\u0627\u062E\u0631 \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u0631 \u0641\u064A \u0632\u0648\u0627\u0631\u0629 \u2014 \u0625\u0642\u0627\u0645\u0629 \u0631\u0627\u0642\u064A\u0629\u060C \u0634\u0627\u0637\u0626 \u062E\u0627\u0635\u060C \u0645\u0633\u0627\u0628\u062D\u060C \u0648\u0645\u0631\u0627\u0641\u0642 \u0639\u0627\u0626\u0644\u064A\u0629.
+
+\u0627\u0644\u0645\u0631\u0627\u0641\u0642 \u0648\u0627\u0644\u062E\u062F\u0645\u0627\u062A:
+${INCLUDED_SERVICES_AR.slice(0, 8).map((s) => `\u2022 ${s}`).join("\n")}
+\u2022 \u0648\u0627\u0644\u0645\u0632\u064A\u062F \u0645\u0646 \u0645\u0631\u0627\u0641\u0642 \u0627\u0644\u0645\u0646\u062A\u062C\u0639
+
+\u0627\u0644\u0623\u0646\u0634\u0637\u0629:
+${ACTIVITIES_AR.slice(0, 6).map((s) => `\u2022 ${s}`).join("\n")}
+\u2022 \u0648\u0623\u0646\u0634\u0637\u0629 \u0623\u0637\u0641\u0627\u0644 \u0648\u0639\u0627\u0626\u0644\u064A\u0629 \u0645\u062A\u0646\u0648\u0639\u0629
+
+\u0627\u0644\u0625\u0642\u0627\u0645\u0629: \u0634\u0627\u0644\u064A\u0647\u0627\u062A VIP\u060C \u0625\u0637\u0644\u0627\u0644\u0627\u062A \u0628\u062D\u0631\u064A\u0629\u060C \u0627\u0633\u062A\u0648\u062F\u064A\u0648\u0647\u0627\u062A\u060C \u0648\u062E\u064A\u0627\u0631\u0627\u062A \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0627\u0644\u0623\u0632\u0648\u0627\u062C.
+\u062A\u062D\u0628 \u062A\u0639\u0631\u0641 \u0623\u0643\u062B\u0631 \u0639\u0646 \u0648\u062D\u062F\u0629 \u0645\u0639\u064A\u0646\u0629\u060C \u0627\u0644\u0623\u0646\u0634\u0637\u0629\u060C \u0623\u0648 \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u0634\u0645\u0648\u0644\u0629\u061F`;
+  }
+  return `La Vida Resort & Beach Club \u2728
+A luxury beachfront resort in Zuwarah with elegant stays, a private beach, pools, and family-friendly facilities.
+
+Facilities & services:
+${INCLUDED_SERVICES_EN.slice(0, 8).map((s) => `\u2022 ${s}`).join("\n")}
+\u2022 Plus full resort amenities
+
+Activities:
+${ACTIVITIES_EN.slice(0, 6).map((s) => `\u2022 ${s}`).join("\n")}
+\u2022 Plus kids and family entertainment
+
+Stays include VIP chalets, sea-view options, garden studios, and family-friendly layouts.
+Would you like details on a specific unit, activities, or included services?`;
+}
 function getUnitCapacityReply(unit, lang) {
   if (lang === "ar") {
     return `${unit.nameAr} \u2728
@@ -1446,8 +1526,18 @@ function resolveBookingReply(message, lang) {
   if (asksBooking) return getBookingUnavailableReply(lang);
   return void 0;
 }
+function asksExplicitPrices(normalized) {
+  return /price list|accommodation prices|room rates|list of prices|اسعار|الاسعار|أسعار|سعر|بكم|قداش|how much|price|prices|rates|cost|rate|as3ar|كم السعر|شن السعر/.test(
+    normalized
+  );
+}
+function asksResortDetailsQuestion(normalized) {
+  return /tell me more|more details|resort details|about the resort|about la vida|what do you offer|what do you have|resort info|information|details|what facilities|what activities|what is included|what services|what's included|services available|facilities do you|activities do you|included services|tell me about|know more|what else|معلومات|تفاصيل|تفاصيل اكثر|ممكن معلومات|عن المنتجع|شن عندكم|شنو عندكم|شن تقدموا|المرافق|الخدمات|شن مشمول|شنو مشمول|زيد|زيدني|وضح|شن بعد|شنو اكثر/.test(
+    normalized
+  );
+}
 function asksCapacityQuestion(normalized) {
-  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة|capacity/.test(
+  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة/.test(
     normalized
   );
 }
@@ -1474,7 +1564,11 @@ Activities: ${activities}
 Opening offers: ${offers}
 
 Behavior rules:
-- If asked how many people a unit fits, use capacity listed above; if exact number unknown, say suitable for families/couples/small families as listed and management can confirm exact capacity.
+- Answer the guest's question directly first. Guide naturally like a resort host \u2014 not a pricing menu.
+- Do NOT send the full price list unless the guest explicitly asks for prices, rates, cost, or a price list.
+- For "tell me more", resort details, facilities, activities, or included services: give detailed resort information \u2014 not prices.
+- For chalet/unit detail questions: share capacity, view, features, included resort access, and nearby amenities \u2014 do not lead with price unless they asked for price.
+- If asked how many people a unit fits, use capacity listed above; management can confirm exact numbers.
 - If asked what is included, list services and facilities.
 - If asked about activities, list all activity categories.
 - If asked about offers, list opening offers.
@@ -1491,14 +1585,16 @@ function getResponseStyleRules(lang) {
 1) \u0623\u062C\u0628 \u0639\u0644\u0649 \u0633\u0624\u0627\u0644 \u0627\u0644\u0636\u064A\u0641 \u0645\u0628\u0627\u0634\u0631\u0629 \u0623\u0648\u0644\u0627\u064B.
 2) \u0628\u0639\u062F \u0627\u0644\u0625\u062C\u0627\u0628\u0629\u060C \u0625\u0630\u0627 \u0643\u0627\u0646 \u0645\u0646\u0627\u0633\u0628\u0627\u064B\u060C \u0627\u0630\u0643\u0631 \u0628\u0627\u062E\u062A\u0635\u0627\u0631 2\u20134 \u0645\u0631\u0627\u0641\u0642 \u0623\u0648 \u0645\u064A\u0632\u0627\u062A \u0645\u0631\u062A\u0628\u0637\u0629 \u0628\u0633\u0624\u0627\u0644\u0647 \u2014 \u0628\u0634\u0643\u0644 \u0637\u0628\u064A\u0639\u064A \u0648\u0644\u064A\u0633 \u0625\u0639\u0644\u0627\u0646\u0627\u064B.
 3) ${features}
-4) \u0644\u0627 \u062A\u0637\u064A\u0644 \u0627\u0644\u0631\u062F \u0648\u0644\u0627 \u062A\u062D\u0648\u0651\u0644\u0647 \u0644\u0625\u0639\u0644\u0627\u0646. \u0644\u0627 \u062A\u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632. \u0643\u0646 \u0645\u0641\u064A\u062F\u0627\u064B \u0648\u0637\u0628\u064A\u0639\u064A\u0627\u064B \u0644\u0627 \u0631\u0648\u0628\u0648\u062A\u064A\u0627\u064B \u0648\u0644\u0627 \u0645\u0628\u064A\u0639\u0627\u062A\u064A\u0627\u064B.`;
+4) \u0644\u0627 \u062A\u0637\u064A\u0644 \u0627\u0644\u0631\u062F \u0648\u0644\u0627 \u062A\u062D\u0648\u0651\u0644\u0647 \u0644\u0625\u0639\u0644\u0627\u0646. \u0644\u0627 \u062A\u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632. \u0644\u0627 \u062A\u0631\u0633\u0644 \u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0625\u0644\u0627 \u0625\u0630\u0627 \u0637\u0644\u0628\u0647\u0627 \u0627\u0644\u0636\u064A\u0641 \u0635\u0631\u0627\u062D\u0629.
+5) \u0643\u0646 \u0645\u0641\u064A\u062F\u0627\u064B \u0648\u0637\u0628\u064A\u0639\u064A\u0627\u064B \u0643\u0645\u0648\u0638\u0641 \u0627\u0633\u062A\u0642\u0628\u0627\u0644 \u2014 \u0644\u0627 \u0631\u0648\u0628\u0648\u062A\u064A\u0627\u064B \u0648\u0644\u0627 \u0645\u0628\u064A\u0639\u0627\u062A\u064A\u0627\u064B.`;
   }
   return `
 Response style (AI-generated replies only):
 1) Answer the guest's question directly first.
 2) After answering, when relevant, briefly mention 2\u20134 related resort features \u2014 naturally, not as an ad.
 3) ${features}
-4) Do not make replies longer than needed. Do not ask users to book. Be helpful and informative, not salesy or robotic.`;
+4) Do not make replies longer than needed. Do not ask users to book. Do not send the price list unless the guest explicitly asks for prices or rates.
+5) Guide the guest naturally like a resort host \u2014 helpful, not salesy or robotic.`;
 }
 function resolveOpeningDateReply(message, lang) {
   const normalized = message.toLowerCase();
@@ -1514,6 +1610,26 @@ function resolvePriceOrUnitReply(message, lang) {
   if (bookingReply) return bookingReply;
   const openingReply = resolveOpeningDateReply(message, lang);
   if (openingReply) return openingReply;
+  const unit = matchAccommodation(normalized);
+  const wantsPrice = asksExplicitPrices(normalized);
+  if (unit && wantsPrice) {
+    return getUnitReply(unit, lang);
+  }
+  if (unit) {
+    return getChaletDetailReply(unit, lang, false);
+  }
+  if (asksResortDetailsQuestion(normalized) && !wantsPrice) {
+    if (/activit|things to do|what to do|أنشطة|الانشطة|نشاط|نشاطات/.test(normalized)) {
+      return getActivitiesReply(lang);
+    }
+    if (/included|what is included|services included|مشمول|شن مشمول|شنو مشمول/.test(normalized)) {
+      return getIncludedServicesReply(lang);
+    }
+    if (asksFacilitiesQuestion(normalized)) {
+      return getIncludedServicesReply(lang);
+    }
+    return getResortOverviewReply(lang);
+  }
   if (asksCapacityQuestion(normalized)) {
     const unit2 = matchAccommodation(normalized);
     return unit2 ? getUnitCapacityReply(unit2, lang) : getAllCapacitiesReply(lang);
@@ -1521,21 +1637,18 @@ function resolvePriceOrUnitReply(message, lang) {
   if (asksActivitiesQuestion(normalized)) {
     return getActivitiesReply(lang);
   }
-  const asksIncluded = /included|what is included|services included|facilities|مشمول|الخدمات|المرافق|شنو مشمول|شن مشمول/.test(
+  const asksIncluded = /included|what is included|services included|مشمول|شن مشمول|شنو مشمول/.test(
     normalized
   );
   if (asksIncluded) return getIncludedServicesReply(lang);
+  if (asksFacilitiesQuestion(normalized)) {
+    return getIncludedServicesReply(lang);
+  }
   const asksOffers = /offer|offers|promo|discount|عروض|خصم|تخفيض/.test(normalized);
   if (asksOffers) return getOffersReply(lang);
-  const unit = matchAccommodation(normalized);
-  if (unit && /price|prices|how much|cost|بكم|قداش|سعر|اسعار|details|تفاصيل|about|عن|this|هذا|هذه/.test(normalized)) {
-    return getUnitReply(unit, lang);
+  if (wantsPrice) {
+    return getPriceListReply(lang);
   }
-  if (unit && !/book|booking|حجز/.test(normalized)) {
-    return getUnitReply(unit, lang);
-  }
-  const asksPrices = /price|prices|how much|cost|rates|as3ar|بكم|قداش|سعر|اسعار|الاسعار|rates/.test(normalized);
-  if (asksPrices) return getPriceListReply(lang);
   return void 0;
 }
 
@@ -1711,17 +1824,18 @@ Style and behavior rules:
 1) Sound luxury, calm, warm, elegant, and natural.
 2) Keep replies short, clear, and helpful.
 3) Never sound robotic.
-4) Answer the guest's question directly first.
-5) After answering, when relevant, briefly mention 2\u20134 related resort features \u2014 naturally, not salesy.
-6) Use only official Summer 2026 prices from the knowledge block.
-7) Booking is not open \u2014 never ask for booking details or say book now.
-8) Never state a fixed opening date; if asked, say the official opening date will be announced soon.
-9) If you are unsure, clearly say management will confirm.
-10) Do not invent facts outside the information above.
-11) Keep conversation continuity: do not reset topic during active threads.
-12) Understand fragmented messages and short follow-ups.
-13) Understand Arabic Libyan slang and mixed Arabic-English.
-14) Never ask "Could you tell us more" unless absolutely necessary.
+4) Answer the guest's question directly first \u2014 guide naturally like a resort host.
+5) Do NOT send the price list unless the guest explicitly asks for prices, rates, or cost.
+6) For chalet detail questions: share capacity, view, features, and amenities \u2014 not only the price.
+7) Use only official Summer 2026 prices when price is explicitly requested.
+8) Booking is not open \u2014 never ask for booking details or say book now.
+9) Never state a fixed opening date; if asked, say the official opening date will be announced soon.
+10) If you are unsure, clearly say management will confirm.
+11) Do not invent facts outside the information above.
+12) Keep conversation continuity: do not reset topic during active threads.
+13) Understand fragmented messages and short follow-ups.
+14) Understand Arabic Libyan slang and mixed Arabic-English.
+15) Never ask "Could you tell us more" unless absolutely necessary.
 ${getResponseStyleRules(lang)}`;
   const stateContext = `
 Conversation context:
@@ -2294,7 +2408,7 @@ ${PHONE_2} \u2728`
   ]);
   if (asksAccommodation) {
     const unit = matchAccommodation(text2);
-    replies.push(unit ? getUnitReply(unit, lang) : getPriceListReply(lang));
+    replies.push(unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang));
   }
   const asksJetski = hasAny2(text2, [
     "jetski",
@@ -2397,9 +2511,7 @@ ${PHONE_2} \u2728`
     "\u0627\u0644\u0645\u0631\u0627\u0641\u0642"
   ]);
   if (asksGeneralActivities) {
-    replies.push(
-      lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u062D\u062A\u0648\u0641\u0631 \u0634\u0627\u0637\u0626\u060C \u0645\u0633\u0628\u062D\u060C \u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629\u060C \u062A\u0623\u062C\u064A\u0631 \u062C\u062A\u0633\u0643\u064A\u060C \u0645\u0644\u0639\u0628 \u0643\u0631\u0629\u060C \u0645\u0644\u0639\u0628 \u0637\u0627\u0626\u0631\u0629\u060C \u0623\u0646\u0634\u0637\u0629 \u0644\u0644\u0623\u0637\u0641\u0627\u0644\u060C \u0643\u0627\u0641\u064A\u0647\u060C \u0648\u0623\u062C\u0648\u0627\u0621 \u0639\u0627\u0626\u0644\u064A\u0629 \u0631\u0627\u0642\u064A\u0629 \u2728" : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach caf\xE9, and relaxing family-friendly spaces \u2728"
-    );
+    replies.push(getActivitiesReply(lang));
   }
   const asksGeneralResort = hasAny2(text2, [
     "what do you offer",
@@ -2431,9 +2543,7 @@ ${PHONE_2} \u2728`
     "\u0645\u0639\u0644\u0648\u0645\u0627\u062A"
   ]);
   if (asksGeneralResort) {
-    replies.push(
-      lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u0631\u064A\u0632\u0648\u0631\u062A \u0622\u0646\u062F \u0628\u064A\u062A\u0634 \u0643\u0644\u0648\u0628 \u0645\u0646\u062A\u062C\u0639 \u0641\u0627\u062E\u0631 \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u0631 \u0641\u064A \u0632\u0648\u0627\u0631\u0629\u060C \u0641\u064A\u0647 \u0641\u0644\u0644 \u0648\u0634\u0627\u0644\u064A\u0647\u0627\u062A \u0648\u0634\u0642\u0642 \u0641\u0646\u062F\u0642\u064A\u0629 \u0648\u0645\u0633\u0627\u0628\u062D \u0648\u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629 \u0648\u0643\u0627\u0641\u064A\u0647 \u0648\u0623\u062C\u0648\u0627\u0621 \u0639\u0627\u0626\u0644\u064A\u0629 \u0631\u0627\u0642\u064A\u0629 \u2728" : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach caf\xE9, and a calm family-friendly atmosphere \u2728"
-    );
+    replies.push(getResortOverviewReply(lang));
   }
   const asksMoreGeneric = hasAny2(text2, [
     "tell me more",
@@ -2448,9 +2558,7 @@ ${PHONE_2} \u2728`
     "\u0634\u0646 \u0628\u0639\u062F"
   ]);
   if (asksMoreGeneric && replies.length === 0) {
-    replies.push(
-      lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u062A\u062D\u0628\u0648\u0627 \u062A\u0639\u0631\u0641\u0648\u0627 \u0623\u0643\u062B\u0631 \u0639\u0644\u0649 \u0627\u0644\u063A\u0631\u0641\u060C \u0627\u0644\u0623\u0646\u0634\u0637\u0629\u060C \u0627\u0644\u0623\u0633\u0639\u0627\u0631\u060C \u0627\u0644\u0645\u0648\u0642\u0639 \u0648\u0644\u0627 \u0627\u0644\u0645\u0631\u0627\u0641\u0642\u061F" : "Of course \u2728 What would you like to know more about? Rooms, activities, prices, location, or facilities?"
-    );
+    replies.push(getResortOverviewReply(lang));
   }
   const uniqueReplies = Array.from(new Set(replies));
   if (uniqueReplies.length === 0) return void 0;
@@ -2812,14 +2920,16 @@ function detectIntents(text2) {
   push("greeting", hasAny3(text2, ["hi", "hello", "hey", "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064A\u0643\u0645", "\u0633\u0644\u0627\u0645", "\u0645\u0631\u062D\u0628\u0627", "\u0627\u0647\u0644\u0627"]));
   push("human_handoff", hasAny3(text2, ["human", "agent", "manager", "admin", "complaint", "problem", "\u0645\u0648\u0638\u0641", "\u0627\u0644\u0625\u062F\u0627\u0631\u0629", "\u0645\u0634\u0643\u0644\u0629"]));
   push("offers", hasAny3(text2, ["offer", "offers", "promo", "discount", "\u0639\u0631\u0648\u0636", "\u062E\u0635\u0645", "\u062A\u062E\u0641\u064A\u0636"]));
-  push("included", hasAny3(text2, ["included", "what is included", "services included", "\u0645\u0634\u0645\u0648\u0644", "\u0627\u0644\u062E\u062F\u0645\u0627\u062A", "\u0634\u0646 \u0645\u0634\u0645\u0648\u0644"]));
-  push("general", hasAny3(text2, ["what do you offer", "tell me more", "what else", "\u0645\u0645\u0643\u0646 \u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u062A\u0641\u0627\u0635\u064A\u0644", "\u0634\u0646\u0648 \u0639\u0646\u062F\u0643\u0645"]));
+  push("activities", hasAny3(text2, ["activit", "things to do", "what to do", "\u0623\u0646\u0634\u0637\u0629", "\u0627\u0644\u0627\u0646\u0634\u0637\u0629", "\u0646\u0634\u0627\u0637", "\u0646\u0634\u0627\u0637\u0627\u062A"]));
+  push("included", hasAny3(text2, ["included", "what is included", "services included", "what facilities", "what services", "services available", "facilities", "\u0645\u0634\u0645\u0648\u0644", "\u0627\u0644\u062E\u062F\u0645\u0627\u062A", "\u0627\u0644\u0645\u0631\u0627\u0641\u0642", "\u0634\u0646 \u0645\u0634\u0645\u0648\u0644", "\u0634\u0646\u0648 \u0627\u0644\u062E\u062F\u0645\u0627\u062A"]));
+  push("general", hasAny3(text2, ["what do you offer", "tell me more", "more details", "resort details", "what else", "about the resort", "resort info", "information", "\u0645\u0645\u0643\u0646 \u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u0645\u0639\u0644\u0648\u0645\u0627\u062A", "\u062A\u0641\u0627\u0635\u064A\u0644", "\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0643\u062B\u0631", "\u0634\u0646\u0648 \u0639\u0646\u062F\u0643\u0645", "\u0634\u0646 \u0639\u0646\u062F\u0643\u0645", "\u0632\u064A\u062F", "\u0648\u0636\u062D"]));
   return intents;
 }
 function replyForIntent(intent, lang, messageText) {
   if (intent === "prices") return getPriceListReply(lang);
   if (intent === "offers") return getOffersReply(lang);
   if (intent === "included") return getIncludedServicesReply(lang);
+  if (intent === "activities") return getActivitiesReply(lang);
   if (intent === "booking") return getBookingUnavailableReply(lang);
   if (intent === "opening") return getOpeningDateReply(lang);
   if (intent === "photos") {
@@ -2833,7 +2943,7 @@ function replyForIntent(intent, lang, messageText) {
   if (intent === "cafe_food") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0641\u064A \u0644\u0627\u0641\u064A\u062F\u0627 \u0643\u0627\u0641\u064A\u0647 \u0634\u0627\u0637\u0626\u064A \u0648\u0645\u0646\u0637\u0642\u0629 \u0623\u0643\u0644." : "Yes \u2728 La Vida has a beach caf\xE9 and food area.";
   if (intent === "rooms") {
     const unit = messageText ? matchAccommodation(normalizeInput(messageText)) : void 0;
-    return unit ? getUnitReply(unit, lang) : getPriceListReply(lang);
+    return unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang);
   }
   if (intent === "private_pool") return lang === "ar" ? "\u0646\u0639\u0645 \u2728 \u0641\u0644\u0644 VIP \u0648\u0627\u0644\u0641\u0644\u0644 \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u0641\u064A\u0647\u0627 \u0645\u0633\u0627\u0628\u062D \u062E\u0627\u0635\u0629." : "Yes \u2728 VIP and presidential villas include private pools.";
   if (intent === "supermarket") return lang === "ar" ? "\u0623\u0643\u064A\u062F \u2728 \u0645\u062A\u0648\u0641\u0631 \u0633\u0648\u0628\u0631\u0645\u0627\u0631\u0643\u062A \u0636\u0645\u0646 \u0627\u0644\u062E\u062F\u0645\u0627\u062A." : "Yes \u2728 A supermarket is available within resort services.";
@@ -2845,7 +2955,7 @@ function replyForIntent(intent, lang, messageText) {
   if (intent === "thanks") return lang === "ar" ? "\u062A\u062D\u062A \u0623\u0645\u0631\u0643\u0645 \u0641\u064A \u0623\u064A \u0648\u0642\u062A \u2728" : "Always happy to help \u2728";
   if (intent === "greeting") return lang === "ar" ? "\u0623\u0647\u0644\u0627\u064B \u0648\u0633\u0647\u0644\u0627\u064B \u0628\u0643\u0645 \u0641\u064A La Vida \u2728 \u0643\u064A\u0641 \u0646\u0642\u062F\u0631 \u0646\u0633\u0627\u0639\u062F\u0643\u0645\u061F" : "Welcome to La Vida \u2728 How can we help you today?";
   if (intent === "general") {
-    return lang === "ar" ? "\u0644\u0627\u0641\u064A\u062F\u0627 \u0645\u0646\u062A\u062C\u0639 \u0641\u0627\u062E\u0631 \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u0631 \u0641\u064A \u0632\u0648\u0627\u0631\u0629 \u0641\u064A\u0647 \u0625\u0642\u0627\u0645\u0629 \u0645\u062A\u0646\u0648\u0639\u0629 \u0648\u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629 \u0648\u0643\u0627\u0641\u064A\u0647 \u0648\u0645\u0631\u0627\u0641\u0642 \u0639\u0627\u0626\u0644\u064A\u0629 \u2728" : "La Vida is a luxury beachfront resort in Zuwarah with varied stays, water activities, caf\xE9 options, and family-friendly facilities \u2728";
+    return getResortOverviewReply(lang);
   }
   return void 0;
 }
