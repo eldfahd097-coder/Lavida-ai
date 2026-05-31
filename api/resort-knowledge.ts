@@ -303,6 +303,30 @@ Opening offers: ${offers}
 Rules: Give real prices when asked. Booking is NOT open — never ask for booking details or say book now. If asked about booking, say booking is not available yet and official booking details will be announced soon. Never confirm reservations. Never state a fixed opening date. Keep replies short and luxury in tone.`;
 }
 
+/** Prompt-only guidance for AI-generated replies (does not alter template/FAQ answers). */
+export function getResponseStyleRules(lang: Language): string {
+  const features =
+    lang === "ar"
+      ? `مرافق يمكن ذكرها بشكل طبيعي عند الصلة: شاطئ خاص، مسابح، كافيه الشاطئ، مطاعم ومقاهي، أنشطة بحرية، جتسكي، منطقة أطفال، صالة ألعاب وتلفزيون، تنس طاولة وبلياردو، رياضات شاطئية، جلسات عائلية، أمن 24/7، موقف مجاني، واي فاي في المناطق العامة.`
+      : `Features you may mention naturally when relevant: private beach, swimming pools, Beach Cafe, restaurants and cafes, water activities, Jet Ski, kids area, Game Room & TV Lounge, ping pong & pool table, beach sports, family seating areas, 24/7 security, free parking, public area WiFi.`;
+
+  if (lang === "ar") {
+    return `
+أسلوب الرد (للردود التي يولّدها الذكاء الاصطناعي فقط):
+1) أجب على سؤال الضيف مباشرة أولاً.
+2) بعد الإجابة، إذا كان مناسباً، اذكر باختصار 2–4 مرافق أو ميزات مرتبطة بسؤاله — بشكل طبيعي وليس إعلاناً.
+3) ${features}
+4) لا تطيل الرد ولا تحوّله لإعلان. لا تطلب الحجز. كن مفيداً وطبيعياً لا روبوتياً ولا مبيعاتياً.`;
+  }
+
+  return `
+Response style (AI-generated replies only):
+1) Answer the guest's question directly first.
+2) After answering, when relevant, briefly mention 2–4 related resort features — naturally, not as an ad.
+3) ${features}
+4) Do not make replies longer than needed. Do not ask users to book. Be helpful and informative, not salesy or robotic.`;
+}
+
 export function resolveOpeningDateReply(message: string, lang: Language): string | undefined {
   const normalized = message.toLowerCase();
   const asksOpening = /opening|when open|opening date|متى تفتح|متى تفتحو|موعد الافتتاح|الافتتاح|امتى الافتتاح|تاريخ الافتتاح/.test(

@@ -4,6 +4,7 @@ import type { Language } from "@contracts/templates";
 import {
   getBookingUnavailableReply,
   getKnowledgeBlockForPrompt,
+  getResponseStyleRules,
   getOffersReply,
   getIncludedServicesReply,
   getOpeningDateReply,
@@ -43,8 +44,9 @@ ${getKnowledgeBlockForPrompt("ar")}
 1) استخدم الأسعار الرسمية أعلاه فقط — لا تخترع أسعاراً.
 2) الحجز غير متوفر حالياً — لا تطلب بيانات حجز ولا تقل احجز الآن.
 3) إذا سُئل عن الحجز: قل إن الحجز غير متوفر وسيتم الإعلان عن آلية الحجز الرسمية قريباً.
-4) إذا السؤال عن مرفق أو وحدة معينة، جاوب على نفس الموضوع فقط وباختصار.
-5) إذا الطلب غير واضح جداً، اطلب توضيح قصير ولطيف.`;
+4) أجب على السؤال مباشرة أولاً؛ ثم عند الحاجة اذكر 2–4 مرافق مرتبطة باختصار (انظر أسلوب الرد أدناه).
+5) إذا الطلب غير واضح جداً، اطلب توضيح قصير ولطيف.
+${getResponseStyleRules("ar")}`;
   }
   return `You are La Vida AI, the official receptionist for ${RESORT_NAME}.
 Tone: luxury, calm, elegant, warm, natural. Keep replies short.
@@ -67,8 +69,9 @@ Hard rules:
 1) Use only the official Summer 2026 prices above — never invent prices.
 2) Booking is not open — never ask for booking details or say book now.
 3) If asked about booking: say booking is not available yet and official booking details will be announced soon.
-4) For specific facility or unit questions, answer only that point briefly.
-5) Ask for clarification only when truly necessary.`;
+4) Answer the question directly first; then when helpful, briefly mention 2–4 related features (see response style below).
+5) Ask for clarification only when truly necessary.
+${getResponseStyleRules("en")}`;
 }
 
 // ─── AI Response Generator ──────────────────────────────────────
