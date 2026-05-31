@@ -6,11 +6,14 @@ import { detectLanguage, type Language } from "@contracts/templates";
 import {
   accommodationBookingLabel,
   getBookingUnavailableReply,
+  getChaletDetailReply,
+  getAccommodationsOverviewReply,
   getIncludedServicesReply,
   getOffersReply,
   getOpeningDateReply,
   getPriceListReply,
-  getUnitReply,
+  getResortOverviewReply,
+  getActivitiesReply,
   matchAccommodation,
   resolvePriceOrUnitReply,
 } from "./resort-knowledge";
@@ -118,8 +121,9 @@ function detectIntents(text: string): IntentName[] {
   push("greeting", hasAny(text, ["hi", "hello", "hey", "السلام عليكم", "سلام", "مرحبا", "اهلا"]));
   push("human_handoff", hasAny(text, ["human", "agent", "manager", "admin", "complaint", "problem", "موظف", "الإدارة", "مشكلة"]));
   push("offers", hasAny(text, ["offer", "offers", "promo", "discount", "عروض", "خصم", "تخفيض"]));
-  push("included", hasAny(text, ["included", "what is included", "services included", "مشمول", "الخدمات", "شن مشمول"]));
-  push("general", hasAny(text, ["what do you offer", "tell me more", "what else", "ممكن معلومات", "معلومات", "تفاصيل", "شنو عندكم"]));
+  push("activities", hasAny(text, ["activit", "things to do", "what to do", "أنشطة", "الانشطة", "نشاط", "نشاطات"]));
+  push("included", hasAny(text, ["included", "what is included", "services included", "what facilities", "what services", "services available", "facilities", "مشمول", "الخدمات", "المرافق", "شن مشمول", "شنو الخدمات"]));
+  push("general", hasAny(text, ["what do you offer", "tell me more", "more details", "resort details", "what else", "about the resort", "resort info", "information", "ممكن معلومات", "معلومات", "تفاصيل", "تفاصيل اكثر", "شنو عندكم", "شن عندكم", "زيد", "وضح"]));
 
   return intents;
 }
@@ -128,6 +132,7 @@ function replyForIntent(intent: IntentName, lang: Language, messageText?: string
   if (intent === "prices") return getPriceListReply(lang);
   if (intent === "offers") return getOffersReply(lang);
   if (intent === "included") return getIncludedServicesReply(lang);
+  if (intent === "activities") return getActivitiesReply(lang);
   if (intent === "booking") return getBookingUnavailableReply(lang);
   if (intent === "opening") return getOpeningDateReply(lang);
   if (intent === "photos") {
@@ -145,7 +150,7 @@ function replyForIntent(intent: IntentName, lang: Language, messageText?: string
   if (intent === "cafe_food") return lang === "ar" ? "أكيد ✨ في لافيدا كافيه شاطئي ومنطقة أكل." : "Yes ✨ La Vida has a beach café and food area.";
   if (intent === "rooms") {
     const unit = messageText ? matchAccommodation(normalizeInput(messageText)) : undefined;
-    return unit ? getUnitReply(unit, lang) : getPriceListReply(lang);
+    return unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang);
   }
   if (intent === "private_pool") return lang === "ar" ? "نعم ✨ فلل VIP والفلل الرئاسية فيها مسابح خاصة." : "Yes ✨ VIP and presidential villas include private pools.";
   if (intent === "supermarket") return lang === "ar" ? "أكيد ✨ متوفر سوبرماركت ضمن الخدمات." : "Yes ✨ A supermarket is available within resort services.";
@@ -157,9 +162,7 @@ function replyForIntent(intent: IntentName, lang: Language, messageText?: string
   if (intent === "thanks") return lang === "ar" ? "تحت أمركم في أي وقت ✨" : "Always happy to help ✨";
   if (intent === "greeting") return lang === "ar" ? "أهلاً وسهلاً بكم في La Vida ✨ كيف نقدر نساعدكم؟" : "Welcome to La Vida ✨ How can we help you today?";
   if (intent === "general") {
-    return lang === "ar"
-      ? "لافيدا منتجع فاخر على البحر في زوارة فيه إقامة متنوعة وأنشطة بحرية وكافيه ومرافق عائلية ✨"
-      : "La Vida is a luxury beachfront resort in Zuwarah with varied stays, water activities, café options, and family-friendly facilities ✨";
+    return getResortOverviewReply(lang);
   }
   return undefined;
 }
@@ -396,6 +399,7 @@ type IntentName =
   | "human_handoff"
   | "offers"
   | "included"
+  | "activities"
   | "general";
 
 type SenderSession = {

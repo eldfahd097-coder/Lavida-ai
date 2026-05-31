@@ -9,7 +9,10 @@ import {
   getIncludedServicesReply,
   getOpeningDateReply,
   getPriceListReply,
-  getUnitReply,
+  getChaletDetailReply,
+  getAccommodationsOverviewReply,
+  getResortOverviewReply,
+  getActivitiesReply,
   matchAccommodation,
   resolvePriceOrUnitReply,
 } from "./resort-knowledge";
@@ -485,7 +488,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   ]);
   if (asksAccommodation) {
     const unit = matchAccommodation(text);
-    replies.push(unit ? getUnitReply(unit, lang) : getPriceListReply(lang));
+    replies.push(unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang));
   }
 
   const asksJetski = hasAny(text, [
@@ -608,11 +611,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "المرافق",
   ]);
   if (asksGeneralActivities) {
-    replies.push(
-      lang === "ar"
-        ? "لافيدا حتوفر شاطئ، مسبح، أنشطة بحرية، تأجير جتسكي، ملعب كرة، ملعب طائرة، أنشطة للأطفال، كافيه، وأجواء عائلية راقية ✨"
-        : "La Vida will offer beach access, pool, water sports, jet ski rentals, football and volleyball courts, kids activities, a beach café, and relaxing family-friendly spaces ✨",
-    );
+    replies.push(getActivitiesReply(lang));
   }
 
   const asksGeneralResort = hasAny(text, [
@@ -645,11 +644,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "معلومات",
   ]);
   if (asksGeneralResort) {
-    replies.push(
-      lang === "ar"
-        ? "لافيدا ريزورت آند بيتش كلوب منتجع فاخر على البحر في زوارة، فيه فلل وشاليهات وشقق فندقية ومسابح وأنشطة بحرية وكافيه وأجواء عائلية راقية ✨"
-        : "La Vida Resort & Beach Club is a luxury beachfront resort in Zuwarah with villas, chalets, hotel apartments, pools, water activities, a beach café, and a calm family-friendly atmosphere ✨",
-    );
+    replies.push(getResortOverviewReply(lang));
   }
 
   const asksMoreGeneric = hasAny(text, [
@@ -665,11 +660,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "شن بعد",
   ]);
   if (asksMoreGeneric && replies.length === 0) {
-    replies.push(
-      lang === "ar"
-        ? "أكيد ✨ تحبوا تعرفوا أكثر على الغرف، الأنشطة، الأسعار، الموقع ولا المرافق؟"
-        : "Of course ✨ What would you like to know more about? Rooms, activities, prices, location, or facilities?",
-    );
+    replies.push(getResortOverviewReply(lang));
   }
 
   const uniqueReplies = Array.from(new Set(replies));

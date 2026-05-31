@@ -7,6 +7,8 @@ export type AccommodationUnit = {
   priceLyd: number;
   capacityEn: string;
   capacityAr: string;
+  viewEn: string;
+  viewAr: string;
   detailsEn: string[];
   detailsAr: string[];
   keywords: string[];
@@ -20,6 +22,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     priceLyd: 3900,
     capacityEn: "Two families",
     capacityAr: "عائلتين",
+    viewEn: "Partial sea view",
+    viewAr: "إطلالة بحرية جزئية",
     detailsEn: [
       "Private pool",
       "Private outdoor seating",
@@ -45,6 +49,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     priceLyd: 2900,
     capacityEn: "Families and couples",
     capacityAr: "عائلات وأزواج",
+    viewEn: "Direct sea view",
+    viewAr: "إطلالة بحرية مباشرة",
     detailsEn: [
       "Direct sea view",
       "Private pool",
@@ -66,6 +72,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     priceLyd: 1900,
     capacityEn: "Families",
     capacityAr: "عائلات",
+    viewEn: "Main pool view",
+    viewAr: "إطلالة على المسبح الرئيسي",
     detailsEn: [
       "Main pool view",
       "Close to entertainment areas",
@@ -85,6 +93,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     priceLyd: 1400,
     capacityEn: "Small families and couples",
     capacityAr: "عائلات صغيرة وأزواج",
+    viewEn: "Side sea view",
+    viewAr: "إطلالة بحر جانبية",
     detailsEn: ["Side sea view", "Private balcony", "Quiet location"],
     detailsAr: ["إطلالة بحر جانبية", "شرفة خاصة", "موقع هادئ"],
     keywords: ["side sea", "جانبي", "1400"],
@@ -96,6 +106,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     priceLyd: 1000,
     capacityEn: "Couples or small families",
     capacityAr: "أزواج أو عائلات صغيرة",
+    viewEn: "Garden view",
+    viewAr: "إطلالة على الحديقة",
     detailsEn: [
       "Garden view",
       "Close to main facilities",
@@ -249,6 +261,79 @@ export function getUnitReply(unit: AccommodationUnit, lang: Language): string {
   return `${unit.nameEn} ✨\n${unit.priceLyd} LYD/night\nCapacity: ${unit.capacityEn}\n${details}`;
 }
 
+const NEARBY_AMENITIES_EN =
+  "Beach, Beach Cafe, restaurants, supermarket, main pool, entertainment areas, and family zones";
+const NEARBY_AMENITIES_AR = "الشاطئ، كافيه الشاطئ، المطاعم، السوبرماركت، المسبح الرئيسي، مناطق الترفيه، ومناطق العائلات";
+
+const INCLUDED_SNIPPET_EN =
+  "Resort access includes private beach, pool, parking, 24h reception & security, WiFi, beach seating, kids area, and more";
+const INCLUDED_SNIPPET_AR =
+  "تشمل الإقامة: شاطئ خاص، مسبح، موقف، استقبال وأمن 24 ساعة، واي فاي، جلسات الشاطئ، منطقة أطفال، والمزيد";
+
+/** Rich chalet detail without leading with price — for detail questions. */
+export function getChaletDetailReply(unit: AccommodationUnit, lang: Language, includePrice = false): string {
+  if (lang === "ar") {
+    const features = unit.detailsAr.map((d) => `• ${d}`).join("\n");
+    const priceLine = includePrice ? `\nالسعر: ${unit.priceLyd} د.ل / ليلة` : "";
+    return `${unit.nameAr} ✨
+السعة: ${unit.capacityAr}
+الإطلالة: ${unit.viewAr}
+المميزات:
+${features}
+${INCLUDED_SNIPPET_AR}
+قريب من: ${NEARBY_AMENITIES_AR}${priceLine}`;
+  }
+  const features = unit.detailsEn.map((d) => `• ${d}`).join("\n");
+  const priceLine = includePrice ? `\nRate: ${unit.priceLyd} LYD/night` : "";
+  return `${unit.nameEn} ✨
+Capacity: ${unit.capacityEn}
+View: ${unit.viewEn}
+Features:
+${features}
+${INCLUDED_SNIPPET_EN}
+Nearby: ${NEARBY_AMENITIES_EN}${priceLine}`;
+}
+
+export function getAccommodationsOverviewReply(lang: Language): string {
+  if (lang === "ar") {
+    const lines = ACCOMMODATIONS.map((u) => `• ${u.nameAr} — ${u.capacityAr} — ${u.viewAr}`);
+    return `وحدات لافيدا ✨\n${lines.join("\n")}\nابعت اسم الوحدة ونشرحلك التفاصيل كاملة.`;
+  }
+  const lines = ACCOMMODATIONS.map((u) => `• ${u.nameEn} — ${u.capacityEn} — ${u.viewEn}`);
+  return `La Vida accommodations ✨\n${lines.join("\n")}\nTell us which unit interests you and we will share full details.`;
+}
+
+export function getResortOverviewReply(lang: Language): string {
+  if (lang === "ar") {
+    return `La Vida Resort & Beach Club ✨
+منتجع فاخر على البحر في زوارة — إقامة راقية، شاطئ خاص، مسابح، ومرافق عائلية.
+
+المرافق والخدمات:
+${INCLUDED_SERVICES_AR.slice(0, 8).map((s) => `• ${s}`).join("\n")}
+• والمزيد من مرافق المنتجع
+
+الأنشطة:
+${ACTIVITIES_AR.slice(0, 6).map((s) => `• ${s}`).join("\n")}
+• وأنشطة أطفال وعائلية متنوعة
+
+الإقامة: شاليهات VIP، إطلالات بحرية، استوديوهات، وخيارات للعائلات والأزواج.
+تحب تعرف أكثر عن وحدة معينة، الأنشطة، أو الخدمات المشمولة؟`;
+  }
+  return `La Vida Resort & Beach Club ✨
+A luxury beachfront resort in Zuwarah with elegant stays, a private beach, pools, and family-friendly facilities.
+
+Facilities & services:
+${INCLUDED_SERVICES_EN.slice(0, 8).map((s) => `• ${s}`).join("\n")}
+• Plus full resort amenities
+
+Activities:
+${ACTIVITIES_EN.slice(0, 6).map((s) => `• ${s}`).join("\n")}
+• Plus kids and family entertainment
+
+Stays include VIP chalets, sea-view options, garden studios, and family-friendly layouts.
+Would you like details on a specific unit, activities, or included services?`;
+}
+
 export function getUnitCapacityReply(unit: AccommodationUnit, lang: Language): string {
   if (lang === "ar") {
     return `${unit.nameAr} ✨\nالسعة: ${unit.capacityAr}\nللعدد الدقيق، الإدارة تقدر تأكد التفاصيل.`;
@@ -315,8 +400,20 @@ export function resolveBookingReply(message: string, lang: Language): string | u
   return undefined;
 }
 
+function asksExplicitPrices(normalized: string): boolean {
+  return /price list|accommodation prices|room rates|list of prices|اسعار|الاسعار|أسعار|سعر|بكم|قداش|how much|price|prices|rates|cost|rate|as3ar|كم السعر|شن السعر/.test(
+    normalized,
+  );
+}
+
+function asksResortDetailsQuestion(normalized: string): boolean {
+  return /tell me more|more details|resort details|about the resort|about la vida|what do you offer|what do you have|resort info|information|details|what facilities|what activities|what is included|what services|what's included|services available|facilities do you|activities do you|included services|tell me about|know more|what else|معلومات|تفاصيل|تفاصيل اكثر|ممكن معلومات|عن المنتجع|شن عندكم|شنو عندكم|شن تقدموا|المرافق|الخدمات|شن مشمول|شنو مشمول|زيد|زيدني|وضح|شن بعد|شنو اكثر/.test(
+    normalized,
+  );
+}
+
 function asksCapacityQuestion(normalized: string): boolean {
-  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة|capacity/.test(
+  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة/.test(
     normalized,
   );
 }
@@ -350,7 +447,11 @@ Activities: ${activities}
 Opening offers: ${offers}
 
 Behavior rules:
-- If asked how many people a unit fits, use capacity listed above; if exact number unknown, say suitable for families/couples/small families as listed and management can confirm exact capacity.
+- Answer the guest's question directly first. Guide naturally like a resort host — not a pricing menu.
+- Do NOT send the full price list unless the guest explicitly asks for prices, rates, cost, or a price list.
+- For "tell me more", resort details, facilities, activities, or included services: give detailed resort information — not prices.
+- For chalet/unit detail questions: share capacity, view, features, included resort access, and nearby amenities — do not lead with price unless they asked for price.
+- If asked how many people a unit fits, use capacity listed above; management can confirm exact numbers.
 - If asked what is included, list services and facilities.
 - If asked about activities, list all activity categories.
 - If asked about offers, list opening offers.
@@ -373,7 +474,8 @@ export function getResponseStyleRules(lang: Language): string {
 1) أجب على سؤال الضيف مباشرة أولاً.
 2) بعد الإجابة، إذا كان مناسباً، اذكر باختصار 2–4 مرافق أو ميزات مرتبطة بسؤاله — بشكل طبيعي وليس إعلاناً.
 3) ${features}
-4) لا تطيل الرد ولا تحوّله لإعلان. لا تطلب الحجز. كن مفيداً وطبيعياً لا روبوتياً ولا مبيعاتياً.`;
+4) لا تطيل الرد ولا تحوّله لإعلان. لا تطلب الحجز. لا ترسل قائمة الأسعار إلا إذا طلبها الضيف صراحة.
+5) كن مفيداً وطبيعياً كموظف استقبال — لا روبوتياً ولا مبيعاتياً.`;
   }
 
   return `
@@ -381,7 +483,8 @@ Response style (AI-generated replies only):
 1) Answer the guest's question directly first.
 2) After answering, when relevant, briefly mention 2–4 related resort features — naturally, not as an ad.
 3) ${features}
-4) Do not make replies longer than needed. Do not ask users to book. Be helpful and informative, not salesy or robotic.`;
+4) Do not make replies longer than needed. Do not ask users to book. Do not send the price list unless the guest explicitly asks for prices or rates.
+5) Guide the guest naturally like a resort host — helpful, not salesy or robotic.`;
 }
 
 export function resolveOpeningDateReply(message: string, lang: Language): string | undefined {
@@ -402,6 +505,30 @@ export function resolvePriceOrUnitReply(message: string, lang: Language): string
   const openingReply = resolveOpeningDateReply(message, lang);
   if (openingReply) return openingReply;
 
+  const unit = matchAccommodation(normalized);
+  const wantsPrice = asksExplicitPrices(normalized);
+
+  if (unit && wantsPrice) {
+    return getUnitReply(unit, lang);
+  }
+
+  if (unit) {
+    return getChaletDetailReply(unit, lang, false);
+  }
+
+  if (asksResortDetailsQuestion(normalized) && !wantsPrice) {
+    if (/activit|things to do|what to do|أنشطة|الانشطة|نشاط|نشاطات/.test(normalized)) {
+      return getActivitiesReply(lang);
+    }
+    if (/included|what is included|services included|مشمول|شن مشمول|شنو مشمول/.test(normalized)) {
+      return getIncludedServicesReply(lang);
+    }
+    if (asksFacilitiesQuestion(normalized)) {
+      return getIncludedServicesReply(lang);
+    }
+    return getResortOverviewReply(lang);
+  }
+
   if (asksCapacityQuestion(normalized)) {
     const unit = matchAccommodation(normalized);
     return unit ? getUnitCapacityReply(unit, lang) : getAllCapacitiesReply(lang);
@@ -411,24 +538,21 @@ export function resolvePriceOrUnitReply(message: string, lang: Language): string
     return getActivitiesReply(lang);
   }
 
-  const asksIncluded = /included|what is included|services included|facilities|مشمول|الخدمات|المرافق|شنو مشمول|شن مشمول/.test(
+  const asksIncluded = /included|what is included|services included|مشمول|شن مشمول|شنو مشمول/.test(
     normalized,
   );
   if (asksIncluded) return getIncludedServicesReply(lang);
 
+  if (asksFacilitiesQuestion(normalized)) {
+    return getIncludedServicesReply(lang);
+  }
+
   const asksOffers = /offer|offers|promo|discount|عروض|خصم|تخفيض/.test(normalized);
   if (asksOffers) return getOffersReply(lang);
 
-  const unit = matchAccommodation(normalized);
-  if (unit && /price|prices|how much|cost|بكم|قداش|سعر|اسعار|details|تفاصيل|about|عن|this|هذا|هذه/.test(normalized)) {
-    return getUnitReply(unit, lang);
+  if (wantsPrice) {
+    return getPriceListReply(lang);
   }
-  if (unit && !/book|booking|حجز/.test(normalized)) {
-    return getUnitReply(unit, lang);
-  }
-
-  const asksPrices = /price|prices|how much|cost|rates|as3ar|بكم|قداش|سعر|اسعار|الاسعار|rates/.test(normalized);
-  if (asksPrices) return getPriceListReply(lang);
 
   return undefined;
 }
