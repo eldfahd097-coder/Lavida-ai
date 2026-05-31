@@ -1384,6 +1384,23 @@ Opening offers: ${offers}
 
 Rules: Give real prices when asked. Booking is NOT open \u2014 never ask for booking details or say book now. If asked about booking, say booking is not available yet and official booking details will be announced soon. Never confirm reservations. Never state a fixed opening date. Keep replies short and luxury in tone.`;
 }
+function getResponseStyleRules(lang) {
+  const features = lang === "ar" ? `\u0645\u0631\u0627\u0641\u0642 \u064A\u0645\u0643\u0646 \u0630\u0643\u0631\u0647\u0627 \u0628\u0634\u0643\u0644 \u0637\u0628\u064A\u0639\u064A \u0639\u0646\u062F \u0627\u0644\u0635\u0644\u0629: \u0634\u0627\u0637\u0626 \u062E\u0627\u0635\u060C \u0645\u0633\u0627\u0628\u062D\u060C \u0643\u0627\u0641\u064A\u0647 \u0627\u0644\u0634\u0627\u0637\u0626\u060C \u0645\u0637\u0627\u0639\u0645 \u0648\u0645\u0642\u0627\u0647\u064A\u060C \u0623\u0646\u0634\u0637\u0629 \u0628\u062D\u0631\u064A\u0629\u060C \u062C\u062A\u0633\u0643\u064A\u060C \u0645\u0646\u0637\u0642\u0629 \u0623\u0637\u0641\u0627\u0644\u060C \u0635\u0627\u0644\u0629 \u0623\u0644\u0639\u0627\u0628 \u0648\u062A\u0644\u0641\u0632\u064A\u0648\u0646\u060C \u062A\u0646\u0633 \u0637\u0627\u0648\u0644\u0629 \u0648\u0628\u0644\u064A\u0627\u0631\u062F\u0648\u060C \u0631\u064A\u0627\u0636\u0627\u062A \u0634\u0627\u0637\u0626\u064A\u0629\u060C \u062C\u0644\u0633\u0627\u062A \u0639\u0627\u0626\u0644\u064A\u0629\u060C \u0623\u0645\u0646 24/7\u060C \u0645\u0648\u0642\u0641 \u0645\u062C\u0627\u0646\u064A\u060C \u0648\u0627\u064A \u0641\u0627\u064A \u0641\u064A \u0627\u0644\u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u0639\u0627\u0645\u0629.` : `Features you may mention naturally when relevant: private beach, swimming pools, Beach Cafe, restaurants and cafes, water activities, Jet Ski, kids area, Game Room & TV Lounge, ping pong & pool table, beach sports, family seating areas, 24/7 security, free parking, public area WiFi.`;
+  if (lang === "ar") {
+    return `
+\u0623\u0633\u0644\u0648\u0628 \u0627\u0644\u0631\u062F (\u0644\u0644\u0631\u062F\u0648\u062F \u0627\u0644\u062A\u064A \u064A\u0648\u0644\u0651\u062F\u0647\u0627 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A \u0641\u0642\u0637):
+1) \u0623\u062C\u0628 \u0639\u0644\u0649 \u0633\u0624\u0627\u0644 \u0627\u0644\u0636\u064A\u0641 \u0645\u0628\u0627\u0634\u0631\u0629 \u0623\u0648\u0644\u0627\u064B.
+2) \u0628\u0639\u062F \u0627\u0644\u0625\u062C\u0627\u0628\u0629\u060C \u0625\u0630\u0627 \u0643\u0627\u0646 \u0645\u0646\u0627\u0633\u0628\u0627\u064B\u060C \u0627\u0630\u0643\u0631 \u0628\u0627\u062E\u062A\u0635\u0627\u0631 2\u20134 \u0645\u0631\u0627\u0641\u0642 \u0623\u0648 \u0645\u064A\u0632\u0627\u062A \u0645\u0631\u062A\u0628\u0637\u0629 \u0628\u0633\u0624\u0627\u0644\u0647 \u2014 \u0628\u0634\u0643\u0644 \u0637\u0628\u064A\u0639\u064A \u0648\u0644\u064A\u0633 \u0625\u0639\u0644\u0627\u0646\u0627\u064B.
+3) ${features}
+4) \u0644\u0627 \u062A\u0637\u064A\u0644 \u0627\u0644\u0631\u062F \u0648\u0644\u0627 \u062A\u062D\u0648\u0651\u0644\u0647 \u0644\u0625\u0639\u0644\u0627\u0646. \u0644\u0627 \u062A\u0637\u0644\u0628 \u0627\u0644\u062D\u062C\u0632. \u0643\u0646 \u0645\u0641\u064A\u062F\u0627\u064B \u0648\u0637\u0628\u064A\u0639\u064A\u0627\u064B \u0644\u0627 \u0631\u0648\u0628\u0648\u062A\u064A\u0627\u064B \u0648\u0644\u0627 \u0645\u0628\u064A\u0639\u0627\u062A\u064A\u0627\u064B.`;
+  }
+  return `
+Response style (AI-generated replies only):
+1) Answer the guest's question directly first.
+2) After answering, when relevant, briefly mention 2\u20134 related resort features \u2014 naturally, not as an ad.
+3) ${features}
+4) Do not make replies longer than needed. Do not ask users to book. Be helpful and informative, not salesy or robotic.`;
+}
 function resolveOpeningDateReply(message, lang) {
   const normalized = message.toLowerCase();
   const asksOpening = /opening|when open|opening date|متى تفتح|متى تفتحو|موعد الافتتاح|الافتتاح|امتى الافتتاح|تاريخ الافتتاح/.test(
@@ -1584,33 +1601,22 @@ Official resort facts:
 - Phones: ${RESORT_INFO.phones.join(" and ")}
 ${getKnowledgeBlockForPrompt(lang)}
 
-Resort features you can mention naturally when relevant:
-- Beach access
-- Pool
-- Luxury chalets
-- Water sports
-- Jetski rentals
-- Football court
-- Volleyball court
-- Cafe
-- Relaxation areas
-- Kids activities
-- Family atmosphere
-- Night entertainment
-
 Style and behavior rules:
 1) Sound luxury, calm, warm, elegant, and natural.
 2) Keep replies short, clear, and helpful.
 3) Never sound robotic.
-4) Use only official Summer 2026 prices from the knowledge block.
-5) Booking is not open \u2014 never ask for booking details or say book now.
-6) Never state a fixed opening date; if asked, say the official opening date will be announced soon.
-7) If you are unsure, clearly say management will confirm.
-8) Do not invent facts outside the information above.
-9) Keep conversation continuity: do not reset topic during active threads.
-10) Understand fragmented messages and short follow-ups.
-11) Understand Arabic Libyan slang and mixed Arabic-English.
-12) Never ask "Could you tell us more" unless absolutely necessary.`;
+4) Answer the guest's question directly first.
+5) After answering, when relevant, briefly mention 2\u20134 related resort features \u2014 naturally, not salesy.
+6) Use only official Summer 2026 prices from the knowledge block.
+7) Booking is not open \u2014 never ask for booking details or say book now.
+8) Never state a fixed opening date; if asked, say the official opening date will be announced soon.
+9) If you are unsure, clearly say management will confirm.
+10) Do not invent facts outside the information above.
+11) Keep conversation continuity: do not reset topic during active threads.
+12) Understand fragmented messages and short follow-ups.
+13) Understand Arabic Libyan slang and mixed Arabic-English.
+14) Never ask "Could you tell us more" unless absolutely necessary.
+${getResponseStyleRules(lang)}`;
   const stateContext = `
 Conversation context:
 - currentTopic: ${state.topic}
@@ -1813,8 +1819,9 @@ ${getKnowledgeBlockForPrompt("ar")}
 1) \u0627\u0633\u062A\u062E\u062F\u0645 \u0627\u0644\u0623\u0633\u0639\u0627\u0631 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0623\u0639\u0644\u0627\u0647 \u0641\u0642\u0637 \u2014 \u0644\u0627 \u062A\u062E\u062A\u0631\u0639 \u0623\u0633\u0639\u0627\u0631\u0627\u064B.
 2) \u0627\u0644\u062D\u062C\u0632 \u063A\u064A\u0631 \u0645\u062A\u0648\u0641\u0631 \u062D\u0627\u0644\u064A\u0627\u064B \u2014 \u0644\u0627 \u062A\u0637\u0644\u0628 \u0628\u064A\u0627\u0646\u0627\u062A \u062D\u062C\u0632 \u0648\u0644\u0627 \u062A\u0642\u0644 \u0627\u062D\u062C\u0632 \u0627\u0644\u0622\u0646.
 3) \u0625\u0630\u0627 \u0633\u064F\u0626\u0644 \u0639\u0646 \u0627\u0644\u062D\u062C\u0632: \u0642\u0644 \u0625\u0646 \u0627\u0644\u062D\u062C\u0632 \u063A\u064A\u0631 \u0645\u062A\u0648\u0641\u0631 \u0648\u0633\u064A\u062A\u0645 \u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0639\u0646 \u0622\u0644\u064A\u0629 \u0627\u0644\u062D\u062C\u0632 \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0642\u0631\u064A\u0628\u0627\u064B.
-4) \u0625\u0630\u0627 \u0627\u0644\u0633\u0624\u0627\u0644 \u0639\u0646 \u0645\u0631\u0641\u0642 \u0623\u0648 \u0648\u062D\u062F\u0629 \u0645\u0639\u064A\u0646\u0629\u060C \u062C\u0627\u0648\u0628 \u0639\u0644\u0649 \u0646\u0641\u0633 \u0627\u0644\u0645\u0648\u0636\u0648\u0639 \u0641\u0642\u0637 \u0648\u0628\u0627\u062E\u062A\u0635\u0627\u0631.
-5) \u0625\u0630\u0627 \u0627\u0644\u0637\u0644\u0628 \u063A\u064A\u0631 \u0648\u0627\u0636\u062D \u062C\u062F\u0627\u064B\u060C \u0627\u0637\u0644\u0628 \u062A\u0648\u0636\u064A\u062D \u0642\u0635\u064A\u0631 \u0648\u0644\u0637\u064A\u0641.`;
+4) \u0623\u062C\u0628 \u0639\u0644\u0649 \u0627\u0644\u0633\u0624\u0627\u0644 \u0645\u0628\u0627\u0634\u0631\u0629 \u0623\u0648\u0644\u0627\u064B\u061B \u062B\u0645 \u0639\u0646\u062F \u0627\u0644\u062D\u0627\u062C\u0629 \u0627\u0630\u0643\u0631 2\u20134 \u0645\u0631\u0627\u0641\u0642 \u0645\u0631\u062A\u0628\u0637\u0629 \u0628\u0627\u062E\u062A\u0635\u0627\u0631 (\u0627\u0646\u0638\u0631 \u0623\u0633\u0644\u0648\u0628 \u0627\u0644\u0631\u062F \u0623\u062F\u0646\u0627\u0647).
+5) \u0625\u0630\u0627 \u0627\u0644\u0637\u0644\u0628 \u063A\u064A\u0631 \u0648\u0627\u0636\u062D \u062C\u062F\u0627\u064B\u060C \u0627\u0637\u0644\u0628 \u062A\u0648\u0636\u064A\u062D \u0642\u0635\u064A\u0631 \u0648\u0644\u0637\u064A\u0641.
+${getResponseStyleRules("ar")}`;
   }
   return `You are La Vida AI, the official receptionist for ${RESORT_NAME}.
 Tone: luxury, calm, elegant, warm, natural. Keep replies short.
@@ -1837,8 +1844,9 @@ Hard rules:
 1) Use only the official Summer 2026 prices above \u2014 never invent prices.
 2) Booking is not open \u2014 never ask for booking details or say book now.
 3) If asked about booking: say booking is not available yet and official booking details will be announced soon.
-4) For specific facility or unit questions, answer only that point briefly.
-5) Ask for clarification only when truly necessary.`;
+4) Answer the question directly first; then when helpful, briefly mention 2\u20134 related features (see response style below).
+5) Ask for clarification only when truly necessary.
+${getResponseStyleRules("en")}`;
 }
 async function generateAIResponse(userMessage, history = [], forceLang) {
   const lang = forceLang ?? detectMessageLanguage2(userMessage);
