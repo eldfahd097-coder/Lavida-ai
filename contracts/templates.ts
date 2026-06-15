@@ -56,17 +56,19 @@ export type Platform = "whatsapp" | "messenger" | "phone";
 // ─── Greeting Templates ─────────────────────────────────────────
 export function getGreeting(_platform: Platform, lang: Language): string {
   if (lang === "ar") {
-    return `مرحباً بكم في La Vida Resort & Beach Club 🏖️
+    return `مرحباً بكم في La Vida Resort & Beach Club
 نشكركم على تواصلكم معنا
 
-أسعار صيف 2026 متوفرة (اضغط 3)
+الافتتاح الرسمي: 1 يوليو 2026
+نقدروا نساعدوكم بالمعلومات أو تسجيل بياناتكم المبدئية للحجز
 
 يرجى إرسال رقم الخيار:`;
   }
-  return `Welcome to La Vida Resort & Beach Club 🏖️
+  return `Welcome to La Vida Resort & Beach Club
 Thank you for reaching out to us
 
-Summer 2026 rates available (press 3)
+Official opening: 1 July 2026
+We can share information or register your preliminary booking details
 
 Please send the option number:`;
 }
@@ -80,160 +82,121 @@ export function getMenu(platform: Platform, lang: Language): string {
 // ─── Response Templates ─────────────────────────────────────────
 export const Responses = {
   resort_info: {
-    ar: `🏖️ La Vida Resort & Beach Club
+    ar: `La Vida Resort & Beach Club
 
-موقعنا: زوارة، ليبيا — على البحر مباشرة
+الموقع: منطقة أم علي بمدينة زوارة — على واجهة شاطئية مباشرة
+الافتتاح الرسمي: 1 يوليو 2026
+
+La Vida ليست مجرد إقامة — تجربة منتجع شاطئي عائلي متكامل:
+شاطئ خاص، إقامة، مسابح، مطاعم، كافيهات، أنشطة مائية، مناطق عائلية، وترفيه.
 
 الوحدات:
-• 10 فيلات فاخرة (فيلا VIP بمسبح خاص + فيلات رئاسية)
-• 20 شاليه عائلي
-• 12 شقة فندقية
+• فيلا VIP الرئاسية
+• فيلا VIP / شاليه VIP
+• شاليه عائلي / إطلالة المسبح
+• شقق
+• استوديو إطلالة الحديقة
 
-المرافق:
-• مسبح مركزي كبير
-• شاطئ خاص
-• نادي رياضات مائية
-• ملعب كرة قدم وشاطئية
-• منطقة ألعاب أطفال
-• مقهى La Vida Beach Cafe
-• واي فاي عالي السرعة
-• استقبال 24/7
+المرافق: شاطئ خاص، مسبح كبير، Beach Cafe، مطاعم، كافيهات، سوبرماركت، منطقة أطفال، Game Room، أمن واستقبال 24 ساعة، موقف مجاني، واي فاي.
 
-نحن وجهتكم المثالية للاستجمام والرفاهية على الساحل الليبي. ✨`,
-    en: `🏖️ La Vida Resort & Beach Club
+📱 0938888868 / 0938888878
+📧 info@lavidaresort.ly`,
+    en: `La Vida Resort & Beach Club
 
-Location: Zuwarah, Libya — directly on the beach
+Location: Umm Ali area, Zuwarah — direct beachfront
+Official opening: 1 July 2026
 
-Accommodations:
-• 10 Luxury Villas (VIP villa with private pool + Presidential villas)
-• 20 Family Chalets
-• 12 Hotel Apartments
+La Vida is a full beachfront family resort experience — private beach, accommodation, pools, restaurants, cafes, water activities, family areas, and entertainment.
 
-Facilities:
-• Large Central Swimming Pool
-• Private Beach Access
-• Water Sports Club
-• Football & Beach Volleyball Courts
-• Kids Playground Area
-• La Vida Beach Cafe
-• High-Speed Wi-Fi
-• 24/7 Reception
+Units:
+• Presidential VIP Villa
+• VIP Villa / VIP Chalet
+• Family Chalet / Pool View Chalet
+• Apartments
+• Garden View Studio
 
-Your perfect destination for relaxation and luxury on the Libyan coast. ✨`,
+Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermarket, kids area, Game Room, 24h security & reception, free parking, WiFi.
+
+📱 0938888868 / 0938888878
+📧 info@lavidaresort.ly`,
   },
 
   chalet_info: {
-    ar: `🏡 الشاليهات في La Vida Resort
+    ar: `وحدات La Vida Resort
 
-لدينا 20 شاليه عائلي بغرفتين:
-• حديقة أمامية بإطلالة على المسبح
-• حديقة خلفية للخصوصية
-• مثالية للعائلات
+1. فيلا VIP الرئاسية — مسبح خاص، خصوصية عالية، حتى ~12 شخص
+2. فيلا VIP / شاليه VIP — وحدة عائلية فاخرة
+3. شاليه عائلي / إطلالة المسبح — قريب من المسبح والأنشطة
+4. شقق — إقامة عائلية مريحة
+5. استوديو إطلالة الحديقة — للأزواج والعائلات الصغيرة
 
-الفيلات:
-• 6 فيلات VIP بغرفتين + مسبح خاص
-• 4 فيلات رئاسية فاخرة
+الصور والفيديوهات الرسمية قيد التجهيز وسيتم نشرها قريباً إن شاء الله.`,
+    en: `La Vida Resort Units
 
-الشقق:
-• 12 شقة بغرفتين، مجهزة بالكامل
+1. Presidential VIP Villa — private pool, high privacy, up to ~12 guests
+2. VIP Villa / VIP Chalet — premium family unit
+3. Family Chalet / Pool View — close to pool and activities
+4. Apartments — comfortable family stays
+5. Garden View Studio — for couples and small families
 
-📸 سيتم مشاركة صور الوحدات قريباً. تابعونا!`,
-    en: `🏡 Chalets at La Vida Resort
-
-We have 20 family-friendly two-bedroom chalets:
-• Front garden with pool view
-• Back garden for privacy
-• Perfect for families
-
-Villas:
-• 6 VIP two-bedroom villas with private pool
-• 4 Presidential luxury villas
-
-Apartments:
-• 12 fully-equipped two-bedroom apartments
-
-📸 Unit photos will be shared soon. Stay tuned!`,
+Official photos and videos are being prepared and will be published soon.`,
   },
 
   activities: {
-    ar: `🎯 الأنشطة والمرافق
+    ar: `الأنشطة والمرافق
 
-• 🏊 مسبح مركزي كبير
-• 🏖️ شاطئ خاص
-• 🚣 نادي رياضات مائية
-• ⚽ ملعب كرة قدم
-• 🏐 ملعب كرة طائرة شاطئية
-• 🎠 منطقة ألعاب أطفال
-• ☕ La Vida Beach Cafe
-• 📶 واي فاي عالي السرعة
-• 🛎️ استقبال وخدمة ضيافة 24/7
+• شاطئ خاص ومسبح كبير
+• أنشطة مائية، جت سكي، كاياك، Paddle Board، قوارب بدالات
+• ملعب كرة قدم وطائرة شاطئية
+• منطقة أطفال، Kids Club، ترامبولين، Game Room، TV Lounge
+• Ping Pong وPool Table
+• Beach Cafe ومطاعم وكافيهات
+• أمن واستقبال 24 ساعة، موقف مجاني، واي فاي`,
+    en: `Activities & Facilities
 
-عائلتكم ستستمتع بكل لحظة هنا! 🌊`,
-    en: `🎯 Activities & Facilities
-
-• 🏊 Large Central Swimming Pool
-• 🏖️ Private Beach Access
-• 🚣 Water Sports Club
-• ⚽ Football Court
-• 🏐 Beach Volleyball Court
-• 🎠 Kids Playground Area
-• ☕ La Vida Beach Cafe
-• 📶 High-Speed Wi-Fi
-• 🛎️ 24/7 Reception & Guest Support
-
-Your family will enjoy every moment here! 🌊`,
+• Private beach and large pool
+• Water sports, jet ski, kayaks, paddle boards, pedal boats
+• Beach football and volleyball courts
+• Kids area, Kids Club, trampoline, Game Room, TV Lounge
+• Ping pong and pool table
+• Beach Cafe, restaurants, and cafes
+• 24h security & reception, free parking, WiFi`,
   },
 
   updates: {
-    ar: `📢 أسعار صيف 2026
+    ar: `آخر التحديثات
 
-• شاليه VIP الرئاسي: 3900 د.ل/ليلة
-• شاليه VIP إطلالة بحر بمسبح خاص: 2900 د.ل/ليلة
-• شاليه إطلالة مسبح وأنشطة: 1900 د.ل/ليلة
-• شاليه إطلالة بحر جانبي: 1400 د.ل/ليلة
-• استوديو إطلالة حديقة: 1000 د.ل/ليلة
+• الافتتاح الرسمي: 1 يوليو 2026 إن شاء الله
+• الأسعار النهائية قيد الاعتماد وسيتم الإعلان عنها رسمياً قريباً
+• الحجوزات: نقدروا نسجلوا بياناتكم المبدئية للتواصل فور فتح الحجز
+• الصور والفيديوهات الرسمية قيد التجهيز
 
-موعد الافتتاح: سيتم الإعلان قريباً ✨
-عروض: ليلة رابعة مجانية عند حجز 3 ليالي
+📱 0938888868 / 0938888878
+📧 info@lavidaresort.ly`,
+    en: `Latest Updates
 
-تابعونا على فيسبوك وإنستغرام!
-📱 +218 91 211 0392
-📧 info@lavida.ly
+• Official opening: 1 July 2026, in sha Allah
+• Final prices are under approval and will be announced officially soon
+• Bookings: we can register your preliminary details for contact when reservations open
+• Official photos and videos are being prepared
 
-شكراً لاهتمامكم بـ La Vida Resort & Beach Club 💙`,
-    en: `📢 Summer 2026 Rates
-
-• VIP Presidential Chalet: 3900 LYD/night
-• VIP Sea View Chalet with private pool: 2900 LYD/night
-• Pool & Activities View Chalet: 1900 LYD/night
-• Side Sea View Chalet: 1400 LYD/night
-• Garden View Studio: 1000 LYD/night
-
-Opening date: to be announced soon ✨
-Offers: 4th night free when booking 3 nights
-
-Follow us on Facebook and Instagram!
-📱 +218 91 211 0392
-📧 info@lavida.ly
-
-Thank you for your interest in La Vida Resort & Beach Club 💙`,
+📱 0938888868 / 0938888878
+📧 info@lavidaresort.ly`,
   },
 
   management: {
-    ar: `📞 سيتم توصيلكم مع الإدارة قريباً...
+    ar: `بنحول استفساركم للفريق المختص للتواصل معاكم وتأكيد التفاصيل.
 
-في غضون ذلك، يمكنكم التواصل مباشرة:
-📱 +218 91 211 0392
-📧 info@lavida.ly
+أو تواصلوا مباشرة:
+📱 0938888868 / 0938888878
+📧 info@lavidaresort.ly
+Messenger: https://www.facebook.com/share/1BSWTBJ8zJ/?mibextid=wwXIfr`,
+    en: `We will forward your inquiry to our specialist team to contact you and confirm details.
 
-أو أرسلوا "واتساب" وسنرد عليكم خلال 24 ساعة.`,
-    en: `📞 Connecting you with management shortly...
-
-In the meantime, you can reach us directly:
-📱 +218 91 211 0392
-📧 info@lavida.ly
-
-Or send "WhatsApp" and we will reply within 24 hours.`,
+Or reach us directly:
+📱 0938888868 / 0938888878
+📧 info@lavidaresort.ly
+Messenger: https://www.facebook.com/share/1BSWTBJ8zJ/?mibextid=wwXIfr`,
   },
 
   fallback: {
@@ -269,14 +232,14 @@ export const PhonePrompts = {
   welcome_en: "Welcome to La Vida Resort & Beach Club.",
   menu_ar: "للحجز والأسعار، اضغط 1. لمعلومات الشاليهات، اضغط 2. للأنشطة والمرافق، اضغط 3. للموقع ومواعيد الافتتاح، اضغط 4. للتحدث مع الإدارة، اضغط 5.",
   menu_en: "For booking and prices, press 1. For chalet information, press 2. For resort activities, press 3. For location and opening updates, press 4. To speak with management, press 5.",
-  option_1_ar: "أسعار صيف 2026 من 1000 إلى 3900 دينار لليلة. الحجز غير متوفر حالياً وسيتم الإعلان عن آلية الحجز الرسمية قريباً.",
-  option_1_en: "Summer 2026 rates from 1000 to 3900 dinars per night. Booking is not available yet; official booking details will be announced soon.",
-  option_2_ar: "لدينا 20 شاليه عائلي و 10 فيلات فاخرة و 12 شقة. سيتم مشاركة التفاصيل الكاملة قريباً.",
-  option_2_en: "We have 20 family chalets, 10 luxury villas, and 12 apartments. Full details will be shared soon.",
-  option_3_ar: "مرافقنا تشمل مسبح مركزي، شاطئ خاص، رياضات مائية، ملاعب، منطقة أطفال، ومقهى.",
-  option_3_en: "Our facilities include a central pool, private beach, water sports, courts, kids area, and a beach cafe.",
-  option_4_ar: "نحن في زوارة، ليبيا. سيتم الإعلان عن موعد الافتتاح الرسمي قريباً ✨ الموقع lavidaresort.ly",
-  option_4_en: "We are located in Zuwarah, Libya. The official opening date will be announced soon ✨ Website lavidaresort.ly",
+  option_1_ar: "الافتتاح الرسمي 1 يوليو 2026. الأسعار قيد الاعتماد. نقدروا نسجلوا بياناتكم المبدئية للحجز.",
+  option_1_en: "Official opening 1 July 2026. Prices are under approval. We can register your preliminary booking details.",
+  option_2_ar: "وحداتنا: فيلا VIP الرئاسية، VIP، شاليه عائلي، شقق، واستوديو. الصور الرسمية قيد التجهيز.",
+  option_2_en: "Our units: Presidential VIP Villa, VIP, family chalet, apartments, and garden studio. Official photos are being prepared.",
+  option_3_ar: "شاطئ خاص، مسبح كبير، أنشطة مائية، مطاعم وكافيهات، منطقة أطفال، Game Room، وملاعب رياضية.",
+  option_3_en: "Private beach, large pool, water sports, restaurants and cafes, kids area, Game Room, and sports courts.",
+  option_4_ar: "نحن في منطقة أم علي بمدينة زوارة. الافتتاح الرسمي 1 يوليو 2026. الموقع lavidaresort.ly",
+  option_4_en: "We are in Umm Ali area, Zuwarah. Official opening 1 July 2026. Website lavidaresort.ly",
   option_5_ar: "سيتم توصيلكم مع الإدارة. إذا لم يتم الرد، يرجى ترك اسمكم ورقم الهاتف بعد النغمة.",
   option_5_en: "Connecting you to management. If no one answers, please leave your name and phone number after the tone.",
   voicemail_ar: "لم يتم الرد. يرجى ترك اسمكم ورقم الهاتف وسنقوم بالتواصل معكم في أقرب وقت. شكراً.",

@@ -2,78 +2,69 @@ import { env } from "./lib/env";
 import { detectLanguage } from "@contracts/templates";
 import type { Language } from "@contracts/templates";
 import {
-  getBookingUnavailableReply,
+  getBookingLeadPrompt,
   getKnowledgeBlockForPrompt,
   getResponseStyleRules,
   getOffersReply,
   getIncludedServicesReply,
   getOpeningDateReply,
-  getPriceListReply,
+  getBookingWhenReply,
+  getPricingUnderReviewReply,
   getChaletDetailReply,
   getAccommodationsOverviewReply,
   getResortOverviewReply,
   getActivitiesReply,
+  getMealsReply,
+  getPhotosReply,
+  getLocationReply,
+  getContactReply,
+  getRestaurantsReply,
+  getHumanHandoffReply,
+  getGuestRecommendationReply,
   matchAccommodation,
   resolvePriceOrUnitReply,
+  resolveBookingLeadReply,
+  extractGuestCount,
+  RESORT_BRAND,
 } from "./resort-knowledge";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-const RESORT_NAME = "La Vida Resort & Beach Club";
-const WEBSITE = "lavidaresort.ly";
-const PHONE_1 = "093 888 8868";
-const PHONE_2 = "093 888 8878";
 
 // ─── System Prompt for La Vida Resort AI ─────────────────────────
 function buildSystemPrompt(lang: Language): string {
   if (lang === "ar") {
-    return `أنت La Vida AI، موظف الاستقبال الرسمي لمنتجع ${RESORT_NAME}.
-النبرة: راقية، هادئة، ودودة، طبيعية، والردود قصيرة.
-اللغة: إذا المستخدم كتب بالعربي (حتى لهجة ليبية) رد بالعربي.
+    return `أنت La Vida AI، موظف الاستقبال والمبيعات لـ ${RESORT_BRAND.name}.
+النبرة: احترافية، ودودة، طبيعية، بلهجة ليبية — ردود قصيرة ومفيدة.
+اللغة: إذا المستخدم كتب بالعربي رد بالعربي الليبي؛ إذا كتب بالإنجليزي رد بالإنجليزي.
 
-حقائق رسمية:
-- الموقع: زوارة، ليبيا
-- الموقع الإلكتروني: ${WEBSITE}
-- أرقام التواصل: ${PHONE_1} / ${PHONE_2}
 ${getKnowledgeBlockForPrompt("ar")}
 
-المرافق:
-- شاطئ ومسبح كبير
-- كافيه شاطئي ومنطقة أكل
-- أنشطة بحرية وتأجير جتسكي
-- ملعب كرة وملعب طائرة
-- أنشطة أطفال، أجواء عائلية، ترفيه ليلي، مشاهدة مباريات، وألعاب شبابية
-
 قواعد إلزامية:
-1) استخدم الأسعار الرسمية أعلاه فقط — لا تخترع أسعاراً.
-2) الحجز غير متوفر حالياً — لا تطلب بيانات حجز ولا تقل احجز الآن.
-3) إذا سُئل عن الحجز: قل إن الحجز غير متوفر وسيتم الإعلان عن آلية الحجز الرسمية قريباً.
-4) أجب على السؤال مباشرة أولاً؛ ثم عند الحاجة اذكر 2–4 مرافق مرتبطة باختصار (انظر أسلوب الرد أدناه).
-5) إذا الطلب غير واضح جداً، اطلب توضيح قصير ولطيف.
+1) لا تخترع معلومات — استخدم المعرفة أعلاه فقط.
+2) الأسعار قيد الاعتماد — لا تذكر أسعاراً نهائية.
+3) الوجبات غير مشمولة في الإقامة حالياً.
+4) الصور الرسمية لم تُنشر بعد — لا تقل إنها متوفرة.
+5) الافتتاح الرسمي: ${RESORT_BRAND.openingDateAr}.
+6) للحجز: اجمع بيانات العميل المهتم (الاسم، الهاتف، التاريخ، العدد، نوع الوحدة) — لا تؤكد حجزاً.
+7) للحالات المعقدة: حوّل للفريق المختص.
+8) أجب على السؤال مباشرة أولاً.
 ${getResponseStyleRules("ar")}`;
   }
-  return `You are La Vida AI, the official receptionist for ${RESORT_NAME}.
-Tone: luxury, calm, elegant, warm, natural. Keep replies short.
-Language: reply in English unless the guest writes Arabic.
+  return `You are La Vida AI, the official receptionist and sales assistant for ${RESORT_BRAND.name}.
+Tone: professional, warm, natural. Keep replies short and helpful.
+Language: reply in English when the guest writes English; use Libyan Arabic when they write Arabic.
 
-Official facts:
-- Location: Zuwarah, Libya
-- Website: ${WEBSITE}
-- Contact numbers: ${PHONE_1} / ${PHONE_2}
 ${getKnowledgeBlockForPrompt("en")}
 
-Facilities:
-- Beachfront access and large pool
-- Beach cafe and food area
-- Water sports and jetski rentals
-- Football and volleyball courts
-- Kids activities, family atmosphere, evening entertainment, match screenings, arcade-style youth area
-
 Hard rules:
-1) Use only the official Summer 2026 prices above — never invent prices.
-2) Booking is not open — never ask for booking details or say book now.
-3) If asked about booking: say booking is not available yet and official booking details will be announced soon.
-4) Answer the question directly first; then when helpful, briefly mention 2–4 related features (see response style below).
-5) Ask for clarification only when truly necessary.
+1) Never invent information — use only the knowledge above.
+2) Prices are under approval — do not state final prices.
+3) Meals are not included in the stay currently.
+4) Official photos/videos are not published yet — do not claim they are available.
+5) Official opening: ${RESORT_BRAND.openingDateEn}.
+6) For booking interest: collect lead details (name, phone, dates, guests, unit) — never confirm a booking.
+7) For complex cases: hand off to the specialist team.
+8) Answer the question directly first.
 ${getResponseStyleRules("en")}`;
 }
 
@@ -84,6 +75,12 @@ export async function generateAIResponse(
   forceLang?: Language
 ): Promise<{ text: string; lang: Language; source: "ai" | "template" }> {
   const lang = forceLang ?? detectMessageLanguage(userMessage);
+  const historyContents = history.map((h) => h.content);
+
+  const bookingLeadReply = resolveBookingLeadReply(userMessage, historyContents, lang);
+  if (bookingLeadReply) {
+    return { text: bookingLeadReply, lang, source: "template" };
+  }
 
   // Strong intent detection before AI generation.
   const intentText = getIntentResponse(userMessage, lang);
@@ -268,8 +265,8 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   if (isGreeting) {
     replies.push(
       lang === "ar"
-      ? "مرحباً بكم في La Vida Resort & Beach Club 🌊\nنورتونا ✨\nكيف نقدر نساعدكم اليوم؟"
-      : "Welcome to La Vida Resort & Beach Club 🌊\nWe’re happy to assist you ✨\nHow can we help you today?",
+        ? "أهلاً بكم في La Vida Resort & Beach Club\nنورتونا — كيف نقدروا نساعدوكم اليوم؟"
+        : "Welcome to La Vida Resort & Beach Club\nHow can we help you today?",
     );
   }
 
@@ -294,7 +291,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "اسعار",
   ]);
   if (isPrice) {
-    replies.push(getPriceListReply(lang));
+    replies.push(getPricingUnderReviewReply(lang));
   }
 
   const isBooking = hasAny(text, [
@@ -308,15 +305,21 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "الحجز",
     "نبي نحجز",
     "كيف نحجز",
+    "نبي حجز",
+    "حابة نحجز",
+    "نريد نحجز",
+    "متى الحجز",
+    "هل الحجز مفتوح",
+    "نبي نسجل اسمي",
+    "مهتم بالحجز",
     "في حجز",
     "طريقة الحجز",
     "نحجز",
     "حجز",
-    "متاح",
     "فيه حجز",
   ]);
   if (isBooking) {
-    replies.push(getBookingUnavailableReply(lang));
+    replies.push(getBookingLeadPrompt(lang));
   }
 
   const asksOffers = hasAny(text, ["offer", "offers", "promo", "discount", "عروض", "خصم", "تخفيض"]);
@@ -336,18 +339,27 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     replies.push(getIncludedServicesReply(lang));
   }
 
-  const isOpening = hasAny(text, ["opening", "when open", "opening date", "متى تفتحو", "موعد الافتتاح", "الافتتاح"]);
+  const isOpening = hasAny(text, [
+    "opening",
+    "when open",
+    "opening date",
+    "متى الافتتاح",
+    "موعد الافتتاح",
+    "الافتتاح",
+    "تاريخ الافتتاح",
+  ]);
   if (isOpening) {
     replies.push(getOpeningDateReply(lang));
   }
 
+  const isBookingWhen = hasAny(text, ["متى الحجز", "هل الحجز مفتوح", "when booking", "booking open"]);
+  if (isBookingWhen) {
+    replies.push(getBookingWhenReply(lang));
+  }
+
   const asksContact = hasAny(text, ["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال", "تلفون"]);
   if (asksContact) {
-    replies.push(
-      lang === "ar"
-      ? `تقدروا تتواصلوا مع لافيدا على:\n${PHONE_1}\n${PHONE_2} ✨`
-      : `You can contact La Vida on:\n${PHONE_1}\n${PHONE_2} ✨`,
-    );
+    replies.push(getContactReply(lang));
   }
 
   const asksLocation = hasAny(text, [
@@ -367,20 +379,22 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "shnowa",
   ]);
   if (asksLocation) {
-    replies.push(
-      lang === "ar"
-      ? `لافيدا موجودة في زوارة ليبيا ✨ ${WEBSITE}`
-      : `La Vida is located in Zuwarah Libya ✨ ${WEBSITE}`,
-    );
+    replies.push(getLocationReply(lang));
   }
 
-  const asksMeals = hasAny(text, ["full board", "breakfast", "meals", "food included", "وجبات", "اقامه كامله", "فول بورد"]);
+  const asksMeals = hasAny(text, [
+    "full board",
+    "breakfast",
+    "meals",
+    "food included",
+    "شامل الوجبات",
+    "شامل الفطور",
+    "وجبات",
+    "اقامه كامله",
+    "فول بورد",
+  ]);
   if (asksMeals) {
-    replies.push(
-      lang === "ar"
-        ? "الإقامة تشمل دخول الشاطئ والمسبح والخدمات المذكورة في قائمة الخدمات المشمولة ✨ اسألنا عن «الخدمات المشمولة» للتفاصيل."
-        : "Your stay includes beach and pool access plus the listed included services ✨ Ask us about included services for details.",
-    );
+    replies.push(getMealsReply(lang));
   }
 
   const asksPhotos = hasAny(text, [
@@ -404,9 +418,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "صور الفلل",
   ]);
   if (asksPhotos) {
-    replies.push(lang === "ar"
-      ? "حالياً الصور الرسمية الخاصة بالشاليهات والمنتجع مش متوفرة عندنا توا ✨\nوحنشاركوا كل الصور والتحديثات البصرية قريباً مع موعد الافتتاح والإعلان الرسمي للحجز."
-      : "Currently the official chalet and resort images are not available yet ✨\nAll photos and visual updates will be shared closer to the opening date and official booking announcement.");
+    replies.push(getPhotosReply(lang));
   }
 
   const asksSupermarket = hasAny(text, [
@@ -434,16 +446,29 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "admin",
     "complaint",
     "problem",
+    "payment",
+    "corporate",
+    "large group",
+    "custom event",
+    "special request",
+    "booking confirmation",
+    "confirm booking",
     "مشكلة",
     "الإدارة",
     "موظف",
+    "دفع",
+    "شكوى",
+    "مجموعة كبيرة",
+    "طلب خاص",
+    "تأكيد الحجز",
   ]);
   if (asksHuman) {
-    replies.push(
-      lang === "ar"
-      ? "أكيد ✨ أحد أعضاء فريق لافيدا حيتواصل معاكم قريباً."
-      : "Of course ✨ A member of the La Vida team will assist you shortly.",
-    );
+    replies.push(getHumanHandoffReply(lang));
+  }
+
+  const guestCount = extractGuestCount(`${text} ${rawText}`);
+  if (guestCount && hasAny(text, ["شن تنصحني", "شنو تنصحني", "تنصحني", "recommend", "suggest", "عندي"])) {
+    replies.push(getGuestRecommendationReply(guestCount, lang));
   }
 
   const asksPrivatePools = hasAny(text, [
@@ -530,11 +555,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
         : "Yes ✨ Jet ski rentals and water activities will be available at La Vida. Full details will be announced closer to opening.",
     );
   } else if (asksCafe) {
-    replies.push(
-      lang === "ar"
-        ? "أكيد ✨ في لافيدا حيكون فيه كافيه ومنطقة أكل للضيوف خلال الإقامة."
-        : "Yes ✨ La Vida will include a beach café and food area for guests to enjoy during their stay.",
-    );
+    replies.push(getRestaurantsReply(lang));
   }
 
   const asksCourts = hasAny(text, ["football", "soccer", "volleyball", "court", "courts", "كرة", "طائره", "ملعب"]);

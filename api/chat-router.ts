@@ -4,19 +4,30 @@ import { detectLanguage, type Language } from "@contracts/templates";
 import { TRPCError } from "@trpc/server";
 import OpenAI from "openai";
 import {
-  getBookingUnavailableReply,
+  getBookingLeadPrompt,
   getKnowledgeBlockForPrompt,
   getResponseStyleRules,
+  getMealsReply,
+  getPhotosReply,
+  getLocationReply,
+  getRestaurantsReply,
+  getHumanHandoffReply,
+  getOpeningDateReply,
+  getContactReply,
   matchAccommodation,
   accommodationBookingLabel,
   resolvePriceOrUnitReply,
+  resolveBookingLeadReply,
+  RESORT_BRAND,
 } from "./resort-knowledge";
 
 const RESORT_INFO = {
-  name: "La Vida Resort & Beach Club",
-  location: "Zuwarah, Libya",
-  website: "lavidaresort.ly",
-  phones: ["093 888 8868", "093 888 8878"],
+  name: RESORT_BRAND.name,
+  location: RESORT_BRAND.locationEn,
+  website: RESORT_BRAND.website,
+  phones: RESORT_BRAND.phonesFormatted,
+  email: RESORT_BRAND.email,
+  messengerLink: RESORT_BRAND.messengerLink,
 } as const;
 
 type ChatRole = "user" | "assistant";
@@ -28,6 +39,7 @@ type ChatHistoryItem = {
 
 type BookingState = {
   active: boolean;
+  fullName?: string;
   accommodationType?: string;
   dates?: string;
   guestCount?: number;
@@ -64,6 +76,7 @@ function hasAny(text: string, keywords: string[]): boolean {
 
 function formatKnownBookingData(booking: BookingState): string {
   const known: string[] = [];
+  if (booking.fullName) known.push(`name=${booking.fullName}`);
   if (booking.accommodationType) known.push(`accommodation=${booking.accommodationType}`);
   if (booking.dates) known.push(`dates=${booking.dates}`);
   if (booking.guestCount) known.push(`guestCount=${booking.guestCount}`);
@@ -81,6 +94,14 @@ function getLastUserQuestion(history: ChatHistoryItem[]): string | undefined {
   return candidate ?? reversed[0];
 }
 
+function extractFullName(message: string): string | undefined {
+  const named = message.match(/(?:اسمي|اسمي هو|انا|أنا|my name is|i am|i'm)\s+(.+)/i);
+  if (named?.[1]) {
+    const value = named[1].trim().replace(/[?.!،,]/g, "").slice(0, 80);
+    if (value.length >= 2) return value;
+  }
+  return undefined;
+}
 function extractAccommodationType(text: string): string | undefined {
   const unit = matchAccommodation(text);
   if (unit) return accommodationBookingLabel(unit);
@@ -164,6 +185,7 @@ function inferConversationState(message: string, history: ChatHistoryItem[]): Co
   const mergedRaw = [...history.map((item) => item.content), message].join(" ");
   const booking: BookingState = {
     active: bookingActive,
+    fullName: extractFullName(mergedRaw),
     accommodationType: extractAccommodationType(mergedText),
     dates: extractDates(mergedRaw),
     guestCount: extractGuestCount(normalizedCurrent) ?? extractGuestCount(mergedText),
@@ -177,9 +199,10 @@ function inferConversationState(message: string, history: ChatHistoryItem[]): Co
   };
 }
 
-function bookingNextStepReply(state: ConversationState, lang: Language): string | undefined {
+function bookingNextStepReply(state: ConversationState, message: string, history: ChatHistoryItem[], lang: Language): string | undefined {
   if (!state.booking.active) return undefined;
-  return getBookingUnavailableReply(lang);
+  const conversationMessages = history.map((item) => item.content);
+  return resolveBookingLeadReply(message, conversationMessages, lang);
 }
 
 function getShortcutReply(message: string, lang: Language): string | undefined {
@@ -187,17 +210,22 @@ function getShortcutReply(message: string, lang: Language): string | undefined {
   if (!text) return undefined;
 
   if (hasAny(text, ["موقع", "location", "maps", "address", "وين"])) {
-    return lang === "ar"
-      ? `الموقع: زوارة - ليبيا 📍\nGoogle Maps عبر موقعنا: ${RESORT_INFO.website}`
-      : `Location: Zuwarah, Libya 📍\nMaps and directions: ${RESORT_INFO.website}`;
+    return getLocationReply(lang);
+  }
+  if (hasAny(text, ["شامل الوجبات", "شامل الفطور", "وجبات", "فطور", "full board", "breakfast", "meals included"])) {
+    return getMealsReply(lang);
   }
   if (hasAny(text, ["مطاعم", "مطعم", "restaurant", "resturent", "resturant", "food", "cafe"])) {
-    return lang === "ar"
-      ? "أكيد ✨ عندنا كافيه ومنطقة أكل بإطلالة بحرية ضمن المنتجع."
-      : "Absolutely ✨ We have a beach café and dedicated food area inside the resort.";
+    return getRestaurantsReply(lang);
   }
-  if (hasAny(text, ["حجز", "booking", "book", "reservation"])) {
-    return getBookingUnavailableReply(lang);
+  if (hasAny(text, ["حجز", "booking", "book", "reservation", "نبي نحجز", "كيف نحجز"])) {
+    return getBookingLeadPrompt(lang);
+  }
+  if (hasAny(text, ["متى الافتتاح", "الافتتاح", "opening date", "opening"])) {
+    return getOpeningDateReply(lang);
+  }
+  if (hasAny(text, ["شكوى", "دفع", "payment", "complaint", "تأكيد الحجز"])) {
+    return getHumanHandoffReply(lang);
   }
   const priceReply = resolvePriceOrUnitReply(text, lang);
   if (priceReply && hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost", "بكم", "offer", "عروض", "included", "مشمول"])) {
@@ -206,15 +234,11 @@ function getShortcutReply(message: string, lang: Language): string | undefined {
   if (hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost", "بكم"])) {
     return resolvePriceOrUnitReply("prices", lang);
   }
-  if (hasAny(text, ["واتساب", "whatsapp", "whats app", "wa"])) {
-    return lang === "ar"
-      ? `واتساب/اتصال:\n${RESORT_INFO.phones[0]}\n${RESORT_INFO.phones[1]}`
-      : `WhatsApp / Call:\n${RESORT_INFO.phones[0]}\n${RESORT_INFO.phones[1]}`;
+  if (hasAny(text, ["واتساب", "whatsapp", "whats app", "wa", "تواصل", "contact", "رقم"])) {
+    return getContactReply(lang);
   }
-  if (hasAny(text, ["صور", "photo", "photos", "gallery", "picture"])) {
-    return lang === "ar"
-      ? "الصور الرسمية قيد التحضير ✨ وحننزلها قريباً جداً."
-      : "Official photos are being finalized ✨ and will be shared very soon.";
+  if (hasAny(text, ["صور", "photo", "photos", "gallery", "picture", "فيديو"])) {
+    return getPhotosReply(lang);
   }
   if (hasAny(text, ["مسبح", "pool", "swimming"])) {
     return lang === "ar"
@@ -230,31 +254,28 @@ function getShortcutReply(message: string, lang: Language): string | undefined {
 }
 
 function buildSystemPrompt(lang: Language, state: ConversationState): string {
-  const base = `You are La Vida AI, the official receptionist for ${RESORT_INFO.name}.
+  const base = `You are La Vida AI, the official receptionist and sales assistant for ${RESORT_INFO.name}.
 
 Official resort facts:
 - Name: ${RESORT_INFO.name}
-- Location: ${RESORT_INFO.location}
+- Location: ${lang === "ar" ? RESORT_BRAND.locationAr : RESORT_INFO.location}
 - Website: ${RESORT_INFO.website}
+- Email: ${RESORT_INFO.email}
 - Phones: ${RESORT_INFO.phones.join(" and ")}
+- Messenger: ${RESORT_INFO.messengerLink}
 ${getKnowledgeBlockForPrompt(lang)}
 
 Style and behavior rules:
-1) Sound luxury, calm, warm, elegant, and natural.
-2) Keep replies short, clear, and helpful.
-3) Never sound robotic.
-4) Answer the guest's question directly first — guide naturally like a resort host.
-5) Do NOT send the price list unless the guest explicitly asks for prices, rates, or cost.
-6) For chalet detail questions: share capacity, view, features, and amenities — not only the price.
-7) Use only official Summer 2026 prices when price is explicitly requested.
-8) Booking is not open — never ask for booking details or say book now.
-9) Never state a fixed opening date; if asked, say the official opening date will be announced soon.
-10) If you are unsure, clearly say management will confirm.
-11) Do not invent facts outside the information above.
-12) Keep conversation continuity: do not reset topic during active threads.
-13) Understand fragmented messages and short follow-ups.
-14) Understand Arabic Libyan slang and mixed Arabic-English.
-15) Never ask "Could you tell us more" unless absolutely necessary.
+1) Professional, warm, natural — Libyan Arabic when guest writes Arabic.
+2) Keep replies short, clear, and helpful — answer the exact question first.
+3) Never invent information. Prices are under approval — do not state final prices.
+4) Meals are NOT included unless management announces otherwise.
+5) Official photos/videos not published yet — do not claim they are available.
+6) Official opening: ${lang === "ar" ? RESORT_BRAND.openingDateAr : RESORT_BRAND.openingDateEn}.
+7) For booking interest: collect lead details (name, phone, dates, guests, unit) — never confirm booking or availability.
+8) For complex cases: hand off to specialist team.
+9) Keep conversation continuity during active threads.
+10) Understand Libyan Arabic slang and mixed Arabic-English.
 ${getResponseStyleRules(lang)}`;
 
   const stateContext = `
@@ -296,13 +317,19 @@ export const chatRouter = createRouter({
       const lang = detectMessageLanguage(message);
       const history = input.history ?? [];
       const state = inferConversationState(message, history);
+      const historyContents = history.map((item) => item.content);
+
+      const bookingLeadReply = resolveBookingLeadReply(message, historyContents, lang);
+      if (bookingLeadReply) {
+        return { reply: bookingLeadReply, language: lang, source: "rule" as const };
+      }
 
       const priceReply = resolvePriceOrUnitReply(message, lang);
       if (priceReply) {
         return { reply: priceReply, language: lang, source: "rule" as const };
       }
 
-      const bookingStepReply = bookingNextStepReply(state, lang);
+      const bookingStepReply = bookingNextStepReply(state, message, history, lang);
       const shortcutReply = getShortcutReply(message, lang);
 
       if (shortcutReply) {
