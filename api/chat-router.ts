@@ -324,7 +324,7 @@ export const chatRouter = createRouter({
         return { reply: bookingLeadReply, language: lang, source: "rule" as const };
       }
 
-      const priceReply = resolvePriceOrUnitReply(message, lang);
+      const priceReply = resolvePriceOrUnitReply(message, lang, { conversationMessages: historyContents });
       if (priceReply) {
         return { reply: priceReply, language: lang, source: "rule" as const };
       }

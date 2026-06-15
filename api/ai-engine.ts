@@ -25,6 +25,7 @@ import {
   resolvePriceOrUnitReply,
   resolveBookingLeadReply,
   extractGuestCount,
+  isActiveLeadCollection,
   RESORT_BRAND,
 } from "./resort-knowledge";
 
@@ -83,7 +84,7 @@ export async function generateAIResponse(
   }
 
   // Strong intent detection before AI generation.
-  const intentText = getIntentResponse(userMessage, lang);
+  const intentText = getIntentResponse(userMessage, lang, historyContents);
   if (intentText) {
     return { text: intentText, lang, source: "template" };
   }
@@ -178,14 +179,18 @@ function getNaturalFallback(lang: Language): string {
   return "Could you tell us a bit more about what you'd like to know about La Vida? ✨";
 }
 
-function getIntentResponse(userMessage: string, lang: Language): string | undefined {
+function getIntentResponse(userMessage: string, lang: Language, history: string[] = []): string | undefined {
   const rawText = userMessage.trim().toLowerCase();
   const text = normalizeArabic(rawText);
   const compact = text.replace(/\s+/g, " ").trim();
   const replies: string[] = [];
 
-  const priceOrUnit = resolvePriceOrUnitReply(`${text} ${rawText}`, lang);
-  if (priceOrUnit) return priceOrUnit;
+  if (!isActiveLeadCollection(history, userMessage)) {
+    const priceOrUnit = resolvePriceOrUnitReply(`${text} ${rawText}`, lang, {
+      conversationMessages: history,
+    });
+    if (priceOrUnit) return priceOrUnit;
+  }
 
   const acknowledgementPhrases = [
     "موافق",
@@ -467,7 +472,11 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
   }
 
   const guestCount = extractGuestCount(`${text} ${rawText}`);
-  if (guestCount && hasAny(text, ["شن تنصحني", "شنو تنصحني", "تنصحني", "recommend", "suggest", "عندي"])) {
+  if (
+    !isActiveLeadCollection(history, userMessage) &&
+    guestCount &&
+    hasAny(text, ["شن تنصحني", "شنو تنصحني", "تنصحني", "recommend", "suggest", "عندي"])
+  ) {
     replies.push(getGuestRecommendationReply(guestCount, lang));
   }
 
@@ -511,7 +520,7 @@ function getIntentResponse(userMessage: string, lang: Language): string | undefi
     "شقق",
     "إقامة",
   ]);
-  if (asksAccommodation) {
+  if (!isActiveLeadCollection(history, userMessage) && asksAccommodation) {
     const unit = matchAccommodation(text);
     replies.push(unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang));
   }

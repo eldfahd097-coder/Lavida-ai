@@ -34,8 +34,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     id: "presidential",
     nameEn: "Presidential VIP Villa",
     nameAr: "فيلا VIP الرئاسية",
-    capacityEn: "Up to ~12 guests — suitable for two large families or VIP groups",
-    capacityAr: "تقريباً حتى 12 شخص — مناسب لعائلتين أو ضيوف VIP",
+    capacityEn: "Up to 8 guests",
+    capacityAr: "حتى 8 أشخاص",
     viewEn: "Premium beachfront location",
     viewAr: "موقع مميز على الواجهة البحرية",
     detailsEn: [
@@ -43,15 +43,13 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "Private swimming pool",
       "High privacy",
       "Large spaces",
-      "Suitable for two families",
-      "Ideal for large families and VIP guests",
+      "Suitable for large families and VIP guests",
     ],
     detailsAr: [
       "وحدة فاخرة بمستوى راقٍ",
       "مسبح خاص",
       "خصوصية عالية",
       "مساحات واسعة",
-      "مناسب لعائلتين",
       "مثالي للعائلات الكبيرة وضيوف VIP",
     ],
     keywords: [
@@ -68,8 +66,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     id: "vip",
     nameEn: "VIP Villa / VIP Chalet",
     nameAr: "فيلا VIP / شاليه VIP",
-    capacityEn: "Families and couples — exact capacity to be confirmed by management",
-    capacityAr: "عائلات وأزواج — السعة الدقيقة حسب تأكيد الإدارة",
+    capacityEn: "Up to 8 guests",
+    capacityAr: "حتى 8 أشخاص",
     viewEn: "Sea view or premium location depending on final allocation",
     viewAr: "إطلالة بحرية أو موقع مميز حسب التخصيص النهائي",
     detailsEn: [
@@ -90,8 +88,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     id: "family_pool",
     nameEn: "Family Chalet / Pool View Chalet",
     nameAr: "شاليه عائلي / شاليه إطلالة المسبح",
-    capacityEn: "Families — exact capacity to be confirmed by management",
-    capacityAr: "عائلات — السعة الدقيقة حسب تأكيد الإدارة",
+    capacityEn: "Up to 6 guests",
+    capacityAr: "حتى 6 أشخاص",
     viewEn: "Pool and activity areas",
     viewAr: "المسبح ومناطق الأنشطة",
     detailsEn: [
@@ -120,8 +118,8 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     id: "apartments",
     nameEn: "Apartments",
     nameAr: "شقق",
-    capacityEn: "Families and longer stays — exact capacity to be confirmed by management",
-    capacityAr: "عائلات وإقامات أطول — السعة الدقيقة حسب تأكيد الإدارة",
+    capacityEn: "Up to 5 guests",
+    capacityAr: "حتى 5 أشخاص",
     viewEn: "Comfortable family accommodation",
     viewAr: "إقامة عائلية مريحة",
     detailsEn: [
@@ -343,10 +341,10 @@ Nearby: ${NEARBY_AMENITIES_EN}`;
 
 export function getAccommodationsOverviewReply(lang: Language): string {
   if (lang === "ar") {
-    const lines = ACCOMMODATIONS.map((u) => `• ${u.nameAr} — ${u.capacityAr}`);
+    const lines = ACCOMMODATIONS.map((u) => `• ${u.nameAr}`);
     return `وحدات La Vida ✨\n${lines.join("\n")}\nابعت اسم الوحدة ونشرحلك التفاصيل.`;
   }
-  const lines = ACCOMMODATIONS.map((u) => `• ${u.nameEn} — ${u.capacityEn}`);
+  const lines = ACCOMMODATIONS.map((u) => `• ${u.nameEn}`);
   return `La Vida accommodations ✨\n${lines.join("\n")}\nTell us which unit interests you and we will share details.`;
 }
 
@@ -382,24 +380,24 @@ Would you like details on a specific unit, activities, or pre-registration?`;
 }
 
 export function getUnitCapacityReply(unit: AccommodationUnit, lang: Language): string {
-  if (unit.id === "presidential") {
-    if (lang === "ar") {
-      return "الشاليه الرئاسي VIP مناسب لعائلتين ويستوعب تقريباً حتى 12 شخص، ويتميز بمسبح خاص ومساحات واسعة وخصوصية عالية.";
-    }
-    return "The Presidential VIP Villa suits two families and accommodates approximately up to 12 guests, with a private pool, large spaces, and high privacy.";
-  }
   if (lang === "ar") {
-    return `${unit.nameAr}\nالسعة: ${unit.capacityAr}`;
+    return `${unit.nameAr} يستوعب ${unit.capacityAr}، ويتميز بخصوصية ومساحة مناسبة للعائلات.`;
   }
-  return `${unit.nameEn}\nCapacity: ${unit.capacityEn}`;
+  return `${unit.nameEn} accommodates ${unit.capacityEn}, with privacy and space suited for families.`;
 }
 
 export function getGuestRecommendationReply(guestCount: number, lang: Language): string {
+  if (guestCount > 8) {
+    if (lang === "ar") {
+      return `للعدد ${guestCount} غالباً ننصح بأكثر من وحدة متقاربة أو التواصل مع الفريق للتنسيق. نقدروا نسجلوا بياناتكم ويتواصل معاكم فريق الحجوزات.`;
+    }
+    return `For ${guestCount} guests, multiple nearby units or contacting our team is usually best. We can register your details and our reservations team will follow up.`;
+  }
   if (guestCount >= 7) {
     if (lang === "ar") {
-      return `للعدد ${guestCount} غالباً أنسب خيار هو الشاليه الرئاسي VIP أو أكثر من وحدة متقاربة حسب التوفر، لأنه يوفر مساحة وخصوصية أكثر للعائلات. نقدروا نسجلوا بياناتكم ويتواصل معاكم فريق الحجوزات للتأكيد.`;
+      return `للعدد ${guestCount} غالباً أنسب خيار هو الرئاسي VIP أو فيلا VIP حسب التوفر. نقدروا نسجلوا بياناتكم ويتواصل معاكم الفريق للتأكيد.`;
     }
-    return `For ${guestCount} guests, the Presidential VIP Villa or multiple nearby units are usually the best fit depending on availability — more space and privacy for families. We can register your details and our reservations team will confirm.`;
+    return `For ${guestCount} guests, Presidential VIP or VIP Villa is usually the best fit depending on availability. We can register your details and our team will confirm.`;
   }
   if (lang === "ar") {
     return `للعدد ${guestCount} نقدروا نرشحلكم الوحدة الأنسب حسب نوع الإقامة والتوفر. نقدروا نسجلوا بياناتكم ويتواصل معاكم الفريق للتأكيد.`;
@@ -460,9 +458,9 @@ export function getBookingLeadPrompt(lang: Language): string {
 
 export function getBookingLeadConfirmation(lang: Language): string {
   if (lang === "ar") {
-    return "تم استلام بياناتكم المبدئية وسيتم التواصل معكم فور فتح الحجوزات رسمياً";
+    return "تم استلام بياناتكم المبدئية وسيتم التواصل معكم فور فتح الحجوزات رسمياً إن شاء الله";
   }
-  return "We have received your preliminary details and will contact you as soon as official bookings open";
+  return "We have received your preliminary details and will contact you as soon as official bookings open, in sha Allah";
 }
 
 export function getBookingUnavailableReply(lang: Language): string {
@@ -542,17 +540,36 @@ export function extractGuestCount(text: string): number | undefined {
 }
 
 function extractDates(message: string): string | undefined {
+  const monthPattern =
+    "يناير|فبراير|مارس|ابريل|أبريل|مايو|يونيو|يوليو|اغسطس|أغسطس|سبتمبر|اكتوبر|أكتوبر|نوفمبر|ديسمبر|january|february|march|april|may|june|july|august|september|october|november|december";
   const datePatterns = [
+    new RegExp(`(?:يوم\\s+)?\\d{1,2}\\s+(?:${monthPattern})(?:\\s*\\d{4})?`, "gi"),
+    new RegExp(`(?:${monthPattern})\\s*\\d{4}`, "gi"),
     /\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/g,
     /\b(?:from|to|من|الى|إلى)\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/gi,
     /\b(?:today|tomorrow|weekend|اليوم|بكره|بكرة|الويكند)\b/gi,
-    /(?:يناير|فبراير|مارس|ابريل|أبريل|مايو|يونيو|يوليو|اغسطس|أغسطس|سبتمبر|اكتوبر|أكتوبر|نوفمبر|ديسمبر|january|february|march|april|may|june|july|august|september|october|november|december)\s*\d{4}/gi,
     /\b(?:صيف|summer)\s*\d{4}\b/gi,
   ];
   for (const pattern of datePatterns) {
     const match = message.match(pattern);
     if (match?.length) return match.join(" - ");
   }
+  return undefined;
+}
+
+function extractNameFromBookingDetails(message: string): string | undefined {
+  const phone = extractPhoneNumber(message);
+  if (!phone) return undefined;
+
+  const phonePattern = /0?9\d{8,9}/;
+  const phoneMatch = message.match(phonePattern);
+  if (!phoneMatch?.index && phoneMatch?.index !== 0) return undefined;
+
+  const beforePhone = message.slice(0, phoneMatch.index).trim().replace(/[،,]+$/, "");
+  if (beforePhone.length < 3 || beforePhone.length > 50) return undefined;
+
+  const cleaned = beforePhone.replace(/^(?:اسمي|اسمي هو|انا|أنا)\s+/i, "").trim();
+  if (/^[\p{L}\s]{2,}$/u.test(cleaned)) return cleaned;
   return undefined;
 }
 
@@ -581,11 +598,11 @@ function extractFullName(message: string): string | undefined {
 export function extractBookingLeadFromText(message: string): Partial<BookingLead> {
   const unit = matchAccommodation(message);
   return {
-    fullName: extractFullName(message),
+    fullName: extractFullName(message) ?? extractNameFromBookingDetails(message),
     phone: extractPhoneNumber(message),
     expectedDates: extractDates(message),
     guestCount: extractGuestCount(message),
-    unitType: unit ? (unit.nameAr) : undefined,
+    unitType: unit ? unit.nameAr : undefined,
   };
 }
 
@@ -612,32 +629,90 @@ function getMissingLeadFields(lead: BookingLead): (keyof BookingLead)[] {
   return missing;
 }
 
-function getLeadFollowUpReply(missing: (keyof BookingLead)[], lang: Language): string {
+function getFirstName(fullName: string): string {
+  return fullName.split(/\s+/)[0] ?? fullName;
+}
+
+const FIELD_LABELS_AR: Record<keyof BookingLead, string> = {
+  fullName: "الاسم",
+  phone: "رقم الهاتف",
+  expectedDates: "التاريخ",
+  guestCount: "عدد الأشخاص",
+  unitType: "نوع الوحدة",
+};
+
+const FIELD_LABELS_EN: Record<keyof BookingLead, string> = {
+  fullName: "name",
+  phone: "phone number",
+  expectedDates: "stay date",
+  guestCount: "number of guests",
+  unitType: "preferred unit type",
+};
+
+function getLeadCollectionReply(lead: BookingLead, lang: Language): string {
+  const missing = getMissingLeadFields(lead);
+  if (missing.length === 0) return getBookingLeadConfirmation(lang);
+
+  const labels = lang === "ar" ? FIELD_LABELS_AR : FIELD_LABELS_EN;
+  const received = (Object.keys(FIELD_LABELS_AR) as (keyof BookingLead)[]).filter(
+    (field) => lead[field] !== undefined,
+  );
+
   if (lang === "ar") {
-    const prompts: string[] = [];
-    if (missing.includes("fullName")) prompts.push("الاسم بالكامل");
-    if (missing.includes("phone")) prompts.push("رقم الهاتف");
-    if (missing.includes("expectedDates")) prompts.push("التاريخ المتوقع للإقامة");
-    if (missing.includes("guestCount")) prompts.push("عدد الأشخاص");
-    if (missing.includes("unitType")) prompts.push("نوع الوحدة المطلوبة إن وجدت");
-    if (prompts.length === 0) return getBookingLeadConfirmation(lang);
-    return `تمام، باقي نحتاج: ${prompts.join("، ")}.`;
+    const firstName = lead.fullName ? getFirstName(lead.fullName) : "";
+    const greeting = firstName ? `ممتاز ${firstName} 🌹 ` : "تمام، ";
+
+    if (received.length > 0 && missing.length === 1 && missing[0] === "unitType") {
+      return `${greeting}استلمنا ${received.map((f) => labels[f]).join(" و")}. باقي فقط نوع الوحدة اللي تفضلها (شقة، شاليه، VIP أو الرئاسي VIP)؟`;
+    }
+
+    if (received.length > 0) {
+      const missingLabels = missing.map((f) => labels[f]);
+      return `${greeting}استلمنا ${received.map((f) => labels[f]).join(" و")}. باقي نحتاج: ${missingLabels.join("، ")}.`;
+    }
+
+    return getBookingLeadPrompt(lang);
   }
-  const prompts: string[] = [];
-  if (missing.includes("fullName")) prompts.push("full name");
-  if (missing.includes("phone")) prompts.push("phone number");
-  if (missing.includes("expectedDates")) prompts.push("expected stay dates");
-  if (missing.includes("guestCount")) prompts.push("number of guests");
-  if (missing.includes("unitType")) prompts.push("preferred unit type if any");
-  if (prompts.length === 0) return getBookingLeadConfirmation(lang);
-  return `Great — we still need: ${prompts.join(", ")}.`;
+
+  const greeting = lead.fullName ? `Great ${getFirstName(lead.fullName)} — ` : "";
+  if (received.length > 0 && missing.length === 1 && missing[0] === "unitType") {
+    return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. Which unit do you prefer (apartment, chalet, VIP, or Presidential VIP)?`;
+  }
+  if (received.length > 0) {
+    return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. We still need: ${missing.map((f) => labels[f]).join(", ")}.`;
+  }
+  return getBookingLeadPrompt(lang);
+}
+
+export function looksLikeBookingDataMessage(message: string): boolean {
+  const partial = extractBookingLeadFromText(message);
+  const fields = [partial.fullName, partial.phone, partial.expectedDates, partial.guestCount, partial.unitType];
+  const count = fields.filter(Boolean).length;
+  if (partial.phone && count >= 2) return true;
+  return count >= 3;
+}
+
+export function isActiveLeadCollection(conversationMessages: string[], currentMessage: string): boolean {
+  const allText = [...conversationMessages, currentMessage].join(" ");
+  if (isLeadCollectionContext(allText)) return true;
+  if (looksLikeBookingDataMessage(currentMessage)) return true;
+
+  const hadBookingPrompt = conversationMessages.some(
+    (m) =>
+      isBookingIntent(m) ||
+      /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|مبدئية ونتواصل|preliminary details/i.test(m),
+  );
+  if (hadBookingPrompt) {
+    return [...conversationMessages, currentMessage].some((m) => looksLikeBookingDataMessage(m));
+  }
+  return false;
 }
 
 export function isLeadCollectionContext(conversationText: string): boolean {
   const normalized = conversationText.toLowerCase();
   return (
     isBookingIntent(normalized) ||
-    /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|preliminary details|register your details/.test(
+    /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|استلمنا|باقي فقط نوع الوحدة|preliminary details|register your details/i.test(
       normalized,
     )
   );
@@ -648,37 +723,26 @@ export function resolveBookingLeadReply(
   conversationMessages: string[],
   lang: Language,
 ): string | undefined {
-  const merged = [...conversationMessages, message].join(" ");
-  const normalized = merged.toLowerCase();
   const bookingWhenOnly = /^(متى الحجز|هل الحجز مفتوح|when.*booking|booking open)\??$/i.test(
     message.trim(),
   );
   if (bookingWhenOnly) return getBookingWhenReply(lang);
 
-  const leadContext = isLeadCollectionContext(merged);
-  const bookingNow = isBookingIntent(message) || isBookingIntent(normalized);
-
-  if (!bookingNow && !leadContext) return undefined;
+  const inLeadFlow = isActiveLeadCollection(conversationMessages, message);
+  if (!inLeadFlow && !isBookingIntent(message)) return undefined;
 
   const lead = extractBookingLeadFromConversation([...conversationMessages, message]);
   const hasAnyLeadData = Boolean(
     lead.fullName || lead.phone || lead.expectedDates || lead.guestCount || lead.unitType,
   );
 
-  if (!hasAnyLeadData && bookingNow) {
+  if (!hasAnyLeadData && isBookingIntent(message)) {
     return getBookingLeadPrompt(lang);
   }
 
   if (!hasAnyLeadData) return undefined;
 
-  const missing = getMissingLeadFields(lead);
-  const requiredMissing = missing.filter((field) => field !== "unitType");
-
-  if (requiredMissing.length === 0) {
-    return getBookingLeadConfirmation(lang);
-  }
-
-  return getLeadFollowUpReply(missing, lang);
+  return getLeadCollectionReply(lead, lang);
 }
 
 function asksExplicitPrices(normalized: string): boolean {
@@ -694,7 +758,7 @@ function asksResortDetailsQuestion(normalized: string): boolean {
 }
 
 function asksCapacityQuestion(normalized: string): boolean {
-  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|كم يسع|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة|عندي \d+/.test(
+  return /how\s*many|capacity|كم\s*يسع|كم\s*شخص|قداش\s*شخص|سعة|تنصحني|recommend|suggest|fits|fit|how many people/.test(
     normalized,
   );
 }
@@ -754,7 +818,10 @@ Messenger: ${RESORT_BRAND.messengerLink}
 
 Positioning: La Vida is a full beachfront family resort experience — private beach, accommodation, pools, restaurants, cafes, water activities, family areas, entertainment, and hospitality.
 
-Accommodation categories (exact capacity for most units pending management confirmation):
+Accommodation categories:
+${lang === "ar" ? ACCOMMODATIONS.map((u) => `- ${u.nameAr}`).join("\n") : ACCOMMODATIONS.map((u) => `- ${u.nameEn}`).join("\n")}
+
+Official capacities (mention ONLY when guest specifically asks about capacity):
 ${units}
 
 Facilities & services: ${included}
@@ -811,7 +878,15 @@ export function resolveOpeningDateReply(message: string, lang: Language): string
   return undefined;
 }
 
-export function resolvePriceOrUnitReply(message: string, lang: Language): string | undefined {
+export function resolvePriceOrUnitReply(
+  message: string,
+  lang: Language,
+  options?: { conversationMessages?: string[] },
+): string | undefined {
+  if (options?.conversationMessages?.length) {
+    if (isActiveLeadCollection(options.conversationMessages, message)) return undefined;
+  }
+
   const normalized = message.toLowerCase();
 
   const openingReply = resolveOpeningDateReply(message, lang);
@@ -823,7 +898,7 @@ export function resolvePriceOrUnitReply(message: string, lang: Language): string
   if (asksLocationQuestion(normalized)) return getLocationReply(lang);
 
   const guestCount = extractGuestCount(normalized);
-  if (guestCount && /شن تنصحني|شنو تنصحني|تنصحني|recommend|suggest|عندي \d+/.test(normalized)) {
+  if (guestCount && /شن تنصحني|شنو تنصحني|تنصحني|recommend|suggest|عندي/.test(normalized)) {
     return getGuestRecommendationReply(guestCount, lang);
   }
 
@@ -838,7 +913,7 @@ export function resolvePriceOrUnitReply(message: string, lang: Language): string
     return getUnitCapacityReply(unit, lang);
   }
 
-  if (unit) {
+  if (unit && /تفاصيل|details|about|عن|معلومات|info/.test(normalized)) {
     return getChaletDetailReply(unit, lang, false);
   }
 
@@ -857,8 +932,12 @@ export function resolvePriceOrUnitReply(message: string, lang: Language): string
   if (asksCapacityQuestion(normalized)) {
     const matched = matchAccommodation(normalized);
     if (matched) return getUnitCapacityReply(matched, lang);
-    if (guestCount) return getGuestRecommendationReply(guestCount, lang);
-    return getAllCapacitiesReply(lang);
+    if (guestCount && /تنصحني|recommend|suggest|عندي/.test(normalized)) {
+      return getGuestRecommendationReply(guestCount, lang);
+    }
+    if (/سعة|capacity|كم يسع|كم شخص/.test(normalized)) {
+      return getAllCapacitiesReply(lang);
+    }
   }
 
   if (asksActivitiesQuestion(normalized)) return getActivitiesReply(lang);

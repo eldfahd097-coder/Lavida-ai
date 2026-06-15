@@ -124,7 +124,7 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
   chalet_info: {
     ar: `وحدات La Vida Resort
 
-1. فيلا VIP الرئاسية — مسبح خاص، خصوصية عالية، حتى ~12 شخص
+1. فيلا VIP الرئاسية — مسبح خاص، خصوصية عالية، حتى 8 أشخاص
 2. فيلا VIP / شاليه VIP — وحدة عائلية فاخرة
 3. شاليه عائلي / إطلالة المسبح — قريب من المسبح والأنشطة
 4. شقق — إقامة عائلية مريحة
@@ -133,7 +133,7 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
 الصور والفيديوهات الرسمية قيد التجهيز وسيتم نشرها قريباً إن شاء الله.`,
     en: `La Vida Resort Units
 
-1. Presidential VIP Villa — private pool, high privacy, up to ~12 guests
+1. Presidential VIP Villa — private pool, high privacy, up to 8 guests
 2. VIP Villa / VIP Chalet — premium family unit
 3. Family Chalet / Pool View — close to pool and activities
 4. Apartments — comfortable family stays
