@@ -9,7 +9,7 @@ import {
   getIncludedServicesReply,
   getOpeningDateReply,
   getBookingWhenReply,
-  getPricingUnderReviewReply,
+  getPriceListReply,
   getChaletDetailReply,
   getAccommodationsOverviewReply,
   getResortOverviewReply,
@@ -42,7 +42,7 @@ ${getKnowledgeBlockForPrompt("ar")}
 
 قواعد إلزامية:
 1) لا تخترع معلومات — استخدم المعرفة أعلاه فقط.
-2) الأسعار قيد الاعتماد — لا تذكر أسعاراً نهائية.
+2) الأسعار معلنة رسمياً — اعرض قائمة الأسعار عند السؤال عنها.
 3) الوجبات غير مشمولة في الإقامة حالياً.
 4) الصور الرسمية لم تُنشر بعد — لا تقل إنها متوفرة.
 5) الافتتاح الرسمي: ${RESORT_BRAND.openingDateAr}.
@@ -59,7 +59,7 @@ ${getKnowledgeBlockForPrompt("en")}
 
 Hard rules:
 1) Never invent information — use only the knowledge above.
-2) Prices are under approval — do not state final prices.
+2) Prices are publicly announced — share the official price list when guests ask.
 3) Meals are not included in the stay currently.
 4) Official photos/videos are not published yet — do not claim they are available.
 5) Official opening: ${RESORT_BRAND.openingDateEn}.
@@ -296,7 +296,7 @@ function getIntentResponse(userMessage: string, lang: Language, history: string[
     "اسعار",
   ]);
   if (isPrice) {
-    replies.push(getPricingUnderReviewReply(lang));
+    replies.push(getPriceListReply(lang));
   }
 
   const isBooking = hasAny(text, [

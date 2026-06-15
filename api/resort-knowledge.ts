@@ -13,13 +13,20 @@ export const RESORT_BRAND = {
   website: "lavidaresort.ly",
 } as const;
 
-/** Final prices are under management review — do not present as confirmed. */
-export const PRICING_STATUS = "under_review" as const;
+/** Publicly announced accommodation prices — update only when management changes them. */
+export const PRICING_STATUS = "announced" as const;
+
+export const GARDEN_STUDIO_FLOOR_PRICES = {
+  second: { priceLyd: 1000, nameAr: "الدور الثاني", nameEn: "Second floor" },
+  first: { priceLyd: 1200, nameAr: "الدور الأول", nameEn: "First floor" },
+  ground: { priceLyd: 1400, nameAr: "الدور الأرضي", nameEn: "Ground floor" },
+} as const;
 
 export type AccommodationUnit = {
   id: string;
   nameEn: string;
   nameAr: string;
+  priceLyd: number;
   capacityEn: string;
   capacityAr: string;
   viewEn: string;
@@ -33,24 +40,25 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
   {
     id: "presidential",
     nameEn: "Presidential VIP Villa",
-    nameAr: "فيلا VIP الرئاسية",
+    nameAr: "الفيلا الرئاسية VIP",
+    priceLyd: 3900,
     capacityEn: "Up to 8 guests",
     capacityAr: "حتى 8 أشخاص",
-    viewEn: "Premium beachfront location",
-    viewAr: "موقع مميز على الواجهة البحرية",
+    viewEn: "Premium beachfront experience",
+    viewAr: "تجربة فاخرة على الواجهة البحرية",
     detailsEn: [
-      "Premium luxury unit",
-      "Private swimming pool",
-      "High privacy",
-      "Large spaces",
-      "Suitable for large families and VIP guests",
+      "2 bedrooms",
+      "2 bathrooms",
+      "Premium experience",
+      "Highest privacy",
+      "Up to 8 guests",
     ],
     detailsAr: [
-      "وحدة فاخرة بمستوى راقٍ",
-      "مسبح خاص",
-      "خصوصية عالية",
-      "مساحات واسعة",
-      "مثالي للعائلات الكبيرة وضيوف VIP",
+      "غرفتين نوم",
+      "حمامين",
+      "تجربة فاخرة",
+      "أعلى مستوى خصوصية",
+      "حتى 8 أشخاص",
     ],
     keywords: [
       "presidential",
@@ -60,54 +68,67 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "presidential vip",
       "الرئاسي",
       "فيلا رئاسية",
+      "الفيلا الرئاسية",
     ],
   },
   {
     id: "vip",
-    nameEn: "VIP Villa / VIP Chalet",
-    nameAr: "فيلا VIP / شاليه VIP",
+    nameEn: "VIP Villa",
+    nameAr: "فيلا VIP",
+    priceLyd: 2900,
     capacityEn: "Up to 8 guests",
     capacityAr: "حتى 8 أشخاص",
-    viewEn: "Sea view or premium location depending on final allocation",
-    viewAr: "إطلالة بحرية أو موقع مميز حسب التخصيص النهائي",
+    viewEn: "Beach view",
+    viewAr: "إطلالة بحرية",
     detailsEn: [
-      "Premium family unit",
-      "Sea view or premium location",
-      "Private or premium outdoor seating",
-      "Suitable for families and couples",
+      "2 bedrooms",
+      "2 bathrooms",
+      "Beach view",
+      "Pool",
+      "Outdoor seating area",
+      "Up to 8 guests",
     ],
     detailsAr: [
-      "وحدة عائلية فاخرة",
-      "إطلالة بحرية أو موقع مميز",
-      "جلسة خارجية خاصة أو مميزة",
-      "مناسب للعائلات والأزواج",
+      "غرفتين نوم",
+      "حمامين",
+      "إطلالة بحرية",
+      "مسبح",
+      "جلسة خارجية",
+      "حتى 8 أشخاص",
     ],
     keywords: ["vip villa", "vip chalet", "vip", "فيلا vip", "شاليه vip", "فيلا"],
   },
   {
     id: "family_pool",
-    nameEn: "Family Chalet / Pool View Chalet",
-    nameAr: "شاليه عائلي / شاليه إطلالة المسبح",
+    nameEn: "Family Chalet",
+    nameAr: "الشاليهات العائلية",
+    priceLyd: 1900,
     capacityEn: "Up to 6 guests",
     capacityAr: "حتى 6 أشخاص",
-    viewEn: "Pool and activity areas",
-    viewAr: "المسبح ومناطق الأنشطة",
+    viewEn: "Pool view",
+    viewAr: "إطلالة على المسبح",
     detailsEn: [
-      "Family-friendly unit",
-      "Close to pool and activity areas",
-      "Easy access to beach and resort facilities",
-      "Suitable for families",
+      "2 bedrooms",
+      "2 bathrooms",
+      "Outdoor seating area",
+      "Garden area",
+      "Pool view",
+      "Up to 6 guests",
     ],
     detailsAr: [
-      "وحدة مناسبة للعائلات",
-      "قريب من المسبح ومناطق الأنشطة",
-      "سهولة الوصول للشاطئ ومرافق المنتجع",
-      "مناسب للعائلات",
+      "غرفتين نوم",
+      "حمامين",
+      "جلسة خارجية",
+      "منطقة حديقة",
+      "إطلالة على المسبح",
+      "حتى 6 أشخاص",
     ],
     keywords: [
       "pool view",
       "family chalet",
       "شاليه عائلي",
+      "الشاليهات العائلية",
+      "شاليهات عائلية",
       "مسبح",
       "pool activities",
       "إطلالة المسبح",
@@ -117,20 +138,29 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
   {
     id: "apartments",
     nameEn: "Apartments",
-    nameAr: "شقق",
+    nameAr: "الشقق",
+    priceLyd: 1600,
     capacityEn: "Up to 5 guests",
     capacityAr: "حتى 5 أشخاص",
-    viewEn: "Comfortable family accommodation",
-    viewAr: "إقامة عائلية مريحة",
+    viewEn: "Garden, pool, and partial beach views",
+    viewAr: "إطلالة حديقة ومسبح وبحر جزئية",
     detailsEn: [
-      "Comfortable family accommodation",
-      "Fully equipped accommodation style",
-      "Suitable for families and longer stays",
+      "2 bedrooms",
+      "2 bathrooms",
+      "Balcony",
+      "Garden view",
+      "Pool view",
+      "Partial beach view",
+      "Up to 5 guests",
     ],
     detailsAr: [
-      "إقامة عائلية مريحة",
-      "تجهيز كامل بأسلوب الشقق الفندقية",
-      "مناسب للعائلات والإقامات الأطول",
+      "غرفتين نوم",
+      "حمامين",
+      "شرفة",
+      "إطلالة حديقة",
+      "إطلالة مسبح",
+      "إطلالة بحر جزئية",
+      "حتى 5 أشخاص",
     ],
     keywords: ["apartment", "apartments", "شقة", "شقق"],
   },
@@ -138,21 +168,39 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     id: "garden_studio",
     nameEn: "Garden View Studio",
     nameAr: "استوديو إطلالة الحديقة",
-    capacityEn: "Couples and small families — exact capacity to be confirmed by management",
-    capacityAr: "أزواج وعائلات صغيرة — السعة الدقيقة حسب تأكيد الإدارة",
-    viewEn: "Garden view — floor-based pricing may apply (ground / first / second floor)",
-    viewAr: "إطلالة حديقة — قد يُطبّق تسعير حسب الطابق (أرضي / أول / ثاني)",
+    priceLyd: 1200,
+    capacityEn: "Couples and small families",
+    capacityAr: "أزواج وعائلات صغيرة",
+    viewEn: "Garden view — pricing by floor (second 1000 / first 1200 / ground 1400 LYD)",
+    viewAr: "إطلالة حديقة — التسعير حسب الطابق (ثاني 1000 / أول 1200 / أرضي 1400 د.ل)",
     detailsEn: [
-      "Studio category with garden view",
+      "Garden view studio",
       "Suitable for couples and small families",
-      "Floor categories under management review",
+      "Second floor: 1000 LYD",
+      "First floor: 1200 LYD",
+      "Ground floor: 1400 LYD",
     ],
     detailsAr: [
       "استوديو بإطلالة حديقة",
       "مناسب للأزواج والعائلات الصغيرة",
-      "تصنيفات الطوابق قيد مراجعة الإدارة",
+      "الدور الثاني: 1000 د.ل",
+      "الدور الأول: 1200 د.ل",
+      "الدور الأرضي: 1400 د.ل",
     ],
-    keywords: ["garden", "studio", "استوديو", "حديقة", "garden view"],
+    keywords: [
+      "garden",
+      "studio",
+      "استوديو",
+      "حديقة",
+      "garden view",
+      "الدور الثاني",
+      "الدور الأول",
+      "الدور الأرضي",
+      "ثاني",
+      "أول",
+      "ارضي",
+      "أرضي",
+    ],
   },
 ];
 
@@ -290,53 +338,69 @@ export function matchAccommodation(text: string): AccommodationUnit | undefined 
 }
 
 export function accommodationBookingLabel(unit: AccommodationUnit): string {
-  return unit.nameEn;
-}
-
-export function getPricingUnderReviewReply(lang: Language): string {
-  if (lang === "ar") {
-    return "الأسعار النهائية قيد الاعتماد وسيتم الإعلان عنها بشكل رسمي قريباً";
-  }
-  return "Final prices are under approval and will be announced officially soon";
+  return `${unit.nameEn} — ${unit.priceLyd} LYD/night`;
 }
 
 export function getPriceListReply(lang: Language): string {
-  return getPricingUnderReviewReply(lang);
+  if (lang === "ar") {
+    return `🏡 أسعار الإقامة الحالية:
+
+• استوديو إطلالة الحديقة - الدور الثاني: 1000 د.ل
+• استوديو إطلالة الحديقة - الدور الأول: 1200 د.ل
+• استوديو إطلالة الحديقة - الدور الأرضي: 1400 د.ل
+• الشقق: 1600 د.ل
+• الشاليهات العائلية: 1900 د.ل
+• فيلا VIP: 2900 د.ل
+• الفيلا الرئاسية VIP: 3900 د.ل`;
+  }
+  return `🏡 Current accommodation rates:
+
+• Garden View Studio - Second floor: 1000 LYD
+• Garden View Studio - First floor: 1200 LYD
+• Garden View Studio - Ground floor: 1400 LYD
+• Apartments: 1600 LYD
+• Family Chalets: 1900 LYD
+• VIP Villa: 2900 LYD
+• Presidential VIP Villa: 3900 LYD`;
+}
+
+/** @deprecated Use getPriceListReply — prices are publicly announced. */
+export function getPricingUnderReviewReply(lang: Language): string {
+  return getPriceListReply(lang);
+}
+
+function getUnitPriceLine(unit: AccommodationUnit, lang: Language): string {
+  if (unit.id === "garden_studio") {
+    if (lang === "ar") {
+      return `الأسعار: الدور الثاني 1000 د.ل — الأول 1200 د.ل — الأرضي 1400 د.ل`;
+    }
+    return `Rates: Second floor 1000 LYD — First floor 1200 LYD — Ground floor 1400 LYD`;
+  }
+  if (lang === "ar") {
+    return `السعر: ${unit.priceLyd} د.ل / ليلة`;
+  }
+  return `Rate: ${unit.priceLyd} LYD / night`;
 }
 
 export function getUnitReply(unit: AccommodationUnit, lang: Language): string {
-  return getChaletDetailReply(unit, lang, false);
+  return getChaletDetailReply(unit, lang, true);
 }
 
-const NEARBY_AMENITIES_EN =
-  "Private beach, Beach Cafe, restaurants, main pool, entertainment areas, and family zones";
-const NEARBY_AMENITIES_AR =
-  "الشاطئ الخاص، Beach Cafe، المطاعم، المسبح الرئيسي، مناطق الترفيه، والمناطق العائلية";
-
-const INCLUDED_SNIPPET_EN =
-  "Resort experience includes private beach, large pool, dining options, kids areas, water activities, and family entertainment";
-const INCLUDED_SNIPPET_AR =
-  "تجربة المنتجع تشمل شاطئ خاص، مسبح كبير، خيارات أكل ومشروبات، مناطق أطفال، أنشطة مائية، وترفيه عائلي";
-
-export function getChaletDetailReply(unit: AccommodationUnit, lang: Language, _includePrice = false): string {
+export function getChaletDetailReply(unit: AccommodationUnit, lang: Language, includePrice = false): string {
   if (lang === "ar") {
     const features = unit.detailsAr.map((d) => `• ${d}`).join("\n");
+    const priceLine = includePrice ? `\n${getUnitPriceLine(unit, lang)}` : "";
     return `${unit.nameAr}
 السعة: ${unit.capacityAr}
-الإطلالة: ${unit.viewAr}
 المميزات:
-${features}
-${INCLUDED_SNIPPET_AR}
-قريب من: ${NEARBY_AMENITIES_AR}`;
+${features}${priceLine}`;
   }
   const features = unit.detailsEn.map((d) => `• ${d}`).join("\n");
+  const priceLine = includePrice ? `\n${getUnitPriceLine(unit, lang)}` : "";
   return `${unit.nameEn}
 Capacity: ${unit.capacityEn}
-View: ${unit.viewEn}
 Features:
-${features}
-${INCLUDED_SNIPPET_EN}
-Nearby: ${NEARBY_AMENITIES_EN}`;
+${features}${priceLine}`;
 }
 
 export function getAccommodationsOverviewReply(lang: Language): string {
@@ -796,6 +860,7 @@ function asksHumanHandoffQuestion(normalized: string): boolean {
 }
 
 export function getKnowledgeBlockForPrompt(lang: Language): string {
+  const priceList = getPriceListReply(lang);
   const units =
     lang === "ar"
       ? ACCOMMODATIONS.map((u) => `- ${u.nameAr}: ${u.capacityAr}`).join("\n")
@@ -803,11 +868,6 @@ export function getKnowledgeBlockForPrompt(lang: Language): string {
 
   const included = lang === "ar" ? INCLUDED_SERVICES_AR.join("; ") : INCLUDED_SERVICES_EN.join("; ");
   const activities = lang === "ar" ? ACTIVITIES_AR.join("; ") : ACTIVITIES_EN.join("; ");
-
-  const pricingNote =
-    lang === "ar"
-      ? "الأسعار النهائية قيد الاعتماد — لا تذكر أسعاراً نهائية إلا إذا أكدتها الإدارة رسمياً"
-      : "Final prices are under approval — do not state final prices unless officially confirmed by management";
 
   return `
 Brand: ${RESORT_BRAND.name}
@@ -818,17 +878,20 @@ Messenger: ${RESORT_BRAND.messengerLink}
 
 Positioning: La Vida is a full beachfront family resort experience — private beach, accommodation, pools, restaurants, cafes, water activities, family areas, entertainment, and hospitality.
 
-Accommodation categories:
-${lang === "ar" ? ACCOMMODATIONS.map((u) => `- ${u.nameAr}`).join("\n") : ACCOMMODATIONS.map((u) => `- ${u.nameEn}`).join("\n")}
+Announced accommodation prices (use these exact prices when guests ask):
+${priceList}
 
-Official capacities (mention ONLY when guest specifically asks about capacity):
+Unit capacities (mention ONLY when guest specifically asks about capacity):
 ${units}
 
 Facilities & services: ${included}
 
 Activities: ${activities}
 
-Pricing: ${pricingNote}
+Pricing rules:
+- Prices are publicly announced — share the price list when guests ask about rates or cost
+- For unit detail questions, explain features and include the relevant price
+- Do not say prices are pending approval
 
 Booking status:
 - Official bookings not fully open yet unless management says otherwise
@@ -850,7 +913,7 @@ export function getResponseStyleRules(lang: Language): string {
 1) أجب على سؤال الضيف مباشرة أولاً.
 2) بعد الإجابة، أضف 1–3 تفاصيل جذابة ومرتبطة فقط إن كانت مفيدة.
 3) اللغة الافتراضية: عربي ليبي طبيعي (مازال، حنعلنوا، نقدروا، توا، شن، لو تحب) — تجنب المصري.
-4) لا تكرر قائمة الأسعار إلا إذا طلبها صراحة — عندها قل إن الأسعار قيد الاعتماد.
+4) عند السؤال عن الأسعار، اعرض قائمة الأسعار الرسمية مباشرة.
 5) لا تؤكد حجزاً ولا توفراً ولا تطلب دفعاً.
 6) للحجز: اجمع بيانات العميل المهتمة بشكل طبيعي.
 7) للحالات المعقدة: حوّل للفريق المختص.
@@ -862,7 +925,7 @@ Response style:
 1) Answer the guest's question directly first.
 2) Add 1–3 attractive relevant details only when helpful.
 3) Default to Libyan Arabic when guest writes Arabic; reply in English when guest writes English.
-4) Do not repeat the full price list unless explicitly asked — then say prices are under approval.
+4) When guests ask about prices, share the official announced price list directly.
 5) Never confirm bookings, availability, or request payment.
 6) For booking interest: collect lead details naturally.
 7) For complex cases: hand off to the specialist team.
@@ -905,15 +968,19 @@ export function resolvePriceOrUnitReply(
   const unit = matchAccommodation(normalized);
   const wantsPrice = asksExplicitPrices(normalized);
 
+  if (unit && wantsPrice) {
+    return getUnitReply(unit, lang);
+  }
+
   if (wantsPrice) {
-    return getPricingUnderReviewReply(lang);
+    return getPriceListReply(lang);
   }
 
   if (unit && /كم يسع|capacity|سعة|كم شخص/.test(normalized)) {
     return getUnitCapacityReply(unit, lang);
   }
 
-  if (unit && /تفاصيل|details|about|عن|معلومات|info/.test(normalized)) {
+  if (unit) {
     return getChaletDetailReply(unit, lang, false);
   }
 

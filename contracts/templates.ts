@@ -124,22 +124,28 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
   chalet_info: {
     ar: `وحدات La Vida Resort
 
-1. فيلا VIP الرئاسية — مسبح خاص، خصوصية عالية، حتى 8 أشخاص
-2. فيلا VIP / شاليه VIP — وحدة عائلية فاخرة
-3. شاليه عائلي / إطلالة المسبح — قريب من المسبح والأنشطة
-4. شقق — إقامة عائلية مريحة
-5. استوديو إطلالة الحديقة — للأزواج والعائلات الصغيرة
+🏡 أسعار الإقامة الحالية:
+• استوديو إطلالة الحديقة - الدور الثاني: 1000 د.ل
+• استوديو إطلالة الحديقة - الدور الأول: 1200 د.ل
+• استوديو إطلالة الحديقة - الدور الأرضي: 1400 د.ل
+• الشقق: 1600 د.ل
+• الشاليهات العائلية: 1900 د.ل
+• فيلا VIP: 2900 د.ل
+• الفيلا الرئاسية VIP: 3900 د.ل
 
-الصور والفيديوهات الرسمية قيد التجهيز وسيتم نشرها قريباً إن شاء الله.`,
+ابعت اسم الوحدة ونشرحلك التفاصيل كاملة.`,
     en: `La Vida Resort Units
 
-1. Presidential VIP Villa — private pool, high privacy, up to 8 guests
-2. VIP Villa / VIP Chalet — premium family unit
-3. Family Chalet / Pool View — close to pool and activities
-4. Apartments — comfortable family stays
-5. Garden View Studio — for couples and small families
+🏡 Current accommodation rates:
+• Garden View Studio - Second floor: 1000 LYD
+• Garden View Studio - First floor: 1200 LYD
+• Garden View Studio - Ground floor: 1400 LYD
+• Apartments: 1600 LYD
+• Family Chalets: 1900 LYD
+• VIP Villa: 2900 LYD
+• Presidential VIP Villa: 3900 LYD
 
-Official photos and videos are being prepared and will be published soon.`,
+Tell us which unit interests you for full details.`,
   },
 
   activities: {
@@ -167,7 +173,16 @@ Official photos and videos are being prepared and will be published soon.`,
     ar: `آخر التحديثات
 
 • الافتتاح الرسمي: 1 يوليو 2026 إن شاء الله
-• الأسعار النهائية قيد الاعتماد وسيتم الإعلان عنها رسمياً قريباً
+
+🏡 أسعار الإقامة الحالية:
+• استوديو إطلالة الحديقة - الدور الثاني: 1000 د.ل
+• استوديو إطلالة الحديقة - الدور الأول: 1200 د.ل
+• استوديو إطلالة الحديقة - الدور الأرضي: 1400 د.ل
+• الشقق: 1600 د.ل
+• الشاليهات العائلية: 1900 د.ل
+• فيلا VIP: 2900 د.ل
+• الفيلا الرئاسية VIP: 3900 د.ل
+
 • الحجوزات: نقدروا نسجلوا بياناتكم المبدئية للتواصل فور فتح الحجز
 • الصور والفيديوهات الرسمية قيد التجهيز
 
@@ -176,7 +191,16 @@ Official photos and videos are being prepared and will be published soon.`,
     en: `Latest Updates
 
 • Official opening: 1 July 2026, in sha Allah
-• Final prices are under approval and will be announced officially soon
+
+🏡 Current accommodation rates:
+• Garden View Studio - Second floor: 1000 LYD
+• Garden View Studio - First floor: 1200 LYD
+• Garden View Studio - Ground floor: 1400 LYD
+• Apartments: 1600 LYD
+• Family Chalets: 1900 LYD
+• VIP Villa: 2900 LYD
+• Presidential VIP Villa: 3900 LYD
+
 • Bookings: we can register your preliminary details for contact when reservations open
 • Official photos and videos are being prepared
 
@@ -232,8 +256,8 @@ export const PhonePrompts = {
   welcome_en: "Welcome to La Vida Resort & Beach Club.",
   menu_ar: "للحجز والأسعار، اضغط 1. لمعلومات الشاليهات، اضغط 2. للأنشطة والمرافق، اضغط 3. للموقع ومواعيد الافتتاح، اضغط 4. للتحدث مع الإدارة، اضغط 5.",
   menu_en: "For booking and prices, press 1. For chalet information, press 2. For resort activities, press 3. For location and opening updates, press 4. To speak with management, press 5.",
-  option_1_ar: "الافتتاح الرسمي 1 يوليو 2026. الأسعار قيد الاعتماد. نقدروا نسجلوا بياناتكم المبدئية للحجز.",
-  option_1_en: "Official opening 1 July 2026. Prices are under approval. We can register your preliminary booking details.",
+  option_1_ar: "الافتتاح الرسمي 1 يوليو 2026. أسعار الإقامة من 1000 إلى 3900 د.ل. نقدروا نسجلوا بياناتكم المبدئية للحجز.",
+  option_1_en: "Official opening 1 July 2026. Accommodation rates from 1000 to 3900 LYD. We can register your preliminary booking details.",
   option_2_ar: "وحداتنا: فيلا VIP الرئاسية، VIP، شاليه عائلي، شقق، واستوديو. الصور الرسمية قيد التجهيز.",
   option_2_en: "Our units: Presidential VIP Villa, VIP, family chalet, apartments, and garden studio. Official photos are being prepared.",
   option_3_ar: "شاطئ خاص، مسبح كبير، أنشطة مائية، مطاعم وكافيهات، منطقة أطفال، Game Room، وملاعب رياضية.",
