@@ -964,7 +964,7 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
   chalet_info: {
     ar: `\u0648\u062D\u062F\u0627\u062A La Vida Resort
 
-1. \u0641\u064A\u0644\u0627 VIP \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u2014 \u0645\u0633\u0628\u062D \u062E\u0627\u0635\u060C \u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629\u060C \u062D\u062A\u0649 ~12 \u0634\u062E\u0635
+1. \u0641\u064A\u0644\u0627 VIP \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629 \u2014 \u0645\u0633\u0628\u062D \u062E\u0627\u0635\u060C \u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629\u060C \u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635
 2. \u0641\u064A\u0644\u0627 VIP / \u0634\u0627\u0644\u064A\u0647 VIP \u2014 \u0648\u062D\u062F\u0629 \u0639\u0627\u0626\u0644\u064A\u0629 \u0641\u0627\u062E\u0631\u0629
 3. \u0634\u0627\u0644\u064A\u0647 \u0639\u0627\u0626\u0644\u064A / \u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u0645\u0633\u0628\u062D \u2014 \u0642\u0631\u064A\u0628 \u0645\u0646 \u0627\u0644\u0645\u0633\u0628\u062D \u0648\u0627\u0644\u0623\u0646\u0634\u0637\u0629
 4. \u0634\u0642\u0642 \u2014 \u0625\u0642\u0627\u0645\u0629 \u0639\u0627\u0626\u0644\u064A\u0629 \u0645\u0631\u064A\u062D\u0629
@@ -973,7 +973,7 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u0641\u064A\u062F\u064A\u0648\u0647\u0627\u062A \u0627\u0644\u0631\u0633\u0645\u064A\u0629 \u0642\u064A\u062F \u0627\u0644\u062A\u062C\u0647\u064A\u0632 \u0648\u0633\u064A\u062A\u0645 \u0646\u0634\u0631\u0647\u0627 \u0642\u0631\u064A\u0628\u0627\u064B \u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647.`,
     en: `La Vida Resort Units
 
-1. Presidential VIP Villa \u2014 private pool, high privacy, up to ~12 guests
+1. Presidential VIP Villa \u2014 private pool, high privacy, up to 8 guests
 2. VIP Villa / VIP Chalet \u2014 premium family unit
 3. Family Chalet / Pool View \u2014 close to pool and activities
 4. Apartments \u2014 comfortable family stays
@@ -1122,8 +1122,8 @@ var ACCOMMODATIONS = [
     id: "presidential",
     nameEn: "Presidential VIP Villa",
     nameAr: "\u0641\u064A\u0644\u0627 VIP \u0627\u0644\u0631\u0626\u0627\u0633\u064A\u0629",
-    capacityEn: "Up to ~12 guests \u2014 suitable for two large families or VIP groups",
-    capacityAr: "\u062A\u0642\u0631\u064A\u0628\u0627\u064B \u062D\u062A\u0649 12 \u0634\u062E\u0635 \u2014 \u0645\u0646\u0627\u0633\u0628 \u0644\u0639\u0627\u0626\u0644\u062A\u064A\u0646 \u0623\u0648 \u0636\u064A\u0648\u0641 VIP",
+    capacityEn: "Up to 8 guests",
+    capacityAr: "\u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635",
     viewEn: "Premium beachfront location",
     viewAr: "\u0645\u0648\u0642\u0639 \u0645\u0645\u064A\u0632 \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062C\u0647\u0629 \u0627\u0644\u0628\u062D\u0631\u064A\u0629",
     detailsEn: [
@@ -1131,15 +1131,13 @@ var ACCOMMODATIONS = [
       "Private swimming pool",
       "High privacy",
       "Large spaces",
-      "Suitable for two families",
-      "Ideal for large families and VIP guests"
+      "Suitable for large families and VIP guests"
     ],
     detailsAr: [
       "\u0648\u062D\u062F\u0629 \u0641\u0627\u062E\u0631\u0629 \u0628\u0645\u0633\u062A\u0648\u0649 \u0631\u0627\u0642\u064D",
       "\u0645\u0633\u0628\u062D \u062E\u0627\u0635",
       "\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629",
       "\u0645\u0633\u0627\u062D\u0627\u062A \u0648\u0627\u0633\u0639\u0629",
-      "\u0645\u0646\u0627\u0633\u0628 \u0644\u0639\u0627\u0626\u0644\u062A\u064A\u0646",
       "\u0645\u062B\u0627\u0644\u064A \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A \u0627\u0644\u0643\u0628\u064A\u0631\u0629 \u0648\u0636\u064A\u0648\u0641 VIP"
     ],
     keywords: [
@@ -1156,8 +1154,8 @@ var ACCOMMODATIONS = [
     id: "vip",
     nameEn: "VIP Villa / VIP Chalet",
     nameAr: "\u0641\u064A\u0644\u0627 VIP / \u0634\u0627\u0644\u064A\u0647 VIP",
-    capacityEn: "Families and couples \u2014 exact capacity to be confirmed by management",
-    capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0623\u0632\u0648\u0627\u062C \u2014 \u0627\u0644\u0633\u0639\u0629 \u0627\u0644\u062F\u0642\u064A\u0642\u0629 \u062D\u0633\u0628 \u062A\u0623\u0643\u064A\u062F \u0627\u0644\u0625\u062F\u0627\u0631\u0629",
+    capacityEn: "Up to 8 guests",
+    capacityAr: "\u062D\u062A\u0649 8 \u0623\u0634\u062E\u0627\u0635",
     viewEn: "Sea view or premium location depending on final allocation",
     viewAr: "\u0625\u0637\u0644\u0627\u0644\u0629 \u0628\u062D\u0631\u064A\u0629 \u0623\u0648 \u0645\u0648\u0642\u0639 \u0645\u0645\u064A\u0632 \u062D\u0633\u0628 \u0627\u0644\u062A\u062E\u0635\u064A\u0635 \u0627\u0644\u0646\u0647\u0627\u0626\u064A",
     detailsEn: [
@@ -1178,8 +1176,8 @@ var ACCOMMODATIONS = [
     id: "family_pool",
     nameEn: "Family Chalet / Pool View Chalet",
     nameAr: "\u0634\u0627\u0644\u064A\u0647 \u0639\u0627\u0626\u0644\u064A / \u0634\u0627\u0644\u064A\u0647 \u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u0645\u0633\u0628\u062D",
-    capacityEn: "Families \u2014 exact capacity to be confirmed by management",
-    capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u2014 \u0627\u0644\u0633\u0639\u0629 \u0627\u0644\u062F\u0642\u064A\u0642\u0629 \u062D\u0633\u0628 \u062A\u0623\u0643\u064A\u062F \u0627\u0644\u0625\u062F\u0627\u0631\u0629",
+    capacityEn: "Up to 6 guests",
+    capacityAr: "\u062D\u062A\u0649 6 \u0623\u0634\u062E\u0627\u0635",
     viewEn: "Pool and activity areas",
     viewAr: "\u0627\u0644\u0645\u0633\u0628\u062D \u0648\u0645\u0646\u0627\u0637\u0642 \u0627\u0644\u0623\u0646\u0634\u0637\u0629",
     detailsEn: [
@@ -1208,8 +1206,8 @@ var ACCOMMODATIONS = [
     id: "apartments",
     nameEn: "Apartments",
     nameAr: "\u0634\u0642\u0642",
-    capacityEn: "Families and longer stays \u2014 exact capacity to be confirmed by management",
-    capacityAr: "\u0639\u0627\u0626\u0644\u0627\u062A \u0648\u0625\u0642\u0627\u0645\u0627\u062A \u0623\u0637\u0648\u0644 \u2014 \u0627\u0644\u0633\u0639\u0629 \u0627\u0644\u062F\u0642\u064A\u0642\u0629 \u062D\u0633\u0628 \u062A\u0623\u0643\u064A\u062F \u0627\u0644\u0625\u062F\u0627\u0631\u0629",
+    capacityEn: "Up to 5 guests",
+    capacityAr: "\u062D\u062A\u0649 5 \u0623\u0634\u062E\u0627\u0635",
     viewEn: "Comfortable family accommodation",
     viewAr: "\u0625\u0642\u0627\u0645\u0629 \u0639\u0627\u0626\u0644\u064A\u0629 \u0645\u0631\u064A\u062D\u0629",
     detailsEn: [
@@ -1396,12 +1394,12 @@ Nearby: ${NEARBY_AMENITIES_EN}`;
 }
 function getAccommodationsOverviewReply(lang) {
   if (lang === "ar") {
-    const lines2 = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameAr} \u2014 ${u.capacityAr}`);
+    const lines2 = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameAr}`);
     return `\u0648\u062D\u062F\u0627\u062A La Vida \u2728
 ${lines2.join("\n")}
 \u0627\u0628\u0639\u062A \u0627\u0633\u0645 \u0627\u0644\u0648\u062D\u062F\u0629 \u0648\u0646\u0634\u0631\u062D\u0644\u0643 \u0627\u0644\u062A\u0641\u0627\u0635\u064A\u0644.`;
   }
-  const lines = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameEn} \u2014 ${u.capacityEn}`);
+  const lines = ACCOMMODATIONS.map((u) => `\u2022 ${u.nameEn}`);
   return `La Vida accommodations \u2728
 ${lines.join("\n")}
 Tell us which unit interests you and we will share details.`;
@@ -1437,25 +1435,23 @@ Official opening: ${RESORT_BRAND.openingDateEn}
 Would you like details on a specific unit, activities, or pre-registration?`;
 }
 function getUnitCapacityReply(unit, lang) {
-  if (unit.id === "presidential") {
-    if (lang === "ar") {
-      return "\u0627\u0644\u0634\u0627\u0644\u064A\u0647 \u0627\u0644\u0631\u0626\u0627\u0633\u064A VIP \u0645\u0646\u0627\u0633\u0628 \u0644\u0639\u0627\u0626\u0644\u062A\u064A\u0646 \u0648\u064A\u0633\u062A\u0648\u0639\u0628 \u062A\u0642\u0631\u064A\u0628\u0627\u064B \u062D\u062A\u0649 12 \u0634\u062E\u0635\u060C \u0648\u064A\u062A\u0645\u064A\u0632 \u0628\u0645\u0633\u0628\u062D \u062E\u0627\u0635 \u0648\u0645\u0633\u0627\u062D\u0627\u062A \u0648\u0627\u0633\u0639\u0629 \u0648\u062E\u0635\u0648\u0635\u064A\u0629 \u0639\u0627\u0644\u064A\u0629.";
-    }
-    return "The Presidential VIP Villa suits two families and accommodates approximately up to 12 guests, with a private pool, large spaces, and high privacy.";
-  }
   if (lang === "ar") {
-    return `${unit.nameAr}
-\u0627\u0644\u0633\u0639\u0629: ${unit.capacityAr}`;
+    return `${unit.nameAr} \u064A\u0633\u062A\u0648\u0639\u0628 ${unit.capacityAr}\u060C \u0648\u064A\u062A\u0645\u064A\u0632 \u0628\u062E\u0635\u0648\u0635\u064A\u0629 \u0648\u0645\u0633\u0627\u062D\u0629 \u0645\u0646\u0627\u0633\u0628\u0629 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A.`;
   }
-  return `${unit.nameEn}
-Capacity: ${unit.capacityEn}`;
+  return `${unit.nameEn} accommodates ${unit.capacityEn}, with privacy and space suited for families.`;
 }
 function getGuestRecommendationReply(guestCount, lang) {
+  if (guestCount > 8) {
+    if (lang === "ar") {
+      return `\u0644\u0644\u0639\u062F\u062F ${guestCount} \u063A\u0627\u0644\u0628\u0627\u064B \u0646\u0646\u0635\u062D \u0628\u0623\u0643\u062B\u0631 \u0645\u0646 \u0648\u062D\u062F\u0629 \u0645\u062A\u0642\u0627\u0631\u0628\u0629 \u0623\u0648 \u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0645\u0639 \u0627\u0644\u0641\u0631\u064A\u0642 \u0644\u0644\u062A\u0646\u0633\u064A\u0642. \u0646\u0642\u062F\u0631\u0648\u0627 \u0646\u0633\u062C\u0644\u0648\u0627 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0648\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0641\u0631\u064A\u0642 \u0627\u0644\u062D\u062C\u0648\u0632\u0627\u062A.`;
+    }
+    return `For ${guestCount} guests, multiple nearby units or contacting our team is usually best. We can register your details and our reservations team will follow up.`;
+  }
   if (guestCount >= 7) {
     if (lang === "ar") {
-      return `\u0644\u0644\u0639\u062F\u062F ${guestCount} \u063A\u0627\u0644\u0628\u0627\u064B \u0623\u0646\u0633\u0628 \u062E\u064A\u0627\u0631 \u0647\u0648 \u0627\u0644\u0634\u0627\u0644\u064A\u0647 \u0627\u0644\u0631\u0626\u0627\u0633\u064A VIP \u0623\u0648 \u0623\u0643\u062B\u0631 \u0645\u0646 \u0648\u062D\u062F\u0629 \u0645\u062A\u0642\u0627\u0631\u0628\u0629 \u062D\u0633\u0628 \u0627\u0644\u062A\u0648\u0641\u0631\u060C \u0644\u0623\u0646\u0647 \u064A\u0648\u0641\u0631 \u0645\u0633\u0627\u062D\u0629 \u0648\u062E\u0635\u0648\u0635\u064A\u0629 \u0623\u0643\u062B\u0631 \u0644\u0644\u0639\u0627\u0626\u0644\u0627\u062A. \u0646\u0642\u062F\u0631\u0648\u0627 \u0646\u0633\u062C\u0644\u0648\u0627 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0648\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0641\u0631\u064A\u0642 \u0627\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0644\u0644\u062A\u0623\u0643\u064A\u062F.`;
+      return `\u0644\u0644\u0639\u062F\u062F ${guestCount} \u063A\u0627\u0644\u0628\u0627\u064B \u0623\u0646\u0633\u0628 \u062E\u064A\u0627\u0631 \u0647\u0648 \u0627\u0644\u0631\u0626\u0627\u0633\u064A VIP \u0623\u0648 \u0641\u064A\u0644\u0627 VIP \u062D\u0633\u0628 \u0627\u0644\u062A\u0648\u0641\u0631. \u0646\u0642\u062F\u0631\u0648\u0627 \u0646\u0633\u062C\u0644\u0648\u0627 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0648\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0627\u0644\u0641\u0631\u064A\u0642 \u0644\u0644\u062A\u0623\u0643\u064A\u062F.`;
     }
-    return `For ${guestCount} guests, the Presidential VIP Villa or multiple nearby units are usually the best fit depending on availability \u2014 more space and privacy for families. We can register your details and our reservations team will confirm.`;
+    return `For ${guestCount} guests, Presidential VIP or VIP Villa is usually the best fit depending on availability. We can register your details and our team will confirm.`;
   }
   if (lang === "ar") {
     return `\u0644\u0644\u0639\u062F\u062F ${guestCount} \u0646\u0642\u062F\u0631\u0648\u0627 \u0646\u0631\u0634\u062D\u0644\u0643\u0645 \u0627\u0644\u0648\u062D\u062F\u0629 \u0627\u0644\u0623\u0646\u0633\u0628 \u062D\u0633\u0628 \u0646\u0648\u0639 \u0627\u0644\u0625\u0642\u0627\u0645\u0629 \u0648\u0627\u0644\u062A\u0648\u0641\u0631. \u0646\u0642\u062F\u0631\u0648\u0627 \u0646\u0633\u062C\u0644\u0648\u0627 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0648\u064A\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0627\u0643\u0645 \u0627\u0644\u0641\u0631\u064A\u0642 \u0644\u0644\u062A\u0623\u0643\u064A\u062F.`;
@@ -1516,9 +1512,9 @@ function getBookingLeadPrompt(lang) {
 }
 function getBookingLeadConfirmation(lang) {
   if (lang === "ar") {
-    return "\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0627\u0644\u0645\u0628\u062F\u0626\u064A\u0629 \u0648\u0633\u064A\u062A\u0645 \u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0643\u0645 \u0641\u0648\u0631 \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0631\u0633\u0645\u064A\u0627\u064B";
+    return "\u062A\u0645 \u0627\u0633\u062A\u0644\u0627\u0645 \u0628\u064A\u0627\u0646\u0627\u062A\u0643\u0645 \u0627\u0644\u0645\u0628\u062F\u0626\u064A\u0629 \u0648\u0633\u064A\u062A\u0645 \u0627\u0644\u062A\u0648\u0627\u0635\u0644 \u0645\u0639\u0643\u0645 \u0641\u0648\u0631 \u0641\u062A\u062D \u0627\u0644\u062D\u062C\u0648\u0632\u0627\u062A \u0631\u0633\u0645\u064A\u0627\u064B \u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647";
   }
-  return "We have received your preliminary details and will contact you as soon as official bookings open";
+  return "We have received your preliminary details and will contact you as soon as official bookings open, in sha Allah";
 }
 function getBookingUnavailableReply(lang) {
   return getBookingLeadPrompt(lang);
@@ -1576,7 +1572,7 @@ function extractGuestCount(text2) {
     if (Number.isFinite(value) && value > 0 && value <= 30) return value;
   }
   const patterns = [
-    /(\d{1,2})\s*(?:guests?|people|persons?|اشخاص|أشخاص|شخص|ناس)\b/i,
+    /(\d{1,2})\s*(?:guests?|people|persons?|اشخاص|أشخاص|شخص|ناس)/i,
     /(?:عدد|ضيوف|اشخاص|أشخاص)\s*(\d{1,2})/,
     /(?:عندي|عندنا|نحن)\s*(\d{1,2})/,
     /^(\d{1,2})$/
@@ -1589,17 +1585,31 @@ function extractGuestCount(text2) {
   return void 0;
 }
 function extractDates(message) {
+  const monthPattern = "\u064A\u0646\u0627\u064A\u0631|\u0641\u0628\u0631\u0627\u064A\u0631|\u0645\u0627\u0631\u0633|\u0627\u0628\u0631\u064A\u0644|\u0623\u0628\u0631\u064A\u0644|\u0645\u0627\u064A\u0648|\u064A\u0648\u0646\u064A\u0648|\u064A\u0648\u0644\u064A\u0648|\u0627\u063A\u0633\u0637\u0633|\u0623\u063A\u0633\u0637\u0633|\u0633\u0628\u062A\u0645\u0628\u0631|\u0627\u0643\u062A\u0648\u0628\u0631|\u0623\u0643\u062A\u0648\u0628\u0631|\u0646\u0648\u0641\u0645\u0628\u0631|\u062F\u064A\u0633\u0645\u0628\u0631|january|february|march|april|may|june|july|august|september|october|november|december";
   const datePatterns = [
+    new RegExp(`(?:\u064A\u0648\u0645\\s+)?\\d{1,2}\\s+(?:${monthPattern})(?:\\s*\\d{4})?`, "gi"),
+    new RegExp(`(?:${monthPattern})\\s*\\d{4}`, "gi"),
     /\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/g,
     /\b(?:from|to|من|الى|إلى)\s+\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b/gi,
     /\b(?:today|tomorrow|weekend|اليوم|بكره|بكرة|الويكند)\b/gi,
-    /(?:يناير|فبراير|مارس|ابريل|أبريل|مايو|يونيو|يوليو|اغسطس|أغسطس|سبتمبر|اكتوبر|أكتوبر|نوفمبر|ديسمبر|january|february|march|april|may|june|july|august|september|october|november|december)\s*\d{4}/gi,
     /\b(?:صيف|summer)\s*\d{4}\b/gi
   ];
   for (const pattern of datePatterns) {
     const match = message.match(pattern);
     if (match?.length) return match.join(" - ");
   }
+  return void 0;
+}
+function extractNameFromBookingDetails(message) {
+  const phone = extractPhoneNumber(message);
+  if (!phone) return void 0;
+  const phonePattern = /0?9\d{8,9}/;
+  const phoneMatch = message.match(phonePattern);
+  if (!phoneMatch?.index && phoneMatch?.index !== 0) return void 0;
+  const beforePhone = message.slice(0, phoneMatch.index).trim().replace(/[،,]+$/, "");
+  if (beforePhone.length < 3 || beforePhone.length > 50) return void 0;
+  const cleaned = beforePhone.replace(/^(?:اسمي|اسمي هو|انا|أنا)\s+/i, "").trim();
+  if (/^[\p{L}\s]{2,}$/u.test(cleaned)) return cleaned;
   return void 0;
 }
 function extractFullName(message) {
@@ -1620,7 +1630,7 @@ function extractFullName(message) {
 function extractBookingLeadFromText(message) {
   const unit = matchAccommodation(message);
   return {
-    fullName: extractFullName(message),
+    fullName: extractFullName(message) ?? extractNameFromBookingDetails(message),
     phone: extractPhoneNumber(message),
     expectedDates: extractDates(message),
     guestCount: extractGuestCount(message),
@@ -1648,56 +1658,92 @@ function getMissingLeadFields(lead) {
   if (!lead.unitType) missing.push("unitType");
   return missing;
 }
-function getLeadFollowUpReply(missing, lang) {
+function getFirstName(fullName) {
+  return fullName.split(/\s+/)[0] ?? fullName;
+}
+var FIELD_LABELS_AR = {
+  fullName: "\u0627\u0644\u0627\u0633\u0645",
+  phone: "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641",
+  expectedDates: "\u0627\u0644\u062A\u0627\u0631\u064A\u062E",
+  guestCount: "\u0639\u062F\u062F \u0627\u0644\u0623\u0634\u062E\u0627\u0635",
+  unitType: "\u0646\u0648\u0639 \u0627\u0644\u0648\u062D\u062F\u0629"
+};
+var FIELD_LABELS_EN = {
+  fullName: "name",
+  phone: "phone number",
+  expectedDates: "stay date",
+  guestCount: "number of guests",
+  unitType: "preferred unit type"
+};
+function getLeadCollectionReply(lead, lang) {
+  const missing = getMissingLeadFields(lead);
+  if (missing.length === 0) return getBookingLeadConfirmation(lang);
+  const labels = lang === "ar" ? FIELD_LABELS_AR : FIELD_LABELS_EN;
+  const received = Object.keys(FIELD_LABELS_AR).filter(
+    (field) => lead[field] !== void 0
+  );
   if (lang === "ar") {
-    const prompts2 = [];
-    if (missing.includes("fullName")) prompts2.push("\u0627\u0644\u0627\u0633\u0645 \u0628\u0627\u0644\u0643\u0627\u0645\u0644");
-    if (missing.includes("phone")) prompts2.push("\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062A\u0641");
-    if (missing.includes("expectedDates")) prompts2.push("\u0627\u0644\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u0645\u062A\u0648\u0642\u0639 \u0644\u0644\u0625\u0642\u0627\u0645\u0629");
-    if (missing.includes("guestCount")) prompts2.push("\u0639\u062F\u062F \u0627\u0644\u0623\u0634\u062E\u0627\u0635");
-    if (missing.includes("unitType")) prompts2.push("\u0646\u0648\u0639 \u0627\u0644\u0648\u062D\u062F\u0629 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629 \u0625\u0646 \u0648\u062C\u062F\u062A");
-    if (prompts2.length === 0) return getBookingLeadConfirmation(lang);
-    return `\u062A\u0645\u0627\u0645\u060C \u0628\u0627\u0642\u064A \u0646\u062D\u062A\u0627\u062C: ${prompts2.join("\u060C ")}.`;
+    const firstName = lead.fullName ? getFirstName(lead.fullName) : "";
+    const greeting2 = firstName ? `\u0645\u0645\u062A\u0627\u0632 ${firstName} \u{1F339} ` : "\u062A\u0645\u0627\u0645\u060C ";
+    if (received.length > 0 && missing.length === 1 && missing[0] === "unitType") {
+      return `${greeting2}\u0627\u0633\u062A\u0644\u0645\u0646\u0627 ${received.map((f) => labels[f]).join(" \u0648")}. \u0628\u0627\u0642\u064A \u0641\u0642\u0637 \u0646\u0648\u0639 \u0627\u0644\u0648\u062D\u062F\u0629 \u0627\u0644\u0644\u064A \u062A\u0641\u0636\u0644\u0647\u0627 (\u0634\u0642\u0629\u060C \u0634\u0627\u0644\u064A\u0647\u060C VIP \u0623\u0648 \u0627\u0644\u0631\u0626\u0627\u0633\u064A VIP)\u061F`;
+    }
+    if (received.length > 0) {
+      const missingLabels = missing.map((f) => labels[f]);
+      return `${greeting2}\u0627\u0633\u062A\u0644\u0645\u0646\u0627 ${received.map((f) => labels[f]).join(" \u0648")}. \u0628\u0627\u0642\u064A \u0646\u062D\u062A\u0627\u062C: ${missingLabels.join("\u060C ")}.`;
+    }
+    return getBookingLeadPrompt(lang);
   }
-  const prompts = [];
-  if (missing.includes("fullName")) prompts.push("full name");
-  if (missing.includes("phone")) prompts.push("phone number");
-  if (missing.includes("expectedDates")) prompts.push("expected stay dates");
-  if (missing.includes("guestCount")) prompts.push("number of guests");
-  if (missing.includes("unitType")) prompts.push("preferred unit type if any");
-  if (prompts.length === 0) return getBookingLeadConfirmation(lang);
-  return `Great \u2014 we still need: ${prompts.join(", ")}.`;
+  const greeting = lead.fullName ? `Great ${getFirstName(lead.fullName)} \u2014 ` : "";
+  if (received.length > 0 && missing.length === 1 && missing[0] === "unitType") {
+    return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. Which unit do you prefer (apartment, chalet, VIP, or Presidential VIP)?`;
+  }
+  if (received.length > 0) {
+    return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. We still need: ${missing.map((f) => labels[f]).join(", ")}.`;
+  }
+  return getBookingLeadPrompt(lang);
+}
+function looksLikeBookingDataMessage(message) {
+  const partial = extractBookingLeadFromText(message);
+  const fields = [partial.fullName, partial.phone, partial.expectedDates, partial.guestCount, partial.unitType];
+  const count = fields.filter(Boolean).length;
+  if (partial.phone && count >= 2) return true;
+  return count >= 3;
+}
+function isActiveLeadCollection(conversationMessages, currentMessage) {
+  const allText = [...conversationMessages, currentMessage].join(" ");
+  if (isLeadCollectionContext(allText)) return true;
+  if (looksLikeBookingDataMessage(currentMessage)) return true;
+  const hadBookingPrompt = conversationMessages.some(
+    (m) => isBookingIntent(m) || /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|مبدئية ونتواصل|preliminary details/i.test(m)
+  );
+  if (hadBookingPrompt) {
+    return [...conversationMessages, currentMessage].some((m) => looksLikeBookingDataMessage(m));
+  }
+  return false;
 }
 function isLeadCollectionContext(conversationText) {
   const normalized = conversationText.toLowerCase();
-  return isBookingIntent(normalized) || /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|preliminary details|register your details/.test(
+  return isBookingIntent(normalized) || /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|استلمنا|باقي فقط نوع الوحدة|preliminary details|register your details/i.test(
     normalized
   );
 }
 function resolveBookingLeadReply(message, conversationMessages, lang) {
-  const merged = [...conversationMessages, message].join(" ");
-  const normalized = merged.toLowerCase();
   const bookingWhenOnly = /^(متى الحجز|هل الحجز مفتوح|when.*booking|booking open)\??$/i.test(
     message.trim()
   );
   if (bookingWhenOnly) return getBookingWhenReply(lang);
-  const leadContext = isLeadCollectionContext(merged);
-  const bookingNow = isBookingIntent(message) || isBookingIntent(normalized);
-  if (!bookingNow && !leadContext) return void 0;
+  const inLeadFlow = isActiveLeadCollection(conversationMessages, message);
+  if (!inLeadFlow && !isBookingIntent(message)) return void 0;
   const lead = extractBookingLeadFromConversation([...conversationMessages, message]);
   const hasAnyLeadData = Boolean(
     lead.fullName || lead.phone || lead.expectedDates || lead.guestCount || lead.unitType
   );
-  if (!hasAnyLeadData && bookingNow) {
+  if (!hasAnyLeadData && isBookingIntent(message)) {
     return getBookingLeadPrompt(lang);
   }
   if (!hasAnyLeadData) return void 0;
-  const missing = getMissingLeadFields(lead);
-  const requiredMissing = missing.filter((field) => field !== "unitType");
-  if (requiredMissing.length === 0) {
-    return getBookingLeadConfirmation(lang);
-  }
-  return getLeadFollowUpReply(missing, lang);
+  return getLeadCollectionReply(lead, lang);
 }
 function asksExplicitPrices(normalized) {
   return /price list|accommodation prices|room rates|list of prices|اسعار|الاسعار|أسعار|سعر|بكم|قداش|how much|price|prices|rates|cost|rate|as3ar|كم السعر|شن السعر|الاسعار/.test(
@@ -1710,7 +1756,7 @@ function asksResortDetailsQuestion(normalized) {
   );
 }
 function asksCapacityQuestion(normalized) {
-  return /how many|capacity|guest|guests|people|person|persons|fits|fit|كم شخص|كم يسع|عدد|ضيوف|اشخاص|أشخاص|قداش شخص|سعة|عندي \d+/.test(
+  return /how\s*many|capacity|كم\s*يسع|كم\s*شخص|قداش\s*شخص|سعة|تنصحني|recommend|suggest|fits|fit|how many people/.test(
     normalized
   );
 }
@@ -1754,7 +1800,10 @@ Messenger: ${RESORT_BRAND.messengerLink}
 
 Positioning: La Vida is a full beachfront family resort experience \u2014 private beach, accommodation, pools, restaurants, cafes, water activities, family areas, entertainment, and hospitality.
 
-Accommodation categories (exact capacity for most units pending management confirmation):
+Accommodation categories:
+${lang === "ar" ? ACCOMMODATIONS.map((u) => `- ${u.nameAr}`).join("\n") : ACCOMMODATIONS.map((u) => `- ${u.nameEn}`).join("\n")}
+
+Official capacities (mention ONLY when guest specifically asks about capacity):
 ${units}
 
 Facilities & services: ${included}
@@ -1807,7 +1856,10 @@ function resolveOpeningDateReply(message, lang) {
   if (asksOpening) return getOpeningDateReply(lang);
   return void 0;
 }
-function resolvePriceOrUnitReply(message, lang) {
+function resolvePriceOrUnitReply(message, lang, options) {
+  if (options?.conversationMessages?.length) {
+    if (isActiveLeadCollection(options.conversationMessages, message)) return void 0;
+  }
   const normalized = message.toLowerCase();
   const openingReply = resolveOpeningDateReply(message, lang);
   if (openingReply) return openingReply;
@@ -1816,7 +1868,7 @@ function resolvePriceOrUnitReply(message, lang) {
   if (asksPhotosQuestion(normalized)) return getPhotosReply(lang);
   if (asksLocationQuestion(normalized)) return getLocationReply(lang);
   const guestCount = extractGuestCount(normalized);
-  if (guestCount && /شن تنصحني|شنو تنصحني|تنصحني|recommend|suggest|عندي \d+/.test(normalized)) {
+  if (guestCount && /شن تنصحني|شنو تنصحني|تنصحني|recommend|suggest|عندي/.test(normalized)) {
     return getGuestRecommendationReply(guestCount, lang);
   }
   const unit = matchAccommodation(normalized);
@@ -1827,7 +1879,7 @@ function resolvePriceOrUnitReply(message, lang) {
   if (unit && /كم يسع|capacity|سعة|كم شخص/.test(normalized)) {
     return getUnitCapacityReply(unit, lang);
   }
-  if (unit) {
+  if (unit && /تفاصيل|details|about|عن|معلومات|info/.test(normalized)) {
     return getChaletDetailReply(unit, lang, false);
   }
   if (asksResortDetailsQuestion(normalized)) {
@@ -1844,8 +1896,12 @@ function resolvePriceOrUnitReply(message, lang) {
   if (asksCapacityQuestion(normalized)) {
     const matched = matchAccommodation(normalized);
     if (matched) return getUnitCapacityReply(matched, lang);
-    if (guestCount) return getGuestRecommendationReply(guestCount, lang);
-    return getAllCapacitiesReply(lang);
+    if (guestCount && /تنصحني|recommend|suggest|عندي/.test(normalized)) {
+      return getGuestRecommendationReply(guestCount, lang);
+    }
+    if (/سعة|capacity|كم يسع|كم شخص/.test(normalized)) {
+      return getAllCapacitiesReply(lang);
+    }
   }
   if (asksActivitiesQuestion(normalized)) return getActivitiesReply(lang);
   if (/included|what is included|services included|مشمول|شن مشمول|شنو مشمول/.test(normalized)) {
@@ -2094,7 +2150,7 @@ var chatRouter = createRouter({
     if (bookingLeadReply) {
       return { reply: bookingLeadReply, language: lang, source: "rule" };
     }
-    const priceReply = resolvePriceOrUnitReply(message, lang);
+    const priceReply = resolvePriceOrUnitReply(message, lang, { conversationMessages: historyContents });
     if (priceReply) {
       return { reply: priceReply, language: lang, source: "rule" };
     }
@@ -2281,7 +2337,7 @@ async function generateAIResponse(userMessage, history = [], forceLang) {
   if (bookingLeadReply) {
     return { text: bookingLeadReply, lang, source: "template" };
   }
-  const intentText = getIntentResponse(userMessage, lang);
+  const intentText = getIntentResponse(userMessage, lang, historyContents);
   if (intentText) {
     return { text: intentText, lang, source: "template" };
   }
@@ -2343,13 +2399,17 @@ function getNaturalFallback(lang) {
   if (lang === "ar") return "\u0645\u0645\u0643\u0646 \u062A\u0648\u0636\u062D\u0644\u0646\u0627 \u0623\u0643\u062B\u0631 \u0634\u0646\u0648 \u062A\u062D\u0628 \u062A\u0639\u0631\u0641 \u0639\u0646 \u0644\u0627\u0641\u064A\u062F\u0627\u061F \u2728";
   return "Could you tell us a bit more about what you'd like to know about La Vida? \u2728";
 }
-function getIntentResponse(userMessage, lang) {
+function getIntentResponse(userMessage, lang, history = []) {
   const rawText = userMessage.trim().toLowerCase();
   const text2 = normalizeArabic(rawText);
   const compact = text2.replace(/\s+/g, " ").trim();
   const replies = [];
-  const priceOrUnit = resolvePriceOrUnitReply(`${text2} ${rawText}`, lang);
-  if (priceOrUnit) return priceOrUnit;
+  if (!isActiveLeadCollection(history, userMessage)) {
+    const priceOrUnit = resolvePriceOrUnitReply(`${text2} ${rawText}`, lang, {
+      conversationMessages: history
+    });
+    if (priceOrUnit) return priceOrUnit;
+  }
   const acknowledgementPhrases = [
     "\u0645\u0648\u0627\u0641\u0642",
     "\u0645\u0648\u0627\u0641\u064A\u0646",
@@ -2609,7 +2669,7 @@ function getIntentResponse(userMessage, lang) {
     replies.push(getHumanHandoffReply(lang));
   }
   const guestCount = extractGuestCount(`${text2} ${rawText}`);
-  if (guestCount && hasAny2(text2, ["\u0634\u0646 \u062A\u0646\u0635\u062D\u0646\u064A", "\u0634\u0646\u0648 \u062A\u0646\u0635\u062D\u0646\u064A", "\u062A\u0646\u0635\u062D\u0646\u064A", "recommend", "suggest", "\u0639\u0646\u062F\u064A"])) {
+  if (!isActiveLeadCollection(history, userMessage) && guestCount && hasAny2(text2, ["\u0634\u0646 \u062A\u0646\u0635\u062D\u0646\u064A", "\u0634\u0646\u0648 \u062A\u0646\u0635\u062D\u0646\u064A", "\u062A\u0646\u0635\u062D\u0646\u064A", "recommend", "suggest", "\u0639\u0646\u062F\u064A"])) {
     replies.push(getGuestRecommendationReply(guestCount, lang));
   }
   const asksPrivatePools = hasAny2(text2, [
@@ -2649,7 +2709,7 @@ function getIntentResponse(userMessage, lang) {
     "\u0634\u0642\u0642",
     "\u0625\u0642\u0627\u0645\u0629"
   ]);
-  if (asksAccommodation) {
+  if (!isActiveLeadCollection(history, userMessage) && asksAccommodation) {
     const unit = matchAccommodation(text2);
     replies.push(unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang));
   }
