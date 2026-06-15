@@ -110,10 +110,9 @@ La Vida is a full beachfront family resort experience — private beach, accommo
 
 Units:
 • Presidential VIP Villa
-• VIP Villa / VIP Chalet
-• Family Chalet / Pool View Chalet
-• Apartments
-• Garden View Studio
+• VIP Villa
+• Family Chalet
+• Garden View Studio / Apartment
 
 Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermarket, kids area, Game Room, 24h security & reception, free parking, WiFi.
 
@@ -128,8 +127,7 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
 • استوديو إطلالة الحديقة - الدور الثاني: 1000 د.ل
 • استوديو إطلالة الحديقة - الدور الأول: 1200 د.ل
 • استوديو إطلالة الحديقة - الدور الأرضي: 1400 د.ل
-• الشقق: 1600 د.ل
-• الشاليهات العائلية: 1900 د.ل
+• الشاليه العائلي: 1900 د.ل
 • فيلا VIP: 2900 د.ل
 • الفيلا الرئاسية VIP: 3900 د.ل
 
@@ -140,8 +138,7 @@ Facilities: private beach, large pool, Beach Cafe, restaurants, cafes, supermark
 • Garden View Studio - Second floor: 1000 LYD
 • Garden View Studio - First floor: 1200 LYD
 • Garden View Studio - Ground floor: 1400 LYD
-• Apartments: 1600 LYD
-• Family Chalets: 1900 LYD
+• Family Chalet: 1900 LYD
 • VIP Villa: 2900 LYD
 • Presidential VIP Villa: 3900 LYD
 
@@ -178,8 +175,7 @@ Tell us which unit interests you for full details.`,
 • استوديو إطلالة الحديقة - الدور الثاني: 1000 د.ل
 • استوديو إطلالة الحديقة - الدور الأول: 1200 د.ل
 • استوديو إطلالة الحديقة - الدور الأرضي: 1400 د.ل
-• الشقق: 1600 د.ل
-• الشاليهات العائلية: 1900 د.ل
+• الشاليه العائلي: 1900 د.ل
 • فيلا VIP: 2900 د.ل
 • الفيلا الرئاسية VIP: 3900 د.ل
 
@@ -196,8 +192,7 @@ Tell us which unit interests you for full details.`,
 • Garden View Studio - Second floor: 1000 LYD
 • Garden View Studio - First floor: 1200 LYD
 • Garden View Studio - Ground floor: 1400 LYD
-• Apartments: 1600 LYD
-• Family Chalets: 1900 LYD
+• Family Chalet: 1900 LYD
 • VIP Villa: 2900 LYD
 • Presidential VIP Villa: 3900 LYD
 

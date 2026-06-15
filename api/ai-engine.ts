@@ -26,6 +26,9 @@ import {
   resolveBookingLeadReply,
   extractGuestCount,
   isActiveLeadCollection,
+  isPhoneOnlyMessage,
+  toBookingContext,
+  type BookingConversationContext,
   RESORT_BRAND,
 } from "./resort-knowledge";
 
@@ -76,15 +79,15 @@ export async function generateAIResponse(
   forceLang?: Language
 ): Promise<{ text: string; lang: Language; source: "ai" | "template" }> {
   const lang = forceLang ?? detectMessageLanguage(userMessage);
-  const historyContents = history.map((h) => h.content);
+  const bookingContext = toBookingContext(history, userMessage);
 
-  const bookingLeadReply = resolveBookingLeadReply(userMessage, historyContents, lang);
+  const bookingLeadReply = resolveBookingLeadReply(userMessage, lang, bookingContext);
   if (bookingLeadReply) {
     return { text: bookingLeadReply, lang, source: "template" };
   }
 
   // Strong intent detection before AI generation.
-  const intentText = getIntentResponse(userMessage, lang, historyContents);
+  const intentText = getIntentResponse(userMessage, lang, bookingContext);
   if (intentText) {
     return { text: intentText, lang, source: "template" };
   }
@@ -179,18 +182,23 @@ function getNaturalFallback(lang: Language): string {
   return "Could you tell us a bit more about what you'd like to know about La Vida? ✨";
 }
 
-function getIntentResponse(userMessage: string, lang: Language, history: string[] = []): string | undefined {
+function getIntentResponse(
+  userMessage: string,
+  lang: Language,
+  context: BookingConversationContext,
+): string | undefined {
+  if (isActiveLeadCollection(context)) return undefined;
+
   const rawText = userMessage.trim().toLowerCase();
   const text = normalizeArabic(rawText);
   const compact = text.replace(/\s+/g, " ").trim();
   const replies: string[] = [];
 
-  if (!isActiveLeadCollection(history, userMessage)) {
-    const priceOrUnit = resolvePriceOrUnitReply(`${text} ${rawText}`, lang, {
-      conversationMessages: history,
-    });
-    if (priceOrUnit) return priceOrUnit;
-  }
+  const priceOrUnit = resolvePriceOrUnitReply(`${text} ${rawText}`, lang, {
+    conversationMessages: context.allMessages,
+    userMessages: context.userMessages,
+  });
+  if (priceOrUnit) return priceOrUnit;
 
   const acknowledgementPhrases = [
     "موافق",
@@ -362,7 +370,10 @@ function getIntentResponse(userMessage: string, lang: Language, history: string[
     replies.push(getBookingWhenReply(lang));
   }
 
-  const asksContact = hasAny(text, ["phone", "contact", "number", "call", "رقم", "تواصل", "اتصال", "تلفون"]);
+  const asksContact =
+    !isPhoneOnlyMessage(userMessage) &&
+    hasAny(text, ["phone", "contact", "call", "رقم", "تواصل", "اتصال", "تلفون", "whatsapp", "واتساب"]) &&
+    !/^\d[\d\s+-]{7,}$/.test(userMessage.trim());
   if (asksContact) {
     replies.push(getContactReply(lang));
   }
@@ -473,7 +484,6 @@ function getIntentResponse(userMessage: string, lang: Language, history: string[
 
   const guestCount = extractGuestCount(`${text} ${rawText}`);
   if (
-    !isActiveLeadCollection(history, userMessage) &&
     guestCount &&
     hasAny(text, ["شن تنصحني", "شنو تنصحني", "تنصحني", "recommend", "suggest", "عندي"])
   ) {
@@ -520,7 +530,7 @@ function getIntentResponse(userMessage: string, lang: Language, history: string[
     "شقق",
     "إقامة",
   ]);
-  if (!isActiveLeadCollection(history, userMessage) && asksAccommodation) {
+  if (asksAccommodation) {
     const unit = matchAccommodation(text);
     replies.push(unit ? getChaletDetailReply(unit, lang) : getAccommodationsOverviewReply(lang));
   }

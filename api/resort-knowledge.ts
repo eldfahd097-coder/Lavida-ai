@@ -101,7 +101,7 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
   {
     id: "family_pool",
     nameEn: "Family Chalet",
-    nameAr: "الشاليهات العائلية",
+    nameAr: "الشاليه العائلي",
     priceLyd: 1900,
     capacityEn: "Up to 6 guests",
     capacityAr: "حتى 6 أشخاص",
@@ -127,7 +127,7 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "pool view",
       "family chalet",
       "شاليه عائلي",
-      "الشاليهات العائلية",
+      "الشاليه العائلي",
       "شاليهات عائلية",
       "مسبح",
       "pool activities",
@@ -136,14 +136,14 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
     ],
   },
   {
-    id: "apartments",
-    nameEn: "Apartments",
-    nameAr: "الشقق",
-    priceLyd: 1600,
+    id: "garden_studio",
+    nameEn: "Garden View Studio / Apartment",
+    nameAr: "استوديو إطلالة الحديقة",
+    priceLyd: 1200,
     capacityEn: "Up to 5 guests",
     capacityAr: "حتى 5 أشخاص",
-    viewEn: "Garden, pool, and partial beach views",
-    viewAr: "إطلالة حديقة ومسبح وبحر جزئية",
+    viewEn: "Garden, pool, and partial beach views — pricing by floor",
+    viewAr: "إطلالة حديقة ومسبح وبحر جزئية — التسعير حسب الطابق",
     detailsEn: [
       "2 bedrooms",
       "2 bathrooms",
@@ -152,6 +152,9 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "Pool view",
       "Partial beach view",
       "Up to 5 guests",
+      "Second floor: 1000 LYD",
+      "First floor: 1200 LYD",
+      "Ground floor: 1400 LYD",
     ],
     detailsAr: [
       "غرفتين نوم",
@@ -161,28 +164,6 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "إطلالة مسبح",
       "إطلالة بحر جزئية",
       "حتى 5 أشخاص",
-    ],
-    keywords: ["apartment", "apartments", "شقة", "شقق"],
-  },
-  {
-    id: "garden_studio",
-    nameEn: "Garden View Studio",
-    nameAr: "استوديو إطلالة الحديقة",
-    priceLyd: 1200,
-    capacityEn: "Couples and small families",
-    capacityAr: "أزواج وعائلات صغيرة",
-    viewEn: "Garden view — pricing by floor (second 1000 / first 1200 / ground 1400 LYD)",
-    viewAr: "إطلالة حديقة — التسعير حسب الطابق (ثاني 1000 / أول 1200 / أرضي 1400 د.ل)",
-    detailsEn: [
-      "Garden view studio",
-      "Suitable for couples and small families",
-      "Second floor: 1000 LYD",
-      "First floor: 1200 LYD",
-      "Ground floor: 1400 LYD",
-    ],
-    detailsAr: [
-      "استوديو بإطلالة حديقة",
-      "مناسب للأزواج والعائلات الصغيرة",
       "الدور الثاني: 1000 د.ل",
       "الدور الأول: 1200 د.ل",
       "الدور الأرضي: 1400 د.ل",
@@ -193,6 +174,10 @@ export const ACCOMMODATIONS: AccommodationUnit[] = [
       "استوديو",
       "حديقة",
       "garden view",
+      "apartment",
+      "apartments",
+      "شقة",
+      "شقق",
       "الدور الثاني",
       "الدور الأول",
       "الدور الأرضي",
@@ -306,6 +291,26 @@ export type BookingLead = {
   unitType?: string;
 };
 
+/** @alias BookingLead — accumulated booking session fields */
+export type BookingSession = BookingLead;
+
+export type BookingConversationContext = {
+  /** User messages only — used for field extraction */
+  userMessages: string[];
+  /** Full conversation including assistant — used for flow detection */
+  allMessages: string[];
+};
+
+export function toBookingContext(
+  history: { role: "user" | "assistant"; content: string }[],
+  currentMessage: string,
+): BookingConversationContext {
+  return {
+    userMessages: [...history.filter((h) => h.role === "user").map((h) => h.content), currentMessage],
+    allMessages: [...history.map((h) => h.content), currentMessage],
+  };
+}
+
 const BOOKING_INTENT_PATTERN =
   /book|booking|reservation|reserve|availability|حجز|الحجز|نحجز|نبي نحجز|كيف نحجز|نبي حجز|حابة نحجز|نريد نحجز|متى الحجز|هل الحجز مفتوح|نبي نسجل اسمي|مهتم بالحجز|نبي نسجل|7ajz|hajz|فيه حجز|طريقة الحجز/;
 
@@ -329,10 +334,8 @@ export function matchAccommodation(text: string): AccommodationUnit | undefined 
   if (/شاليه|chalet/.test(normalized) && !/vip|رئاس/.test(normalized)) {
     return ACCOMMODATIONS.find((u) => u.id === "family_pool");
   }
-  if (/استوديو|studio|شقه|apartment|شقة|شقق/.test(normalized)) {
-    return /استوديو|studio|حديقة|garden/.test(normalized)
-      ? ACCOMMODATIONS.find((u) => u.id === "garden_studio")
-      : ACCOMMODATIONS.find((u) => u.id === "apartments");
+  if (/استوديو|studio|شقه|apartment|شقة|شقق|حديقة|garden/.test(normalized)) {
+    return ACCOMMODATIONS.find((u) => u.id === "garden_studio");
   }
   return undefined;
 }
@@ -348,8 +351,7 @@ export function getPriceListReply(lang: Language): string {
 • استوديو إطلالة الحديقة - الدور الثاني: 1000 د.ل
 • استوديو إطلالة الحديقة - الدور الأول: 1200 د.ل
 • استوديو إطلالة الحديقة - الدور الأرضي: 1400 د.ل
-• الشقق: 1600 د.ل
-• الشاليهات العائلية: 1900 د.ل
+• الشاليه العائلي: 1900 د.ل
 • فيلا VIP: 2900 د.ل
 • الفيلا الرئاسية VIP: 3900 د.ل`;
   }
@@ -358,8 +360,7 @@ export function getPriceListReply(lang: Language): string {
 • Garden View Studio - Second floor: 1000 LYD
 • Garden View Studio - First floor: 1200 LYD
 • Garden View Studio - Ground floor: 1400 LYD
-• Apartments: 1600 LYD
-• Family Chalets: 1900 LYD
+• Family Chalet: 1900 LYD
 • VIP Villa: 2900 LYD
 • Presidential VIP Villa: 3900 LYD`;
 }
@@ -520,11 +521,31 @@ export function getBookingLeadPrompt(lang: Language): string {
   return "Official bookings will be announced soon, but we can register your preliminary details and contact you when reservations open. Please share your full name, phone number, expected stay dates, number of guests, and preferred unit type if any.";
 }
 
-export function getBookingLeadConfirmation(lang: Language): string {
+export function getBookingLeadConfirmation(lead: BookingLead, lang: Language): string {
   if (lang === "ar") {
-    return "تم استلام بياناتكم المبدئية وسيتم التواصل معكم فور فتح الحجوزات رسمياً إن شاء الله";
+    return `ممتاز 🌹
+
+تم تسجيل طلب الحجز المبدئي بنجاح
+
+الاسم: ${lead.fullName ?? "—"}
+رقم الهاتف: ${lead.phone ?? "—"}
+التاريخ: ${lead.expectedDates ?? "—"}
+عدد الأشخاص: ${lead.guestCount ?? "—"}
+الوحدة: ${lead.unitType ?? "—"}
+
+سيتم التواصل معاكم عند فتح الحجوزات الرسمية لتأكيد الحجز وإتمام الإجراءات.`;
   }
-  return "We have received your preliminary details and will contact you as soon as official bookings open, in sha Allah";
+  return `Excellent 🌹
+
+Your preliminary booking request has been registered.
+
+Name: ${lead.fullName ?? "—"}
+Phone: ${lead.phone ?? "—"}
+Dates: ${lead.expectedDates ?? "—"}
+Guests: ${lead.guestCount ?? "—"}
+Unit: ${lead.unitType ?? "—"}
+
+We will contact you when official bookings open to confirm and complete the process.`;
 }
 
 export function getBookingUnavailableReply(lang: Language): string {
@@ -606,6 +627,13 @@ export function extractGuestCount(text: string): number | undefined {
 function extractDates(message: string): string | undefined {
   const monthPattern =
     "يناير|فبراير|مارس|ابريل|أبريل|مايو|يونيو|يوليو|اغسطس|أغسطس|سبتمبر|اكتوبر|أكتوبر|نوفمبر|ديسمبر|january|february|march|april|may|june|july|august|september|october|november|december";
+  const rangePattern = new RegExp(
+    `\\d{1,2}\\s+(?:${monthPattern})(?:\\s*-\\s*\\d{1,2}\\s+(?:${monthPattern}))?(?:\\s*\\d{4})?`,
+    "gi",
+  );
+  const rangeMatch = message.match(rangePattern);
+  if (rangeMatch?.length) return rangeMatch.join(" - ");
+
   const datePatterns = [
     new RegExp(`(?:يوم\\s+)?\\d{1,2}\\s+(?:${monthPattern})(?:\\s*\\d{4})?`, "gi"),
     new RegExp(`(?:${monthPattern})\\s*\\d{4}`, "gi"),
@@ -638,7 +666,7 @@ function extractNameFromBookingDetails(message: string): string | undefined {
 }
 
 function extractFullName(message: string): string | undefined {
-  const named = message.match(/(?:اسمي|اسمي هو|انا|أنا|my name is|i am|i'm)\s+(.+)/i);
+  const named = message.match(/(?:اسمي|اسمي هو|انا|أنا|my name is|i am|i'm|name is)\s+(.+)/i);
   if (named?.[1]) {
     let value = named[1].trim().replace(/[?.!،,]/g, " ").trim();
     value = value.replace(/\d[\d\s-]{6,}\d/g, "").trim();
@@ -646,12 +674,17 @@ function extractFullName(message: string): string | undefined {
     if (value.length >= 2) return value;
   }
   const trimmed = message.trim();
+  if (matchAccommodation(trimmed) || extractDates(trimmed)) return undefined;
+  if (/^[A-Za-z]{2,}(?:\s+[A-Za-z]{2,}){1,4}$/.test(trimmed)) {
+    if (!/(?:chalet|villa|vip|studio|apartment|pool|garden)/i.test(trimmed)) return trimmed;
+  }
   if (
     trimmed.length >= 3 &&
     trimmed.length <= 60 &&
     !/\d/.test(trimmed) &&
     !isBookingIntent(trimmed) &&
-    !/(?:مرحب|السلام|شكر|تمام|اهلا)/.test(trimmed.toLowerCase())
+    !matchAccommodation(trimmed) &&
+    !/(?:مرحب|السلام|شكر|تمام|اهلا|july|june|august|chalet|villa|vip)/i.test(trimmed)
   ) {
     const words = trimmed.split(/\s+/);
     if (words.length >= 2 && words.length <= 5) return trimmed;
@@ -670,9 +703,13 @@ export function extractBookingLeadFromText(message: string): Partial<BookingLead
   };
 }
 
-export function extractBookingLeadFromConversation(messages: string[]): BookingLead {
+export function buildBookingSession(userMessages: string[]): BookingSession {
+  return extractBookingLeadFromConversation(userMessages);
+}
+
+export function extractBookingLeadFromConversation(userMessages: string[]): BookingLead {
   const lead: BookingLead = {};
-  for (const message of messages) {
+  for (const message of userMessages) {
     const partial = extractBookingLeadFromText(message);
     if (partial.fullName) lead.fullName = partial.fullName;
     if (partial.phone) lead.phone = partial.phone;
@@ -715,7 +752,7 @@ const FIELD_LABELS_EN: Record<keyof BookingLead, string> = {
 
 function getLeadCollectionReply(lead: BookingLead, lang: Language): string {
   const missing = getMissingLeadFields(lead);
-  if (missing.length === 0) return getBookingLeadConfirmation(lang);
+  if (missing.length === 0) return getBookingLeadConfirmation(lead, lang);
 
   const labels = lang === "ar" ? FIELD_LABELS_AR : FIELD_LABELS_EN;
   const received = (Object.keys(FIELD_LABELS_AR) as (keyof BookingLead)[]).filter(
@@ -727,7 +764,7 @@ function getLeadCollectionReply(lead: BookingLead, lang: Language): string {
     const greeting = firstName ? `ممتاز ${firstName} 🌹 ` : "تمام، ";
 
     if (received.length > 0 && missing.length === 1 && missing[0] === "unitType") {
-      return `${greeting}استلمنا ${received.map((f) => labels[f]).join(" و")}. باقي فقط نوع الوحدة اللي تفضلها (شقة، شاليه، VIP أو الرئاسي VIP)؟`;
+      return `${greeting}استلمنا ${received.map((f) => labels[f]).join(" و")}. باقي فقط نوع الوحدة اللي تفضلها (استوديو، شاليه عائلي، VIP أو الرئاسي VIP)؟`;
     }
 
     if (received.length > 0) {
@@ -740,7 +777,7 @@ function getLeadCollectionReply(lead: BookingLead, lang: Language): string {
 
   const greeting = lead.fullName ? `Great ${getFirstName(lead.fullName)} — ` : "";
   if (received.length > 0 && missing.length === 1 && missing[0] === "unitType") {
-    return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. Which unit do you prefer (apartment, chalet, VIP, or Presidential VIP)?`;
+    return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. Which unit do you prefer (studio, family chalet, VIP, or Presidential VIP)?`;
   }
   if (received.length > 0) {
     return `${greeting}we have your ${received.map((f) => labels[f]).join(", ")}. We still need: ${missing.map((f) => labels[f]).join(", ")}.`;
@@ -748,27 +785,52 @@ function getLeadCollectionReply(lead: BookingLead, lang: Language): string {
   return getBookingLeadPrompt(lang);
 }
 
+export function isPhoneOnlyMessage(message: string): boolean {
+  const trimmed = message.trim();
+  const phone = extractPhoneNumber(trimmed);
+  if (!phone) return false;
+  const remainder = trimmed.replace(phone, "").replace(/[\s+()-]/g, "");
+  return remainder.length === 0;
+}
+
+export function isAssistantBookingPrompt(text: string): boolean {
+  return /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|استلمنا|باقي نحتاج|باقي فقط|we still need|still need|preliminary booking|register your details|which unit do you prefer|phone number|عدد الأشخاص|نوع الوحدة|stay date|full name|طلب الحجز المبدئي/i.test(
+    text,
+  );
+}
+
+export function isSingleFieldBookingReply(message: string): boolean {
+  const trimmed = message.trim();
+  if (!trimmed) return false;
+  if (isPhoneOnlyMessage(trimmed)) return true;
+  if (extractGuestCount(trimmed) && trimmed.length <= 24) return true;
+  if (extractDates(trimmed)) return true;
+  if (matchAccommodation(trimmed)) return true;
+  if (extractFullName(trimmed)) return true;
+  return false;
+}
+
 export function looksLikeBookingDataMessage(message: string): boolean {
   const partial = extractBookingLeadFromText(message);
   const fields = [partial.fullName, partial.phone, partial.expectedDates, partial.guestCount, partial.unitType];
   const count = fields.filter(Boolean).length;
+  if (isPhoneOnlyMessage(message)) return true;
   if (partial.phone && count >= 2) return true;
-  return count >= 3;
+  return count >= 2;
 }
 
-export function isActiveLeadCollection(conversationMessages: string[], currentMessage: string): boolean {
-  const allText = [...conversationMessages, currentMessage].join(" ");
-  if (isLeadCollectionContext(allText)) return true;
-  if (looksLikeBookingDataMessage(currentMessage)) return true;
+export function isActiveLeadCollection(context: BookingConversationContext): boolean {
+  const { userMessages, allMessages } = context;
+  const allText = allMessages.join(" ");
 
-  const hadBookingPrompt = conversationMessages.some(
-    (m) =>
-      isBookingIntent(m) ||
-      /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|مبدئية ونتواصل|preliminary details/i.test(m),
-  );
-  if (hadBookingPrompt) {
-    return [...conversationMessages, currentMessage].some((m) => looksLikeBookingDataMessage(m));
-  }
+  if (isLeadCollectionContext(allText)) return true;
+  if (userMessages.some((m) => looksLikeBookingDataMessage(m))) return true;
+
+  const lastAssistant = [...allMessages].reverse().find((m) => isAssistantBookingPrompt(m));
+  if (lastAssistant) return true;
+
+  if (allMessages.some((m) => isBookingIntent(m))) return true;
+
   return false;
 }
 
@@ -776,7 +838,7 @@ export function isLeadCollectionContext(conversationText: string): boolean {
   const normalized = conversationText.toLowerCase();
   return (
     isBookingIntent(normalized) ||
-    /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|استلمنا|باقي فقط نوع الوحدة|preliminary details|register your details/i.test(
+    /بياناتكم المبدئية|نسجلوا بياناتكم|الاسم ورقم الهاتف|استلمنا|باقي نحتاج|باقي فقط|preliminary booking|register your details|we still need|still need|phone number/i.test(
       normalized,
     )
   );
@@ -784,18 +846,18 @@ export function isLeadCollectionContext(conversationText: string): boolean {
 
 export function resolveBookingLeadReply(
   message: string,
-  conversationMessages: string[],
   lang: Language,
+  context: BookingConversationContext,
 ): string | undefined {
   const bookingWhenOnly = /^(متى الحجز|هل الحجز مفتوح|when.*booking|booking open)\??$/i.test(
     message.trim(),
   );
   if (bookingWhenOnly) return getBookingWhenReply(lang);
 
-  const inLeadFlow = isActiveLeadCollection(conversationMessages, message);
+  const inLeadFlow = isActiveLeadCollection(context);
   if (!inLeadFlow && !isBookingIntent(message)) return undefined;
 
-  const lead = extractBookingLeadFromConversation([...conversationMessages, message]);
+  const lead = buildBookingSession(context.userMessages);
   const hasAnyLeadData = Boolean(
     lead.fullName || lead.phone || lead.expectedDates || lead.guestCount || lead.unitType,
   );
@@ -804,7 +866,7 @@ export function resolveBookingLeadReply(
     return getBookingLeadPrompt(lang);
   }
 
-  if (!hasAnyLeadData) return undefined;
+  if (!hasAnyLeadData && !inLeadFlow) return undefined;
 
   return getLeadCollectionReply(lead, lang);
 }
@@ -944,10 +1006,18 @@ export function resolveOpeningDateReply(message: string, lang: Language): string
 export function resolvePriceOrUnitReply(
   message: string,
   lang: Language,
-  options?: { conversationMessages?: string[] },
+  options?: { conversationMessages?: string[]; userMessages?: string[] },
 ): string | undefined {
   if (options?.conversationMessages?.length) {
-    if (isActiveLeadCollection(options.conversationMessages, message)) return undefined;
+    const userOnly = options.userMessages ?? options.conversationMessages;
+    if (
+      isActiveLeadCollection({
+        userMessages: userOnly,
+        allMessages: options.conversationMessages,
+      })
+    ) {
+      return undefined;
+    }
   }
 
   const normalized = message.toLowerCase();

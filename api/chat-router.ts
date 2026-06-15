@@ -18,6 +18,9 @@ import {
   accommodationBookingLabel,
   resolvePriceOrUnitReply,
   resolveBookingLeadReply,
+  toBookingContext,
+  isActiveLeadCollection,
+  isPhoneOnlyMessage,
   RESORT_BRAND,
 } from "./resort-knowledge";
 
@@ -201,11 +204,13 @@ function inferConversationState(message: string, history: ChatHistoryItem[]): Co
 
 function bookingNextStepReply(state: ConversationState, message: string, history: ChatHistoryItem[], lang: Language): string | undefined {
   if (!state.booking.active) return undefined;
-  const conversationMessages = history.map((item) => item.content);
-  return resolveBookingLeadReply(message, conversationMessages, lang);
+  return resolveBookingLeadReply(message, lang, toBookingContext(history, message));
 }
 
-function getShortcutReply(message: string, lang: Language): string | undefined {
+function getShortcutReply(message: string, lang: Language, history: ChatHistoryItem[] = []): string | undefined {
+  const context = toBookingContext(history, message);
+  if (isActiveLeadCollection(context)) return undefined;
+
   const text = normalizeText(message);
   if (!text) return undefined;
 
@@ -234,7 +239,11 @@ function getShortcutReply(message: string, lang: Language): string | undefined {
   if (hasAny(text, ["اسعار", "الاسعار", "سعر", "price", "prices", "cost", "بكم"])) {
     return resolvePriceOrUnitReply("prices", lang);
   }
-  if (hasAny(text, ["واتساب", "whatsapp", "whats app", "wa", "تواصل", "contact", "رقم"])) {
+  if (
+    !isPhoneOnlyMessage(message) &&
+    hasAny(text, ["واتساب", "whatsapp", "whats app", "wa", "تواصل", "contact"]) &&
+    !/^\d[\d\s+-]{7,}$/.test(message.trim())
+  ) {
     return getContactReply(lang);
   }
   if (hasAny(text, ["صور", "photo", "photos", "gallery", "picture", "فيديو"])) {
@@ -317,20 +326,23 @@ export const chatRouter = createRouter({
       const lang = detectMessageLanguage(message);
       const history = input.history ?? [];
       const state = inferConversationState(message, history);
-      const historyContents = history.map((item) => item.content);
+      const bookingContext = toBookingContext(history, message);
 
-      const bookingLeadReply = resolveBookingLeadReply(message, historyContents, lang);
+      const bookingLeadReply = resolveBookingLeadReply(message, lang, bookingContext);
       if (bookingLeadReply) {
         return { reply: bookingLeadReply, language: lang, source: "rule" as const };
       }
 
-      const priceReply = resolvePriceOrUnitReply(message, lang, { conversationMessages: historyContents });
+      const priceReply = resolvePriceOrUnitReply(message, lang, {
+        conversationMessages: bookingContext.allMessages,
+        userMessages: bookingContext.userMessages,
+      });
       if (priceReply) {
         return { reply: priceReply, language: lang, source: "rule" as const };
       }
 
       const bookingStepReply = bookingNextStepReply(state, message, history, lang);
-      const shortcutReply = getShortcutReply(message, lang);
+      const shortcutReply = getShortcutReply(message, lang, history);
 
       if (shortcutReply) {
         return {
